@@ -8,6 +8,7 @@ const StartScreen = (props) => {
         navigation.navigate('Auth')
     }
 
+
     return (
         <StartWrapper source={require('../../assets/images/auth/background.png')} resizeMode="cover" >
             <StartTouchableOpacity onPress={handleStart}>

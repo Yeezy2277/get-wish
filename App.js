@@ -1,28 +1,26 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import AppRouter from "./components/AppRouter/AppRouter";
 import * as Font from 'expo-font';
-import {Text} from "react-native";
-import useFonts from './hooks/useFonts';
 import AppLoading from 'expo-app-loading';
 
+let customFonts = {
+    'Nunito': require('./assets/fonts/NunitoRegular.otf')
+};
+
 export default props => {
-    const [fontsLoaded, setFontsLoaded] = useState(false)
+    const [fontsLoaded, setFontsLoaded] = React.useState(false)
 
-    const LoadFonts = async () => {
-        await useFonts();
-    };
-
-    if (!fontsLoaded) {
-        return (
-            <AppLoading
-                startAsync={LoadFonts}
-                onFinish={() => setFontsLoaded(true)}
-                onError={() => {}}
-            />
-        );
+    async function _loadFontsAsync() {
+        await Font.loadAsync(customFonts);
+        setFontsLoaded(true);
     }
 
+    useEffect(() => {
+        (async function () {
+            await _loadFontsAsync()
+        }())
+    }, [])
+
     return (
-        <AppRouter/>
-    )
+        <AppRouter/>)
 }

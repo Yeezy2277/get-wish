@@ -26,8 +26,16 @@ function AuthScreen(props) {
         setStep((prev) => prev + 1);
     };
 
+    const onPrevStep = () => {
+        setStep((prev) => prev - 1);
+    };
+
+    const goBack = () => {
+        navigation.goBack()
+    }
+
     return (
-        <AuthContext.Provider value={{step, onNextStep, data, handleChangeObject}}>
+        <AuthContext.Provider value={{step, onNextStep, data, handleChangeObject, onPrevStep}}>
             <Step/>
         </AuthContext.Provider>
     );
