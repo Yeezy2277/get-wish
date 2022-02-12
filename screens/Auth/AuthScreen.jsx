@@ -1,9 +1,10 @@
 import React, {useCallback} from 'react';
-import {EnterCodeStep, EnterNumberStep} from "../../components";
+import {EnterCodeStep, EnterNicknameStep, EnterNumberStep} from "../../components";
 
 const stepsComponents = {
     0: EnterNumberStep,
     1: EnterCodeStep,
+    2: EnterNicknameStep,
 };
 
 
@@ -13,7 +14,8 @@ function AuthScreen(props) {
     const { navigation } = props;
     const [step, setStep] = React.useState(0);
     const [data, setData] = React.useState({
-        phoneNumber: ''
+        phoneNumber: '',
+        codes: ''
     })
     const Step = stepsComponents[step];
 

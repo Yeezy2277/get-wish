@@ -16,7 +16,7 @@ function EnterNumberStep() {
                 if (data.phoneNumber.split(' ').join('').length >= 10) {
                     onNextStep()
                 }
-            }} colors={data.phoneNumber.split(' ').join('').length < 10 ? ['#D4DAEC'] : ['#FB26FF', '#8A24FF', '#8424FF']}>Получить код</AuthButton>
+            }} colors={data.phoneNumber.split(' ').join('').length < 10 ? ['#D4DAEC', '#D4DAEC'] : ['#FB26FF', '#8A24FF', '#8424FF']}>Получить код</AuthButton>
         </AuthStep>
     );
 }

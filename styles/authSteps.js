@@ -6,6 +6,7 @@ export const AuthStepContainer = styled.View`
   width: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #fff;
   font-family: 'Nunito';
 `;
 
@@ -13,9 +14,20 @@ export const AuthStepHeader = styled.View`
   height: 44px;
   width: 100%;
   display: flex;
+    justify-content: ${props => props.jc};
   flex-direction: row;
   align-items: center;
   margin-bottom: 48px;
+`;
+
+export const ExitImage = styled.Image`
+    align-self: flex-end;
+`;
+
+export const HeaderTouchableHighlight = styled.TouchableHighlight`
+  align-self: flex-end;
+  width: 74.42px;
+  height: 16px;
 `;
 
 export const AuthStepContent = styled.View`
@@ -55,7 +67,6 @@ export const PhoneContainer = styled.View`
 
 export const PhonePrefix = styled.Text`
   color: #1A1A1A;
-  font-weight: 600;
   font-size: 30px;
   margin-right: 12px;
 `;
@@ -74,3 +85,104 @@ export const TextOffer = styled.Text`
 export const TextOfferPurple = styled.Text`
   color: #8424FF;
 `
+
+export const Codes = styled.View`
+  margin-top: 73px;
+  width: 150px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+`
+
+export const CodeElement = styled.View`
+    position: relative;
+  display: flex;
+  flex-direction: column;
+      height: 30px;
+      width: 30px;
+`
+
+export const CodePlaceholder = styled.View`
+        position: absolute;
+      align-self: center;
+      align-content: center;
+      left: 10px;
+      top: 10px;
+      border-radius: 30px;
+      background: #D4DAEC;
+      height: 10px;
+      width: 10px;
+`
+
+export const EnterCodeStepContainer = styled.View`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+`
+
+
+export const EnterCodeStepBottom = styled.View`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+    margin-top: auto;
+`
+
+
+export const EnterNickNameStepContainer = styled.View`
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    height: 272px;
+`
+
+export const EnterNickNameInfo = styled.Text`
+    max-width: 325px;
+    align-self: center;
+    text-align: center;
+    font-size: 13px;
+    line-height: 18px;
+    color: #7C82A5;
+    margin-bottom: 20px;
+`
+
+export const TimerContainer = styled.View`
+    margin-top: 112px;
+    display: flex;
+  font-family: 'Nunito';
+  flex-direction: row;
+  align-items: center;
+    margin-bottom: 46px;
+    width: 199px;
+    height: 21px;
+`
+export const TimerTexts = styled.Text`
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  color: #D4DAEC;
+`
+
+export const TimerTextSendAgain = styled.Text`
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  align-self: center; 
+  width: 100%;
+  color: #8424FF;
+  text-align: center;
+`
+
+export const TimerNumber = styled.Text`
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  margin-left: 12px;
+  color: #1A1A1A;
+`
+
+
