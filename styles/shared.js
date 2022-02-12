@@ -57,6 +57,16 @@ export const NicknameError = styled.Text`
   margin-top: 10px;
 `;
 
+export const NicknameSuccess = styled.Text`
+  font-size: 13px;
+  line-height: 18px;
+  color: #00D085;
+  font-family: 'Nunito';
+  margin-left: 4px;
+  margin-top: 10px;
+`;
+
+
 export const NicknameField = styled.View`
   display: flex;
   flex-direction: column;
