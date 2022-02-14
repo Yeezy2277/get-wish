@@ -52,8 +52,15 @@ function Nickname(props) {
         <>
             <NicknameInput value={value}
                            onChangeText={async (text) => {
-                               await onChange(name)(text)
-                               loading ? setLoading(false) : await showLoading(text)
+                               if (text.length !== 0) {
+                                   if (text.match(/^(?=.*[a-z_.])[\w.]+$/)) {
+                                       await onChange(name)(text)
+                                       loading ? setLoading(false) : text.length >= 3 && await showLoading()
+                                   }
+                               } else {
+                                   await onChange(name)(text)
+                                   loading ? setLoading(false) : text.length >= 3 && await showLoading()
+                               }
                            }}
                            autoCapitalize="none"/>
             {!hasError && isSubmitting && !preLoading && !loading && <NicknameSuccess>Никнейм свободен</NicknameSuccess>}
