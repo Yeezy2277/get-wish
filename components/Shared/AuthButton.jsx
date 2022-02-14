@@ -1,17 +1,19 @@
 import React from 'react';
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {ButtonAuthLabel} from "../../styles/shared";
 import { LinearGradient } from 'expo-linear-gradient';
 import {TouchableHighlight} from "react-native";
 
 function AuthButton({children, colors, onPress}) {
     return (
-        <LinearGradient locations={[0,0.5,0.6]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-                        style={styles.linearGradient} colors={colors}>
-            <TouchableHighlight style={styles.higlight} underlayColor={'gray'} onPress={onPress}>
-                <ButtonAuthLabel>{children}</ButtonAuthLabel>
-            </TouchableHighlight>
-        </LinearGradient>
+        <View style={styles.linearGradient}>
+            <LinearGradient locations={[0,0.5,0.6]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+                            style={styles.linearGradient} colors={colors}>
+                <TouchableHighlight style={styles.higlight} underlayColor={'gray'} onPress={onPress}>
+                    <ButtonAuthLabel>{children}</ButtonAuthLabel>
+                </TouchableHighlight>
+            </LinearGradient>
+        </View>
     );
 }
 

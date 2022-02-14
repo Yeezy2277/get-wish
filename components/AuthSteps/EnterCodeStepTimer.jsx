@@ -1,8 +1,11 @@
 import React from 'react';
 import {TimerContainer, TimerNumber, TimerTexts, TimerTextSendAgain} from "../../styles/authSteps";
+import {sendCode} from "../../redux/actions/authActions";
+import {AuthContext} from "../../screens/Auth/AuthScreen";
 
-function EnterCodeStepTimer(props) {
+function EnterCodeStepTimer() {
     const [seconds, setSeconds ] = React.useState(60);
+    const {data} = React.useContext(AuthContext)
     React.useEffect(()=>{
         let myInterval = setInterval(() => {
             if (seconds > 0) {
@@ -17,6 +20,11 @@ function EnterCodeStepTimer(props) {
         };
     });
 
+    const handleSendCodeAgain = async () => {
+        const phoneNumber = data.phoneNumber.split(' ').join('')
+        await sendCode(`+7${phoneNumber}`)
+        setSeconds(60)
+    }
 
     return (
         seconds !== 0 ?
@@ -26,7 +34,7 @@ function EnterCodeStepTimer(props) {
             </TimerContainer>
          : <>
                 <TimerContainer>
-                    <TimerTextSendAgain>Отправить повторно</TimerTextSendAgain>
+                    <TimerTextSendAgain onPress={handleSendCodeAgain}>Отправить повторно</TimerTextSendAgain>
                 </TimerContainer>
         </>
     );

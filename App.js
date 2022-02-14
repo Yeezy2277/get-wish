@@ -1,26 +1,36 @@
-import React, {useEffect, useState} from 'react';
-import AppRouter from "./components/AppRouter/AppRouter";
+import React from 'react';
 import * as Font from 'expo-font';
-import AppLoading from 'expo-app-loading';
+import { TextInput } from 'react-native'
+import {Provider} from "react-redux";
+import store from "./redux";
+import {AppRouter} from "./components";
+TextInput.defaultProps.selectionColor = '#8424FF'
+
 
 let customFonts = {
     'Nunito': require('./assets/fonts/NunitoRegular.otf')
 };
 
 export default props => {
+
     const [fontsLoaded, setFontsLoaded] = React.useState(false)
+
+    console.disableYellowBox = true;
 
     async function _loadFontsAsync() {
         await Font.loadAsync(customFonts);
         setFontsLoaded(true);
     }
 
-    useEffect(() => {
+    React.useEffect(() => {
         (async function () {
             await _loadFontsAsync()
         }())
     }, [])
 
     return (
-        <AppRouter/>)
+        <Provider store={store}>
+            <AppRouter/>
+        </Provider>
+    )
 }

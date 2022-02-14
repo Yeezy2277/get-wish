@@ -3,14 +3,14 @@ import {NicknameError, NicknameField, NicknameInput, NicknameSuccess} from "../.
 import {LoaderNickname} from "../index";
 import {Animated} from "react-native";
 import Easing from "react-native-web/dist/vendor/react-native/Animated/Easing";
+import {delay} from "../../functions";
 
 function Nickname(props) {
     const {
         field: { name, onChange, value },
-        form: { errors, touched, submitForm },
+        form: { errors, touched, submitForm, isSubmitting},
     } = props
     let timeout
-    let timeout2
     const hasError = errors[name] && touched[name]
     const [loading, setLoading] = React.useState(false)
     const [preLoading, setPreLoading] = React.useState(false)
@@ -36,23 +36,27 @@ function Nickname(props) {
         })
     }
 
-    const showLoading = () => {
-        setPreLoading(true)
-        timeout = setTimeout(function(){
-            setLoading(true)
-            timeout2 = setTimeout(function(){setLoading(false); setPreLoading(false); submitForm()} , 1500);
-        } , 1200);
+    const showLoading = async () => {
+        setPreLoading(true);
+        await delay(1200)
+        setLoading(true)
+        timeout = setTimeout(function () {
+            setLoading(false);
+            setPreLoading(false);
+            submitForm()
+            clearTimeout(timeout)
+        }, 1500);
     }
 
     return (
         <>
             <NicknameInput value={value}
-                           onChangeText={(text) => {
-                               showLoading()
-                               onChange(name)(text)
+                           onChangeText={async (text) => {
+                               await onChange(name)(text)
+                               loading ? setLoading(false) : await showLoading(text)
                            }}
                            autoCapitalize="none"/>
-            {!hasError && !preLoading && !loading && <NicknameSuccess>Никнейм свободен</NicknameSuccess>}
+            {!hasError && isSubmitting && !preLoading && !loading && <NicknameSuccess>Никнейм свободен</NicknameSuccess>}
             {hasError && !preLoading && !loading && <NicknameError>{errors[name]}</NicknameError>}
             {loading && <LoaderNickname loading={loading} animate_state={animate_state} spin={spin} spinValue={spinValue}/>}
         </>

@@ -7,9 +7,15 @@ import {
 } from "../../styles/authSteps";
 import {Image, TouchableHighlight} from "react-native";
 import {AuthContext} from "../../screens/Auth/AuthScreen";
+import {logout} from "../../redux/actions/authActions";
 
 function AuthStep({title, text, children, maxWidth, mt, back, exit}) {
-    const {onPrevStep} = useContext(AuthContext)
+    const {onPrevStep, dispatch} = useContext(AuthContext)
+
+    const handleLogout = async () => {
+        dispatch(logout())
+    }
+
     return (
         <AuthStepContainer>
             <AuthStepContent mt={mt}>
@@ -19,7 +25,7 @@ function AuthStep({title, text, children, maxWidth, mt, back, exit}) {
                     </TouchableHighlight>
                 </AuthStepHeader>}
                 {exit && <AuthStepHeader jc={"flex-end"}>
-                    <HeaderTouchableHighlight underlayColor={'none'} >
+                    <HeaderTouchableHighlight onPress={handleLogout} underlayColor={'none'} >
                         <ExitImage source={require('../../assets/images/icons/header/exit.png')}/>
                     </HeaderTouchableHighlight>
                 </AuthStepHeader>}

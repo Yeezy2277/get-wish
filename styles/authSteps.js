@@ -22,12 +22,14 @@ export const AuthStepHeader = styled.View`
 
 export const ExitImage = styled.Image`
     align-self: flex-end;
+  width: 76px;
+  height: 26px;
 `;
 
 export const HeaderTouchableHighlight = styled.TouchableHighlight`
   align-self: flex-end;
-  width: 74.42px;
-  height: 16px;
+  width: 76px;
+  height: 26px;
 `;
 
 export const AuthStepContent = styled.View`
@@ -98,9 +100,9 @@ export const Codes = styled.View`
 
 export const CodeElement = styled.View`
     position: relative;
-  display: flex;
-  flex-direction: column;
-      height: 30px;
+      display: flex;
+      flex-direction: column;
+      height: 31px;
       width: 30px;
 `
 
@@ -111,13 +113,14 @@ export const CodePlaceholder = styled.View`
       left: 10px;
       top: 10px;
       border-radius: 30px;
-      background: #D4DAEC;
+      background: ${props => props.error || '#D4DAEC'};
       height: 10px;
       width: 10px;
 `
 
 export const EnterCodeStepContainer = styled.View`
     display: flex;
+    height: 335px;
     width: 100%;
     align-items: center;
     flex-direction: column;
@@ -148,6 +151,16 @@ export const EnterNickNameInfo = styled.Text`
     line-height: 18px;
     color: #7C82A5;
     margin-bottom: 20px;
+`
+
+export const CodeTextError = styled.Text`
+  margin-top: 41px;
+  font-family: 'Nunito';
+  font-size: 14px;
+  line-height: 19px;
+  color: #FF3D54;
+  text-align: center;
+  align-self: center;
 `
 
 export const TimerContainer = styled.View`

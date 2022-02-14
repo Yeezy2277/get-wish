@@ -16,6 +16,8 @@ export const StartTouchableOpacity = styled.TouchableOpacity`
 `;
 
 export const ImageWishList = styled.Image`
-    margin-top: 482.3px;
+    margin-top: 100%;
+    width: 205.63px;
+    height: 45.45px;
 `;
 

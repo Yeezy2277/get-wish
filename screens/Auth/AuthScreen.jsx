@@ -1,23 +1,30 @@
 import React, {useCallback} from 'react';
+import {Text} from "react-native";
 import {EnterCodeStep, EnterNicknameStep, EnterNumberStep} from "../../components";
-
-const stepsComponents = {
-    0: EnterNumberStep,
-    1: EnterCodeStep,
-    2: EnterNicknameStep,
-};
-
+import {useDispatch} from "react-redux";
 
 export const AuthContext = React.createContext(undefined)
 
 function AuthScreen(props) {
-    const { navigation } = props;
+    const StepsComponents = {
+        0: EnterNumberStep,
+        1: EnterCodeStep,
+        2: EnterNicknameStep,
+    };
+
+    const dispatch = useDispatch()
+
+    const { screenProps, navigation } = props;
+    const [loading, setLoading] = React.useState(true)
     const [step, setStep] = React.useState(0);
     const [data, setData] = React.useState({
+        id: '',
         phoneNumber: '',
-        codes: ''
+        codes: '',
+        username: ''
     })
-    const Step = stepsComponents[step];
+
+    const Step = StepsComponents[step];
 
     const handleChangeObject = useCallback(
         (key, value) => setData({...data, [key]: value}),
@@ -32,13 +39,18 @@ function AuthScreen(props) {
         setStep((prev) => prev - 1);
     };
 
-    const goBack = () => {
-        navigation.goBack()
-    }
+    React.useEffect(() => {
+        setLoading(true)
+        if (screenProps.nickname) {
+            setStep(2)
+        }
+        setLoading(false)
+    }, [screenProps]);
+
 
     return (
-        <AuthContext.Provider value={{step, onNextStep, data, handleChangeObject, onPrevStep}}>
-            <Step/>
+        <AuthContext.Provider value={{dispatch, navigation, step, onNextStep, data, handleChangeObject, onPrevStep}}>
+            {loading ? <Text>загрузка</Text> : <Step/>}
         </AuthContext.Provider>
     );
 }

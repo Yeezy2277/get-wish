@@ -1,25 +1,45 @@
 import React from 'react';
-import {createAppContainer} from "react-navigation";
-import {createStackNavigator} from "react-navigation-stack";
+import {useDispatch, useSelector} from "react-redux";
+import {refresh} from "../../redux/actions/authActions";
+import {userCRUD} from "../../http/CRUD";
+import {SET_AUTH, SET_USER_INFO} from "../../redux/constants/userConstants";
+import {Text} from "react-native";
+import MainRouter from "./MainRouter";
+import AuthRouter from "./AuthRouter";
 
-import {
-    AuthScreen,
-    StartScreen
-} from '../../screens';
+function AppRouter() {
+    const {isAuth} = useSelector((state) => state.user);
+    const dispatch = useDispatch()
+    const [loading, setLoading] = React.useState(false)
+    const [nickname, setNickname] = React.useState(false)
 
-const AppNavigator = createStackNavigator(
-    {
-        Start: {
-            screen: StartScreen,
-        },
-        Auth: {
-            screen: AuthScreen,
-        }
-    },
-    {
-        initialRouteName: 'Start',
-        headerMode: 'none'
+    React.useEffect(() => {
+        (async function () {
+            setLoading(true)
+            await refresh().then(async () => {
+                const user = await userCRUD.search()
+                if (user) {
+                    dispatch({type: SET_USER_INFO, payload: user})
+                    if (!user?.username)
+                        setNickname(true)
+                    else {
+                        dispatch({type: SET_AUTH, payload: true})
+                    }
+                }
+            }).finally(async () => await setLoading(false))
+        }())
+    }, [])
+
+    if (loading) {
+        return <Text>Загрузка</Text>
     }
-);
 
-export default createAppContainer(AppNavigator);
+    return (
+        <>
+            {isAuth && <MainRouter screenProps={{nextStart: 'Main'}}/>}
+            {!isAuth && <AuthRouter screenProps={{nickname, nextStart: 'Auth'}}/>}
+        </>
+    );
+}
+
+export default AppRouter;
