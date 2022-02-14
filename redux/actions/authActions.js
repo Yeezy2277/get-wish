@@ -1,7 +1,7 @@
 import {$authHost, $host} from "../../http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {parseError, parseResponse} from "../../http/utils";
-import {LOGOUT} from "../constants/userConstants";
+import {LOGOUT, SET_NICKNAME} from "../constants/userConstants";
 import {userCRUD} from "../../http/CRUD";
 
 export const sendCode = async (phone) => {
@@ -43,6 +43,7 @@ export const logout = () => async (dispatch) => {
     await AsyncStorage.removeItem('token')
     await AsyncStorage.removeItem('refreshToken')
     dispatch({type: LOGOUT})
+    dispatch({type: SET_NICKNAME, payload: false})
 }
 
 export const deleteUser = (userInfo) => async (dispatch) => {
@@ -50,6 +51,7 @@ export const deleteUser = (userInfo) => async (dispatch) => {
     await AsyncStorage.removeItem('token')
     await AsyncStorage.removeItem('refreshToken')
     dispatch({type: LOGOUT})
+    dispatch({type: SET_NICKNAME, payload: false})
 }
 
 export const refresh = async () => {

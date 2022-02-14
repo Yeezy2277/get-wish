@@ -1,7 +1,8 @@
-import {LOGOUT, SET_AUTH, SET_USER_INFO} from "../constants/userConstants";
+import {LOGOUT, SET_AUTH, SET_NICKNAME, SET_USER_INFO} from "../constants/userConstants";
 
 const initialState = {
     isAuth: false,
+    nickname: false,
     userInfo: null,
 };
 
@@ -22,7 +23,11 @@ export const userReducer = (state = initialState, action) => {
                 ...state,
                 isAuth: false
             };
-
+        case SET_NICKNAME:
+            return {
+                ...state,
+                nickname: action.payload
+            };
         default:
             return state;
     }

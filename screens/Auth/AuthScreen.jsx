@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {Text} from "react-native";
 import {EnterCodeStep, EnterNicknameStep, EnterNumberStep} from "../../components";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 export const AuthContext = React.createContext(undefined)
 
@@ -13,7 +13,7 @@ function AuthScreen(props) {
     };
 
     const dispatch = useDispatch()
-
+    const {nickname} = useSelector((state) => state.user);
     const { screenProps, navigation } = props;
     const [loading, setLoading] = React.useState(true)
     const [step, setStep] = React.useState(0);
@@ -41,7 +41,7 @@ function AuthScreen(props) {
 
     React.useEffect(() => {
         setLoading(true)
-        if (screenProps.nickname) {
+        if (nickname) {
             setStep(2)
         }
         setLoading(false)

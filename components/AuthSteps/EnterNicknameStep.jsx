@@ -30,25 +30,27 @@ function EnterNicknameStep() {
     React.useEffect(() => {
         (async function () {
             setLoading(true)
-            const user = await userCRUD.search()
-            if (user) {
-                if (user?.username) {
-                    await dispatch({type: SET_USER_INFO, payload: user})
-                    await dispatch({type: SET_AUTH, payload: true})
-                    navigation.navigate('MainNavigator', { screen: 'Main' });
+            try {
+                const user = await userCRUD.search()
+                if (user) {
+                    if (user?.username) {
+                        await dispatch({type: SET_USER_INFO, payload: user})
+                        await dispatch({type: SET_AUTH, payload: true})
+                        navigation.navigate('MainNavigator', { screen: 'Main' });
+                    }
                 }
+            } finally {
+                setLoading(false)
             }
-            setLoading(false)
         }())
     }, [])
 
     const onHandleRegistration = async () => {
         if (canRegistration) {
-            const phoneNumber = data.phoneNumber.split(' ').join('')
             const res = await userCRUD.search()
             await userCRUD.edit(res.id, {
                 username: data.username,
-                phone: `+7${phoneNumber}`
+                phone: data.phone
             })
             dispatch({type: SET_AUTH, payload: true})
             navigation.navigate('MainNavigator', { screen: 'Main' })

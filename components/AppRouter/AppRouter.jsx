@@ -2,18 +2,16 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {refresh} from "../../redux/actions/authActions";
 import {userCRUD} from "../../http/CRUD";
-import {SET_AUTH, SET_USER_INFO} from "../../redux/constants/userConstants";
+import {SET_AUTH, SET_NICKNAME, SET_USER_INFO} from "../../redux/constants/userConstants";
 import {Text} from "react-native";
 import MainRouter from "./MainRouter";
 import AuthRouter from "./AuthRouter";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavigationService from "../../functions/NavigationService";
 
 function AppRouter() {
     const {isAuth} = useSelector((state) => state.user);
     const dispatch = useDispatch()
     const [loading, setLoading] = React.useState(false)
-    const [nickname, setNickname] = React.useState(false)
 
     React.useEffect(() => {
         (async function () {
@@ -22,8 +20,9 @@ function AppRouter() {
                 const user = await userCRUD.search()
                 if (user) {
                     dispatch({type: SET_USER_INFO, payload: user})
-                    if (!user?.username)
-                        setNickname(true)
+                    if (!user?.username) {
+                        dispatch({type: SET_NICKNAME, payload: true})
+                    }
                     else {
                         dispatch({type: SET_AUTH, payload: true})
                     }
@@ -41,7 +40,7 @@ function AppRouter() {
             {isAuth && <MainRouter screenProps={{nextStart: 'Main'}}/>}
             {!isAuth && <AuthRouter ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
-            }} screenProps={{nickname, nextStart: 'Auth'}}/>}
+            }} screenProps={{nextStart: 'Auth'}}/>}
         </>
     );
 }

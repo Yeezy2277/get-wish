@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {logout, refresh} from "../redux/actions/authActions";
 import NavigationService from "../functions/NavigationService";
 import store from '../redux/index'
-import {LOGOUT} from "../redux/constants/userConstants";
+import {LOGOUT, SET_NICKNAME} from "../redux/constants/userConstants";
 
 const {dispatch} = store
 
@@ -25,10 +25,13 @@ $authHost.interceptors.response.use(response => {
 }, async error => {
   if (error.response.status === 401) {
     await refresh().catch(async () => {
-      await AsyncStorage.removeItem('token')
-      await AsyncStorage.removeItem('refreshToken')
-      dispatch({type: LOGOUT})
-      NavigationService.navigate('Start')
+      if (await AsyncStorage.getItem('token') || await AsyncStorage.getItem('refreshToken') || store.getState('user')?.user?.isAuth ) {
+        await AsyncStorage.removeItem('token')
+        await AsyncStorage.removeItem('refreshToken')
+        dispatch({type: LOGOUT})
+        dispatch({type: SET_NICKNAME, payload: false})
+        NavigationService.navigate('Start')
+      }
     })
   }
   throw error;
