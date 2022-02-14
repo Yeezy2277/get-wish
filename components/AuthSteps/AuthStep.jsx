@@ -8,12 +8,14 @@ import {
 import {Image, TouchableHighlight} from "react-native";
 import {AuthContext} from "../../screens/Auth/AuthScreen";
 import {logout} from "../../redux/actions/authActions";
+import NavigationService from "../../functions/NavigationService";
 
 function AuthStep({title, text, children, maxWidth, mt, back, exit}) {
     const {onPrevStep, dispatch} = useContext(AuthContext)
 
     const handleLogout = async () => {
-        dispatch(logout())
+        await dispatch(logout())
+        NavigationService.navigate('Start')
     }
 
     return (

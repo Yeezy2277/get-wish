@@ -6,6 +6,8 @@ import {SET_AUTH, SET_USER_INFO} from "../../redux/constants/userConstants";
 import {Text} from "react-native";
 import MainRouter from "./MainRouter";
 import AuthRouter from "./AuthRouter";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NavigationService from "../../functions/NavigationService";
 
 function AppRouter() {
     const {isAuth} = useSelector((state) => state.user);
@@ -37,7 +39,9 @@ function AppRouter() {
     return (
         <>
             {isAuth && <MainRouter screenProps={{nextStart: 'Main'}}/>}
-            {!isAuth && <AuthRouter screenProps={{nickname, nextStart: 'Auth'}}/>}
+            {!isAuth && <AuthRouter ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+            }} screenProps={{nickname, nextStart: 'Auth'}}/>}
         </>
     );
 }

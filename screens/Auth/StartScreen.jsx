@@ -1,11 +1,12 @@
 import React from 'react';
 import {ImageWishList, StartTouchableOpacity, StartWrapper} from "../../styles/auth";
+import NavigationService from "../../functions/NavigationService";
 
 const StartScreen = (props) => {
-    const { navigation, screenProps } = props;
+    const { screenProps } = props;
 
     const handleStart = () => {
-        navigation.navigate(screenProps.nextStart)
+        NavigationService.navigate(screenProps.nextStart)
     }
 
     return (

@@ -14,9 +14,10 @@ const MainNavigator = createStackNavigator(
     },
     {
         initialRouteName: 'Main',
-        headerMode: 'none'
+        headerMode: 'none',
     }
 );
+
 
 
 export default createAppContainer(MainNavigator);
