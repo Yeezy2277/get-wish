@@ -42,7 +42,7 @@ export const NicknameInput = styled.TextInput`
   border-radius: 12px;
   font-size: 15px;
   line-height: 20px;
-  padding-left: 18px;
+  padding-left: ${props => props.errorAnimation || 18}px;
   padding-bottom: 9px;
   padding-top: 27px;
   color: #1A1A1A;

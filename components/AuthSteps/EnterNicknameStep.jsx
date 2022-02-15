@@ -93,7 +93,7 @@ function EnterNicknameStep() {
                                 <NicknameBottom>
                                     <EnterNickNameInfo>Ты можешь использовать символы <TextOfferPurple>a-z</TextOfferPurple>, <TextOfferPurple>0-9</TextOfferPurple>, <TextOfferPurple>.</TextOfferPurple> и <TextOfferPurple>_</TextOfferPurple> .
                                         Длина от 3 до 30 символов.</EnterNickNameInfo>
-                                    <AuthButton onPress={onHandleRegistration} colors={canRegistration ? ['#FB26FF', '#8A24FF', '#8424FF'] : ['#D4DAEC', '#D4DAEC']}>Зарегистрироваться</AuthButton>
+                                    <AuthButton onPress={onHandleRegistration} active={canRegistration}>Зарегистрироваться</AuthButton>
                                 </NicknameBottom>
                             </EnterNickNameStepContainer>
                         )

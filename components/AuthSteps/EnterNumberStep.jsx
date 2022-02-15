@@ -24,7 +24,7 @@ function EnterNumberStep() {
             <PhoneNumber/>
             <TextOffer>Нажимая на кнопку, ты соглашаешься с <TextOfferPurple>политикой
                 конфиденциальности и условиями использованиями</TextOfferPurple></TextOffer>
-            <AuthButton onPress={onPressNumberStep} colors={disabledNext ? ['#D4DAEC', '#D4DAEC'] : ['#FB26FF', '#8A24FF', '#8424FF']}>Получить код</AuthButton>
+            <AuthButton onPress={onPressNumberStep} active={!disabledNext}>Получить код</AuthButton>
         </AuthStep>
     );
 }

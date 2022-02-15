@@ -14,9 +14,11 @@ function Nickname(props) {
         availability, setAvailability
     } = props
     let timeout
+    let timeoutAnimation
     const hasError = errors[name] && touched[name]
     const [loading, setLoading] = React.useState(false)
     const [preLoading, setPreLoading] = React.useState(false)
+    const [errorAnimation, setErrorAnimation] = React.useState(false)
 
     const animate_state = {
         start: 0,
@@ -54,14 +56,24 @@ function Nickname(props) {
         }, 1500);
     }
 
+    const animationError = async () => {
+        setErrorAnimation(true)
+        timeoutAnimation = setTimeout(async function () {
+            setErrorAnimation(false)
+            clearTimeout(timeoutAnimation)
+        }, 100);
+    }
+
     return (
         <>
-            <NicknameInput value={value}
+            <NicknameInput errorAnimation={errorAnimation && 15} value={value}
                            onChangeText={async (text) => {
                                if (text.length !== 0) {
                                    if (text.match(/^(?=.*[a-z_.])[\w.]+$/)) {
                                        await onChange(name)(text)
                                        loading ? setLoading(false) : text.length >= 3 && await showLoading(text)
+                                   } else {
+                                       await animationError()
                                    }
                                } else {
                                    await onChange(name)(text)

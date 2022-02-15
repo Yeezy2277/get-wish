@@ -105,7 +105,7 @@ function EnterCodeStep() {
                 {error && <CodeTextError>Введён неверный код</CodeTextError>}
                 <EnterCodeStepBottom>
                     <EnterCodeStepTimer/>
-                    <AuthButton onPress={onPressCodeStep} colors={disabledNext ? ['#D4DAEC', '#D4DAEC'] : ['#FB26FF', '#8A24FF', '#8424FF']}>Подтвердить</AuthButton>
+                    <AuthButton onPress={onPressCodeStep} active={!disabledNext}>Подтвердить</AuthButton>
                 </EnterCodeStepBottom>
             </EnterCodeStepContainer>
         </AuthStep>
