@@ -18,8 +18,8 @@ function AuthButton({children, active, onPress}) {
 
 const styles = StyleSheet.create({
     linearGradient: {
-        width: '100%',
-        height: 55,
+        width: 335,
+        height: 50,
         paddingTop: 15,
         paddingBottom: 13,
         display: "flex",
@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     higlight: {
-        width: '100%',
-        height: 55,
+        width: 335,
+        height: 50,
         display: "flex",
         justifyContent: 'center',
         alignItems: 'center'
