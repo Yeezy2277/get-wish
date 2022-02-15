@@ -4,11 +4,14 @@ import {LoaderNickname} from "../index";
 import {Animated} from "react-native";
 import Easing from "react-native-web/dist/vendor/react-native/Animated/Easing";
 import {delay} from "../../functions";
+import {checkAvailability} from "../../redux/actions/authActions";
 
 function Nickname(props) {
     const {
         field: { name, onChange, value },
         form: { errors, touched, submitForm, isSubmitting},
+        setCanRegistration,
+        availability, setAvailability
     } = props
     let timeout
     const hasError = errors[name] && touched[name]
@@ -36,11 +39,14 @@ function Nickname(props) {
         })
     }
 
-    const showLoading = async () => {
+    const showLoading = async (text) => {
         setPreLoading(true);
         await delay(1200)
         setLoading(true)
-        timeout = setTimeout(function () {
+        timeout = setTimeout(async function () {
+            const availability = await checkAvailability(text)
+            setAvailability(availability)
+            !availability && setCanRegistration(false)
             setLoading(false);
             setPreLoading(false);
             submitForm()
@@ -55,15 +61,16 @@ function Nickname(props) {
                                if (text.length !== 0) {
                                    if (text.match(/^(?=.*[a-z_.])[\w.]+$/)) {
                                        await onChange(name)(text)
-                                       loading ? setLoading(false) : text.length >= 3 && await showLoading()
+                                       loading ? setLoading(false) : text.length >= 3 && await showLoading(text)
                                    }
                                } else {
                                    await onChange(name)(text)
-                                   loading ? setLoading(false) : text.length >= 3 && await showLoading()
+                                   loading ? setLoading(false) : text.length >= 3 && await showLoading(text)
                                }
                            }}
                            autoCapitalize="none"/>
-            {!hasError && isSubmitting && !preLoading && !loading && <NicknameSuccess>Никнейм свободен</NicknameSuccess>}
+            {!hasError && availability && isSubmitting && !preLoading && !loading && <NicknameSuccess>Никнейм свободен</NicknameSuccess>}
+            {!hasError && !availability && isSubmitting && !preLoading && !loading && <NicknameError>К сожалению, этот никнейм уже занят</NicknameError>}
             {hasError && !preLoading && !loading && <NicknameError>{errors[name]}</NicknameError>}
             {loading && <LoaderNickname loading={loading} animate_state={animate_state} spin={spin} spinValue={spinValue}/>}
         </>

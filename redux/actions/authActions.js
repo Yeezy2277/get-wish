@@ -14,6 +14,18 @@ export const sendCode = async (phone) => {
     }
 }
 
+export const checkAvailability = async (username) => {
+    try {
+        const res = await $authHost.post('/api/v1/user/availability', {
+            username
+        })
+        return res.status === 200;
+    } catch (e) {
+        console.log(e)
+        return false
+    }
+}
+
 export const getUser = async () => {
     try {
          return parseResponse(await $authHost.get('/api/v1/user'))

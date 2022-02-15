@@ -15,6 +15,7 @@ function EnterNicknameStep() {
     const {data, handleChangeObject, navigation, dispatch} = useContext(AuthContext)
 
     const [loading, setLoading] = React.useState(true)
+    const [availability, setAvailability] = React.useState(false)
 
     const nicknameValidationSchema = yup.object().shape({
         nickName: yup
@@ -33,8 +34,8 @@ function EnterNicknameStep() {
             try {
                 const user = await userCRUD.search()
                 if (user) {
+                    await dispatch({type: SET_USER_INFO, payload: user})
                     if (user?.username) {
-                        await dispatch({type: SET_USER_INFO, payload: user})
                         await dispatch({type: SET_AUTH, payload: true})
                         navigation.navigate('MainNavigator', { screen: 'Main' });
                     }
@@ -75,7 +76,7 @@ function EnterNicknameStep() {
                     }}
                 >
                     {({errors}) => {
-                        if (Object.keys(errors).length !== 0) {
+                        if (Object.keys(errors).length !== 0 || !availability) {
                             setCanRegistration(false)
                         }
                         return (
@@ -83,6 +84,8 @@ function EnterNicknameStep() {
                                 <NicknameContainer>
                                     <NicknameLabel><NicknameLabelText>Никнейм</NicknameLabelText></NicknameLabel>
                                     <Field
+                                        setCanRegistration={setCanRegistration}
+                                        availability={availability} setAvailability={setAvailability}
                                         component={Nickname}
                                         name="nickName"
                                     />
