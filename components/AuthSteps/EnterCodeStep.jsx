@@ -10,7 +10,7 @@ import {
     EnterCodeStepBottom,
     EnterCodeStepContainer
 } from "../../styles/authSteps";
-import {StyleSheet, TextInput, InteractionManager} from "react-native";
+import {StyleSheet, TextInput, InteractionManager, Platform} from "react-native";
 import EnterCodeStepTimer from "./EnterCodeStepTimer";
 import {checkCode} from "../../redux/actions/authActions";
 
@@ -116,10 +116,13 @@ const styles = StyleSheet.create({
     inputStyle: {
         fontFamily: 'Nunito',
         fontWeight: '600',
+        width: 30,
+        height: 30,
         color: '#1A1A1A',
         paddingLeft: 5,
-        fontSize: 31,
-        // ...(Platform.OS === 'android' && { textAlignVertical: 'bottom' })
+        marginTop: 0,
+        textAlign: 'center',
+        fontSize: Platform.OS === 'android' ? 27 : 30,
     }
 })
 

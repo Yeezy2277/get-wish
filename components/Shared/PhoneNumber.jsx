@@ -36,10 +36,9 @@ function PhoneNumber(props) {
 const styles = StyleSheet.create({
     input: {
         fontFamily: 'Nunito',
-        width: 215,
+        width: 204,
         fontStyle: 'normal',
         height: 41,
-        lineHeight: 41,
         color: '#1A1A1A',
         fontWeight: "600",
         fontSize: 30,

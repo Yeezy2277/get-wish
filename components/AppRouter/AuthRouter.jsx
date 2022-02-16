@@ -3,21 +3,17 @@ import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
 
 import {
-    AuthScreen, MainScreen,
-    StartScreen
+    AuthScreen
 } from '../../screens';
 
 const AuthNavigator = createStackNavigator(
     {
-        Start: {
-            screen: StartScreen,
-        },
         Auth: {
             screen: AuthScreen,
         }
     },
     {
-        initialRouteName: 'Start',
+        initialRouteName: 'Auth',
         headerMode: 'none'
     }
 );

@@ -9,7 +9,7 @@ import {checkAvailability} from "../../redux/actions/authActions";
 function Nickname(props) {
     const {
         field: { name, onChange, value },
-        form: { errors, touched, submitForm, isSubmitting},
+        form: { errors, touched, submitForm, isSubmitting, setErrors},
         setCanRegistration,
         availability, setAvailability
     } = props
@@ -57,6 +57,7 @@ function Nickname(props) {
     }
 
     const animationError = async () => {
+        setErrors({nickName: "Допустимые символы: a-z, 0-9, . и _"})
         setErrorAnimation(true)
         timeoutAnimation = setTimeout(async function () {
             setErrorAnimation(false)

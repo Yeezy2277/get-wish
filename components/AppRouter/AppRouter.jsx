@@ -40,7 +40,7 @@ function AppRouter() {
             {isAuth && <MainRouter screenProps={{nextStart: 'Main'}}/>}
             {!isAuth && <AuthRouter ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
-            }} screenProps={{nextStart: 'Auth'}}/>}
+            }}/>}
         </>
     );
 }
