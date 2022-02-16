@@ -77,6 +77,7 @@ function EnterNicknameStep() {
                 >
                     {({errors}) => {
                         if (Object.keys(errors).length !== 0 || !availability) {
+                            if (errors.nickName !== "Допустимые символы: a-z, 0-9, . и _")
                             setCanRegistration(false)
                         }
                         return (

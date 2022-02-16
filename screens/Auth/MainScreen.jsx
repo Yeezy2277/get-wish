@@ -11,11 +11,11 @@ function MainScreen(props) {
 
     const logoutHandler = async () => {
         await dispatch(logout())
-        navigation.navigate('AuthNavigator', { screen: 'Start' })
+        navigation.navigate('AuthNavigator', { screen: 'Auth' })
     }
     const deleteHandler = async () => {
         await dispatch(deleteUser(userInfo))
-        navigation.navigate('AuthNavigator', { screen: 'Start' })
+        navigation.navigate('AuthNavigator', { screen: 'Auth' })
     }
     return (
         <Container>

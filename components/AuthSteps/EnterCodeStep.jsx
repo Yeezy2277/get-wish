@@ -60,6 +60,14 @@ function EnterCodeStep() {
         }
     }
 
+
+    let disabledNext = true
+
+    codes.forEach(el => {
+        disabledNext = !el;
+    })
+
+
     const onPressCodeStep = async () => {
         const phoneNumber = data.phoneNumber.split(' ').join('')
         if (!disabledNext) {
@@ -72,13 +80,6 @@ function EnterCodeStep() {
             })
         }
     }
-
-    let disabledNext = true
-
-    codes.forEach(el => {
-        disabledNext = !el;
-    })
-
 
     return (
         <AuthStep back={true} mt={44} maxWidth={276} text="На этот номер был отправлен код подтверждения. Введи его в поле ниже." title={`+7 ${data.phoneNumber}`}>

@@ -39,6 +39,10 @@ function AuthScreen(props) {
         setStep((prev) => prev - 1);
     };
 
+    const onReloadStep = () => {
+        setStep(0);
+    };
+
     React.useEffect(() => {
         setLoading(true)
         if (nickname) {
@@ -49,7 +53,7 @@ function AuthScreen(props) {
 
 
     return (
-        <AuthContext.Provider value={{dispatch, navigation, step, onNextStep, data, handleChangeObject, onPrevStep}}>
+        <AuthContext.Provider value={{onReloadStep, dispatch, navigation, step, onNextStep, data, handleChangeObject, onPrevStep}}>
             {loading ? <Text>загрузка</Text> : <Step/>}
         </AuthContext.Provider>
     );
