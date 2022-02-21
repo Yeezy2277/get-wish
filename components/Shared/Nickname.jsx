@@ -11,7 +11,7 @@ function Nickname(props) {
         field: { name, onChange, value },
         form: { errors, touched, submitForm, isSubmitting, setErrors},
         setCanRegistration,
-        availability, setAvailability
+        availability, setAvailability, setState
     } = props
     let timeout
     let timeoutAnimation
@@ -67,7 +67,7 @@ function Nickname(props) {
 
     return (
         <>
-            <NicknameInput errorAnimation={errorAnimation && 15} value={value}
+            <NicknameInput ref={(input) => { setState(input)}} errorAnimation={errorAnimation && 15} value={value}
                            onChangeText={async (text) => {
                                if (text.length !== 0) {
                                    if (text.match(/^(?=.*[a-z_.])[\w.]+$/)) {

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "274806843437",
+    "project_id": "getwish-e58bc",
+    "storage_bucket": "getwish-e58bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:274806843437:android:9d0eeb2b79250b1aa770a4",
+        "android_client_info": {
+          "package_name": "com.wish_list"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "274806843437-hh33erj1snejj3r64ijhe7b8u6t12ar6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5UFpR8RkNZulqvbpOGjGVqLrIbq6B0_U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "274806843437-hh33erj1snejj3r64ijhe7b8u6t12ar6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "274806843437-2cngqmqj42fo8lc0j13ora032nfkvonq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mediapark.getwish"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

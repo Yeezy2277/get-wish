@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import { MaskedTextInput } from "react-native-mask-text";
-import { StyleSheet, InteractionManager } from "react-native";
+import {StyleSheet, InteractionManager, Platform} from "react-native";
 import {AuthContext} from "../../screens/Auth/AuthScreen";
 import {PhoneContainer, PhonePrefix} from "../../styles/authSteps";
 
@@ -18,7 +18,7 @@ function PhoneNumber(props) {
 
     return (
         <PhoneContainer>
-            <PhonePrefix>+7</PhonePrefix>
+            <PhonePrefix fz={Platform.OS === 'android' ? 27 : 30}>+7</PhonePrefix>
             <MaskedTextInput
                 mask="999 999 99 99"
                 ref={(input) => { setState(input)}}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         height: 41,
         color: '#1A1A1A',
         fontWeight: "600",
-        fontSize: 30,
+        fontSize: Platform.OS === 'android' ? 27 : 30,
         display: "flex",
         alignItems: 'center'
     },

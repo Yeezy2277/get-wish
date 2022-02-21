@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
         color: '#1A1A1A',
         paddingLeft: 5,
         marginTop: 0,
-        textAlign: 'center',
         fontSize: Platform.OS === 'android' ? 27 : 30,
     }
 })

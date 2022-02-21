@@ -9,13 +9,14 @@ import {EnterNickNameInfo, EnterNickNameStepContainer, TextOfferPurple} from "..
 import {AuthContext} from "../../screens/Auth/AuthScreen";
 import {userCRUD} from "../../http/CRUD";
 import {SET_AUTH, SET_USER_INFO} from "../../redux/constants/userConstants";
-import {Text} from "react-native";
+import {InteractionManager, Text} from "react-native";
 
 function EnterNicknameStep() {
     const {data, handleChangeObject, navigation, dispatch} = useContext(AuthContext)
 
     const [loading, setLoading] = React.useState(true)
     const [availability, setAvailability] = React.useState(false)
+    const [state, setState] = React.useState({})
 
     const nicknameValidationSchema = yup.object().shape({
         nickName: yup
@@ -58,6 +59,15 @@ function EnterNicknameStep() {
         }
     }
 
+    React.useEffect(() => {
+        if (Object.keys(state).length !== 0) {
+            InteractionManager.runAfterInteractions(() => {
+                state.focus()
+            })
+        }
+    }, [state])
+
+
     if (loading) {
         return <Text>Загрузка</Text>
     }
@@ -85,6 +95,7 @@ function EnterNicknameStep() {
                                 <NicknameContainer>
                                     <NicknameLabel><NicknameLabelText>Никнейм</NicknameLabelText></NicknameLabel>
                                     <Field
+                                        setState={setState}
                                         setCanRegistration={setCanRegistration}
                                         availability={availability} setAvailability={setAvailability}
                                         component={Nickname}
