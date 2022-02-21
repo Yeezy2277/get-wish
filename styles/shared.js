@@ -72,3 +72,94 @@ export const NicknameField = styled.View`
   display: flex;
   flex-direction: column;
 `;
+
+export const FormGroupContainer = styled.View`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: ${props => props.lst}px;
+  background: #F7F7F7;
+  border-radius: 12px;
+`;
+
+export const FormGroupElement = styled.View`
+  padding: 11px 14px 10px 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const FormGroupElementSwitch = styled.View`
+  padding: 10px 14px 10px 14px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const FormGroupLine = styled.View`
+  width: 100%;
+  padding-left: 14px;
+`;
+export const FormGroupLineElement = styled.View`
+  height: 1px;
+  background-color: #EBEFFF;
+`;
+
+
+export const FormGroupText = styled.Text`
+  font-family: 'Nunito';
+  font-size: 15px;
+  line-height: 20px;
+  color: #7C82A5;
+`;
+
+export const FormGroupTextSwitch = styled.Text`
+  font-family: 'Nunito';
+  font-size: 15px;
+  line-height: 20px;
+  text-align: center;
+  color: #1A1A1A;
+`;
+
+export const FormGroupTextInput = styled.TextInput`
+  font-family: 'Nunito';
+  font-size: 15px;
+  margin-top: 0;
+  text-align: right;
+  color: #1A1A1A;
+  min-width: 82px;
+  height: 20px;
+`;
+
+export const FormGroupSelect = styled.Text`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const FormGroupSwitch = styled.Switch`
+  width: 50px;
+  height: 30px;
+`;
+
+
+export const FormGroupSelectText = styled.Text`
+  font-family: 'Nunito';
+  font-size: 15px;
+  color: #1A1A1A;
+  line-height: 20px;
+`;
+
+
+export const FormGroupButton = styled.TouchableHighlight`
+  
+`;
+
+export const FormGroupButtonText = styled.Text`
+  font-family: 'Nunito';
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  color: #8424FF;
+`;

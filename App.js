@@ -4,11 +4,12 @@ import { TextInput } from 'react-native'
 import {Provider} from "react-redux";
 import store from "./redux";
 import {AppRouter} from "./components";
+import { NativeBaseProvider, Box } from "native-base";
 TextInput.defaultProps.selectionColor = '#8424FF'
 
 
 let customFonts = {
-    'Nunito': require('./assets/fonts/NunitoRegular.otf')
+    'Nunito': require('./assets/fonts/NunitoRegular.ttf')
 };
 
 export default props => {
@@ -30,7 +31,9 @@ export default props => {
 
     return (
         <Provider store={store}>
-            <AppRouter/>
+            <NativeBaseProvider>
+                <AppRouter/>
+            </NativeBaseProvider>
         </Provider>
     )
 }
