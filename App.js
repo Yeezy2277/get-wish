@@ -4,7 +4,8 @@ import { TextInput } from 'react-native'
 import {Provider} from "react-redux";
 import store from "./redux";
 import {AppRouter} from "./components";
-import { NativeBaseProvider, Box } from "native-base";
+import { NativeBaseProvider } from "native-base";
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 TextInput.defaultProps.selectionColor = '#8424FF'
 
 
@@ -32,7 +33,9 @@ export default props => {
     return (
         <Provider store={store}>
             <NativeBaseProvider>
-                <AppRouter/>
+                <ActionSheetProvider>
+                    <AppRouter/>
+                </ActionSheetProvider>
             </NativeBaseProvider>
         </Provider>
     )

@@ -1,18 +1,20 @@
 import React from 'react';
 import {
-    FormGroupButton, FormGroupButtonText,
+    FormGroupButtonText,
     FormGroupContainer,
-    FormGroupElement, FormGroupElementSwitch,
+    FormGroupElement, FormGroupElementDate, FormGroupElementSwitch,
     FormGroupLine, FormGroupLineElement, FormGroupSelect, FormGroupSelectText, FormGroupSwitch,
     FormGroupText,
     FormGroupTextInput, FormGroupTextSwitch
 } from "../../styles/shared";
 import Icon from "./Icon";
-import {Pressable} from 'react-native';
-import {ModalCalendar} from "../index";
+import {Pressable, Platform} from 'react-native';
+import CalendarShared from "../Calendar/Calendar";
+import moment from "moment";
 
 function FormGroup({forms, last = false}) {
     const [modalVisible, setModalVisible] = React.useState(false)
+    const [date, setDate] = React.useState(new Date());
 
     const renderLine = () => {
         return <FormGroupLine>
@@ -36,7 +38,7 @@ function FormGroup({forms, last = false}) {
                     <FormGroupElement>
                         <FormGroupText>{name}</FormGroupText>
                         <FormGroupSelect>
-                            <FormGroupSelectText>Не указано</FormGroupSelectText>
+                            <FormGroupSelectText>{value}</FormGroupSelectText>
                             <Icon style={{marginLeft: 12}} source={require('../../assets/images/icons/profile/arrow.png')}/>
                         </FormGroupSelect>
                     </FormGroupElement>
@@ -54,12 +56,13 @@ function FormGroup({forms, last = false}) {
             }
             case 'date': {
                 return <>
-                    <FormGroupElement>
+                    <FormGroupElementDate>
                         <FormGroupText>{name}</FormGroupText>
+                        <CalendarShared date={date} setDate={setDate} show={modalVisible} setShow={setModalVisible}/>
                         <Pressable onPress={() => setModalVisible(true)}><FormGroupButtonText>
-                            Добавить
+                            {moment(date).format('YYYY-MM-DD')}
                         </FormGroupButtonText></Pressable>
-                    </FormGroupElement>
+                    </FormGroupElementDate>
                     {!last && renderLine()}
                 </>
             }
@@ -71,10 +74,9 @@ function FormGroup({forms, last = false}) {
         <FormGroupContainer lst={last ? 0 : 20}>
             {forms && forms.map((el, idx, row) => {
                 return <React.Fragment key={idx}>
-                    {renderFormGroupElement(el.type, el.name, null, idx + 1 === row.length)}
+                    {renderFormGroupElement(el.type, el.name, el.value, idx + 1 === row.length)}
                 </React.Fragment>
             })}
-            <ModalCalendar modalVisible={modalVisible} setModalVisible={setModalVisible}/>
         </FormGroupContainer>
     );
 }

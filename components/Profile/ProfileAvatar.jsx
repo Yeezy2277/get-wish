@@ -1,16 +1,18 @@
 import React, {useContext} from 'react';
 import {Icon} from "../index";
 import {Avatar, AvatarTouchableHighlight} from "../../styles/profile";
-import {Image, ActionSheetIOS } from "react-native";
+import {Image } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import {ProfileContext} from "../../screens/Profile/ProfileScreen";
+import {useSelector} from "react-redux";
+import {connectActionSheet, useActionSheet} from "@expo/react-native-action-sheet";
+import {changeUserInfo} from "../../redux/actions/authActions";
 
 function ProfileAvatar({...props}) {
+    const { showActionSheetWithOptions } = useActionSheet();
 
-    const {navigation} = useContext(ProfileContext)
-
-    const handleChangeAvatar = () => {
-        ActionSheetIOS.showActionSheetWithOptions(
+    const changeImage = () => {
+        showActionSheetWithOptions(
             {
                 options: ["Отмена", "Выбрать из галереи", "Сделать снимок"],
                 title: 'Выбор фото',
@@ -26,19 +28,75 @@ function ProfileAvatar({...props}) {
                         aspect: [4, 3],
                         quality: 1,
                     });
-                    navigation.push('ImageView', {
-                        image
-                    })
-
+                    if (!image.cancelled) {
+                        navigation.push('ImageView', {
+                            image
+                        })
+                    }
                 } else if (buttonIndex === 2) {
+                    const {status} = ImagePicker.requestCameraPermissionsAsync()
+                    if (status !== "granted") {
+                        let image = await ImagePicker.launchCameraAsync({
+                            mediaTypes: ImagePicker.MediaTypeOptions.All,
+                            allowsEditing: false,
+                            aspect: [4, 3],
+                            quality: 1,
+                        });
+                        if (!image.cancelled) {
+                            navigation.push('ImageView', {
+                                image
+                            })
+                        }
+                    } else {
+                        alert('Нет доступа')
+                    }
                 }
             }
-        );
+        )
+    }
+
+    const {navigation} = useContext(ProfileContext)
+    const {avatar} = useSelector((state) => state.user);
+    const hasPhoto = avatar?.uri
+
+    const handleChangeAvatar = () => {
+        if (hasPhoto) {
+            showActionSheetWithOptions(
+                {
+                    options: ["Отмена", "Изменить фото", "Удалить фото"],
+                    title: 'Выбор фото',
+                    cancelButtonIndex: 0,
+                    destructiveButtonIndex: 2,
+                    userInterfaceStyle: 'dark'
+                },
+                async (buttonIndex) => {
+                    if (buttonIndex === 1) {
+                        changeImage()
+                    } else if (buttonIndex === 2) {
+                        showActionSheetWithOptions(
+                            {
+                                options: ["Отмена", "Удалить"],
+                                title: 'Удалить фото профиля',
+                                cancelButtonIndex: 0,
+                                destructiveButtonIndex: 1,
+                                userInterfaceStyle: 'dark'
+                            }, async (buttonIndex) => {
+                                if (buttonIndex === 1) {
+                                    return changeUserInfo('avatar', {})
+                                }
+                            })
+                    }
+                }
+            )
+
+        } else {
+            changeImage()
+        }
     }
 
     return (
         <Avatar>
-            <Icon {...props} source={require('../../assets/images/icons/profile/avatar.png')}/>
+            <Icon {...props} source={avatar?.uri ? {uri: avatar?.uri} : require('../../assets/images/icons/profile/avatar.png')}/>
             <AvatarTouchableHighlight onPress={handleChangeAvatar} underlayColor={'none'}>
                 <Image style={{ height: 15, width: 18}} source={require('../../assets/images/icons/profile/edit.png')}/>
             </AvatarTouchableHighlight>
@@ -46,4 +104,6 @@ function ProfileAvatar({...props}) {
     );
 }
 
-export default ProfileAvatar;
+const ConnectedApp = connectActionSheet(ProfileAvatar);
+
+export default ConnectedApp;

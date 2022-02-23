@@ -1,9 +1,16 @@
 import { NavigationActions } from 'react-navigation';
+import React from 'react'
 
 let _navigatorAuth;
 
+let _navigatorProfile;
+
 function setTopLevelNavigator(navigatorRef) {
     _navigatorAuth = navigatorRef;
+}
+
+function setTopLevelNavigatorProfile(navigatorRef) {
+    _navigatorProfile = navigatorRef;
 }
 
 function navigate(routeName, params) {
@@ -15,7 +22,24 @@ function navigate(routeName, params) {
     );
 }
 
+function navigateProfile(routeName, params) {
+    _navigatorProfile.dispatch(
+        NavigationActions.navigate({
+            routeName,
+            params,
+        })
+    );
+}
+
+export const navigationRef = React.createRef();
+
+export const navigateAction = (routeName, params) => {
+    navigationRef.current?.navigate(routeName, params);
+};
+
 export default {
     navigate,
     setTopLevelNavigator,
+    setTopLevelNavigatorProfile,
+    navigateProfile
 };

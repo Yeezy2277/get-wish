@@ -1,13 +1,28 @@
 import {$authHost, $host} from "../../http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {parseError, parseResponse} from "../../http/utils";
-import {LOGOUT, SET_NICKNAME} from "../constants/userConstants";
+import {LOGOUT, SET_DATA, SET_NICKNAME} from "../constants/userConstants";
 import {userCRUD} from "../../http/CRUD";
+import store from "../index";
+
+const {dispatch} = store
 
 export const sendCode = async (phone) => {
     try {
         return await $host.post('/api/v1/auth/code/send', {
             phone
+        })
+    } catch (e) {
+        console.log('error', e)
+    }
+}
+
+export const changeUserInfo = (key, value) => {
+    try {
+        dispatch({
+            type: SET_DATA, payload: {
+                key, value
+            }
         })
     } catch (e) {
         console.log('error', e)

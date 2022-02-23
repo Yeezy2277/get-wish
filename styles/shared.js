@@ -89,6 +89,14 @@ export const FormGroupElement = styled.View`
   justify-content: space-between;
 `;
 
+export const FormGroupElementDate = styled.View`
+  padding: 11px 14px 5px 14px;
+  height: 45px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 export const FormGroupElementSwitch = styled.View`
   padding: 10px 14px 10px 14px;
   display: flex;
@@ -162,4 +170,77 @@ export const FormGroupButtonText = styled.Text`
   font-size: 15px;
   line-height: 20px;
   color: #8424FF;
+`;
+
+
+export const HeaderRow = styled.View`
+  display: flex;
+  flex-direction: row;
+  padding: 44px 20px 0 20px;
+  justify-content: center;
+  position: relative;
+  background-color: #fff;
+  height: 88px;
+  align-items: center;
+`;
+
+export const HeaderArrow = styled.Image`
+  height: 16px;
+  width: 8px;
+`;
+
+export const HeaderPressable = styled.Pressable`
+  height: 16px;
+  position: absolute;
+  top: 58px;
+  left: 20px;
+  width: 8px;
+`;
+
+export const HeaderTitle = styled.Text`
+  font-family: 'Nunito';
+  font-weight: bold;
+  font-size: 17px;
+  line-height: 23px;
+  text-align: center;
+  color: #1A1A1A;
+`;
+
+export const SharedGroupContainer = styled.View`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+export const SharedGroupText = styled.Text`
+  font-family: 'Nunito';
+  font-weight: 600;
+  margin-bottom: 19px;
+  font-size: 15px;
+  line-height: 20px;
+  color: #7C82A5;
+`;
+
+export const SharedGroupElement = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+
+export const SharedGroupImage = styled.Image`
+  height: 40px;
+  margin-left: 20px;
+  width: 40px;
+  border-radius: 20px;
+`;
+
+export const SharedGroupCheckboxText = styled.Text`
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 22px;
+  margin-left: 10px;
+  color: #1A1A1A;
 `;

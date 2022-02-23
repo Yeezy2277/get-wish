@@ -19,3 +19,13 @@ export const MainContainer = styled.View`
   padding: 54px 20px 0 20px;
   font-family: 'Nunito';
 `;
+
+export const FlexContainer = styled.View`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: #FFFFFF;
+  padding: 0 20px 0 20px;
+`;

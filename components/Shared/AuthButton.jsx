@@ -3,11 +3,11 @@ import {StyleSheet, View} from 'react-native'
 import {ButtonAuthLabel} from "../../styles/shared";
 import {TouchableHighlight, ImageBackground} from "react-native";
 
-function AuthButton({children, active, onPress}) {
+function AuthButton({children, active, onPress, style}) {
     return (
-        <View style={styles.linearGradient}>
+        <View style={{...styles.linearGradient, ...style}}>
             <ImageBackground source={active ? require('../../assets/images/icons/Buttons.png') : require('../../assets/images/icons/ButtonsDisabled.png')} resizeMode="cover"
-                            style={styles.linearGradient}>
+                            style={{...styles.linearGradient, ...style}}>
                 <TouchableHighlight style={styles.higlight} underlayColor={'none'} onPress={onPress}>
                     <ButtonAuthLabel>{children}</ButtonAuthLabel>
                 </TouchableHighlight>

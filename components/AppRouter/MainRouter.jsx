@@ -3,53 +3,67 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {
+    DesiresScreen,
     ImageView,
-    MainScreen, ProfileScreen,
+    MainScreen, ProfileScreen, ShareScreen,
 } from '../../screens';
 import {COLORS} from "../../functions/constants";
 import {Image} from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
+import {useSelector} from "react-redux";
+import {navigationRef} from "../../functions/NavigationService";
+import Header from "../Header/Header";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 function MyStack() {
     return (
-        <Stack.Navigator screenOptions={{
-            headerShown: false
-        }} initialRouteName="Profile">
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="ImageView" component={ImageView} />
-        </Stack.Navigator>
+            <Stack.Navigator initialRouteName="MainProfile">
+                <Stack.Screen options={{headerShown: false}} name="MainProfile" component={ProfileScreen} />
+                <Stack.Screen options={{headerShown: false}} name="ImageView" component={ImageView} />
+                <Stack.Screen options={{headerShown: false}} name="ShareScreen" component={ShareScreen} />
+                <Stack.Screen options={{header: (navigation) => <Header title="Зарезервированные желания" navigation={navigation}/>}} name="DesiresScreen" component={DesiresScreen} />
+            </Stack.Navigator>
     );
 }
 
+function TabStack() {
+    const {avatar} = useSelector((state) => state.user);
+    return (
+        <Tab.Navigator
+            initialRouteName="Main"
+            tabBarOptions={{
+                activeTintColor: COLORS.purple,
+            }}
+            screenOptions={{ headerShown: false }}
+        >
+            <Tab.Screen
+                name="Main"
+                component={MainScreen}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={MyStack}
+                options={({ route }) => ({
+                    tabBarOptions: { showIcon: true },
+                    tabBarIcon: ({ tintColor }) => {
+                        return <Image style={{ width: 26, height: 26, borderRadius: 13 }} source={
+                            avatar?.uri ? {uri: avatar?.uri} : require('../../assets/images/icons/bottom/profile.png')}/>
+                    },
+                    tabBarLabel: 'Профиль',
+                })}
+            />
+        </Tab.Navigator>
+    )
+}
+
+
+
 function App() {
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                initialRouteName="Main"
-                tabBarOptions={{
-                    activeTintColor: COLORS.purple,
-                }}
-                screenOptions={{ headerShown: false }}
-                >
-                <Tab.Screen
-                    name="Main"
-                    component={MainScreen}
-                />
-                <Tab.Screen
-                    name="Profile"
-                    component={MyStack}
-                    options={{
-                        tabBarOptions: { showIcon: true },
-                        tabBarIcon: ({ tintColor }) => {
-                            return <Image style={{ width: 26, height: 26 }} source={require('../../assets/images/icons/bottom/profile.png')}/>
-                        },
-                        tabBarLabel: 'Профиль'
-                    }}
-                />
-            </Tab.Navigator>
+        <NavigationContainer ref={navigationRef}>
+            <TabStack />
         </NavigationContainer>
     );
 }
