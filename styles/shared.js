@@ -6,6 +6,24 @@ export const ButtonAuthLabel = styled.Text`
   font-weight: bold;
 `;
 
+export const ButtonAuthLabelVariant2 = styled.Text`
+  font-family: 'Nunito';
+  position: absolute;
+  font-weight: bold;
+  top: 0;
+  height: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 15px;
+  color: #FFFFFF;
+  line-height: 45px;
+`;
+
+
 export const NicknameContainer = styled.View`
   font-family: 'Nunito';
   display: flex;
@@ -190,11 +208,11 @@ export const HeaderArrow = styled.Image`
 `;
 
 export const HeaderPressable = styled.Pressable`
-  height: 16px;
+  width: 26px;
+  height: 26px;
   position: absolute;
   top: 58px;
   left: 20px;
-  width: 8px;
 `;
 
 export const HeaderTitle = styled.Text`

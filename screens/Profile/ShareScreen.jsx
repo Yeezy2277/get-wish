@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {ScrollView, StyleSheet} from "react-native";
 import {
     ShareScreenButtonPanel,
@@ -24,6 +24,26 @@ function ShareScreen(props) {
         }
     }, [])
 
+    const [checkBox1, setCheckBox1] = React.useState(false)
+    const [checkBox2, setCheckBox2] = React.useState(false)
+    const [checkBox3, setCheckBox3] = React.useState(false)
+
+    const isDisabled = !checkBox1 && !checkBox2 && !checkBox3
+
+    const sendSeparately = (checkBox1 && checkBox2 && !checkBox3) || (!checkBox1 && checkBox2 && checkBox3) || (checkBox1 && !checkBox2 && checkBox3) ||
+        (checkBox1 && checkBox2 && checkBox3)
+
+    const onChangeCheckBoxFalse = () => {
+        setCheckBox1(false)
+        setCheckBox2(false)
+        setCheckBox3(false)
+    }
+
+    const onChangeCheckBoxTrue = () => {
+        setCheckBox1(true)
+        setCheckBox2(true)
+        setCheckBox3(true)
+    }
 
     return (
         <>
@@ -39,13 +59,15 @@ function ShareScreen(props) {
                     <ShareScreenButtonPanel>
                         <Button style={{backgroundColor: '#F7F7F7', borderRadius: 10, flex: 1, marginRight: 10}} _text={{
                             color: "#8424FF"
-                        }} onPress={() => console.log("hello world")}>Выбрать всех</Button>
-                        <Button style={{backgroundColor: '#F7F7F7', borderRadius: 10, flex: 1}} _text={{
-                            color: "#8424FF"
-                        }} onPress={() => console.log("hello world")}>Снять выбор</Button>
+                        }} onPress={onChangeCheckBoxTrue}>Выбрать всех</Button>
+                        <Button isDisabled={isDisabled} style={{backgroundColor: '#F7F7F7', borderRadius: 10, flex: 1}} _text={{
+                            color: !isDisabled ? "#8424FF" : '#C8CCE1'
+                        }} onPress={onChangeCheckBoxFalse}>Снять выбор</Button>
                     </ShareScreenButtonPanel>
-                    <ShareGroup/>
-                    <AuthButton style={{marginTop: 'auto', marginBottom: 44}} active={true}>Отправить по отдельности</AuthButton>
+                    <ShareGroup setCheckBox1={setCheckBox1} setCheckBox2={setCheckBox2} setCheckBox3={setCheckBox3} checkBox1={checkBox1} checkBox2={checkBox2} checkBox3={checkBox3}/>
+                    <AuthButton style={{marginTop: 'auto', marginBottom: 44}} active={!isDisabled}>
+                        {sendSeparately ? 'Отправить по отдельности' :  'Отправить'}
+                    </AuthButton>
                 </FlexContainer>
             </ScrollView>
         </>

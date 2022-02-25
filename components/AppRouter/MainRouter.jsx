@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {
+    ChangePhoneScreen,
     DesiresScreen,
     ImageView,
     MainScreen, ProfileScreen, ShareScreen,
@@ -23,6 +24,7 @@ function MyStack() {
                 <Stack.Screen options={{headerShown: false}} name="MainProfile" component={ProfileScreen} />
                 <Stack.Screen options={{headerShown: false}} name="ImageView" component={ImageView} />
                 <Stack.Screen options={{headerShown: false}} name="ShareScreen" component={ShareScreen} />
+                <Stack.Screen options={{headerShown: false}} name="ChangePhoneScreen" component={ChangePhoneScreen} />
                 <Stack.Screen options={{header: (navigation) => <Header title="Зарезервированные желания" navigation={navigation}/>}} name="DesiresScreen" component={DesiresScreen} />
             </Stack.Navigator>
     );
@@ -48,7 +50,7 @@ function TabStack() {
                 options={({ route }) => ({
                     tabBarOptions: { showIcon: true },
                     tabBarIcon: ({ tintColor }) => {
-                        return <Image style={{ width: 26, height: 26, borderRadius: 13 }} source={
+                        return <Image resizeMode="cover" style={{ width: 26, height: 26, borderRadius: 13 }} source={
                             avatar?.uri ? {uri: avatar?.uri} : require('../../assets/images/icons/bottom/profile.png')}/>
                     },
                     tabBarLabel: 'Профиль',

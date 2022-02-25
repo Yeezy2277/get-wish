@@ -6,8 +6,9 @@ import AuthButton from "../Shared/AuthButton";
 import {AuthContext} from "../../screens/Auth/AuthScreen";
 import {sendCode} from "../../redux/actions/authActions";
 
-function EnterNumberStep() {
+function EnterNumberStep(props) {
     const {data, onNextStep} = useContext(AuthContext)
+
 
     const onPressNumberStep = async () => {
         const phoneNumber = data.phoneNumber.split(' ').join('')
@@ -20,11 +21,11 @@ function EnterNumberStep() {
     const disabledNext = data.phoneNumber.split(' ').join('').length < 10
 
     return (
-        <AuthStep mt={136} maxWidth={266} text="На этот номер будет отправлено СМС с кодом подтверждения" title="Введи номер телефона">
+        <AuthStep isFirstStep isChangePhone={props?.isChangePhone} mt={props?.isChangePhone ? 44 : 136} maxWidth={266} text="На этот номер будет отправлено СМС с кодом подтверждения" title="Введи номер телефона">
             <PhoneNumber/>
-            <TextOffer>Нажимая на кнопку, ты соглашаешься с <TextOfferPurple>политикой
-                конфиденциальности и условиями использованиями</TextOfferPurple></TextOffer>
-            <AuthButton onPress={onPressNumberStep} active={!disabledNext}>Получить код</AuthButton>
+            {!props?.isChangePhone && <TextOffer>Нажимая на кнопку, ты соглашаешься с <TextOfferPurple>политикой
+                конфиденциальности и условиями использованиями</TextOfferPurple></TextOffer>}
+            <AuthButton style={{marginTop: props?.isChangePhone && 100}} onPress={onPressNumberStep} active={!disabledNext}>Получить код</AuthButton>
         </AuthStep>
     );
 }

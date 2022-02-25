@@ -13,10 +13,12 @@ import {
 import {StyleSheet, TextInput, InteractionManager, Platform} from "react-native";
 import EnterCodeStepTimer from "./EnterCodeStepTimer";
 import {checkCode} from "../../redux/actions/authActions";
+import {navigateAction} from "../../functions/NavigationService";
+import useToasts from "../../hooks/useToast";
 
-function EnterCodeStep() {
+function EnterCodeStep(props) {
     const {data, handleChangeObject, onNextStep} = React.useContext(AuthContext)
-
+    const {show} = useToasts(2000, 'Телефон успешно изменен')
     const [codes, setCodes] = React.useState(['', '', '', ''])
     const handleChangeInput = (text, index) => {
         setCodes((prev) => {
@@ -71,13 +73,18 @@ function EnterCodeStep() {
     const onPressCodeStep = async () => {
         const phoneNumber = data.phoneNumber.split(' ').join('')
         if (!disabledNext) {
-            await checkCode(`+7${phoneNumber}`, codes.join('')).then(async () => {
-                onNextStep()
-            }).catch(() => {
-                setCodes(['', '', '', ''])
-                state?.focus()
-                setError(true)
-            })
+            if (props?.isChangePhone) {
+                await navigateAction('MainProfile')
+                show()
+            } else {
+                await checkCode(`+7${phoneNumber}`, codes.join('')).then(async () => {
+                    onNextStep()
+                }).catch(() => {
+                    setCodes(['', '', '', ''])
+                    state?.focus()
+                    setError(true)
+                })
+            }
         }
     }
 

@@ -54,7 +54,7 @@ function ProfileScreen({navigation}) {
                             {type: 'date', name: 'Дата рождения'},
                         ]}/>
                         <FormGroup forms={[
-                            {type: 'select', name: 'Телефон', value: userInfo?.phone},
+                            {type: 'select', name: 'Телефон', value: userInfo?.phone, link: {name: 'ChangePhoneScreen'}},
                             {type: 'select', name: 'Никнейм', value: `@${userInfo?.username}`},
                         ]}/>
                         <FormGroup last forms={[

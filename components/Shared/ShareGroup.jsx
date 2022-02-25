@@ -6,34 +6,32 @@ import {
     SharedGroupImage,
     SharedGroupText
 } from "../../styles/shared";
-import {Checkbox, VStack, Text, Center, Box} from "native-base";
-import {COLORS} from "../../functions/constants";
+import {Checkbox, VStack, Box} from "native-base";
 
-function ShareGroup(props) {
+function ShareGroup({checkBox3, checkBox1, setCheckBox1, setCheckBox2, setCheckBox3, checkBox2}) {
+    const [selected, setSelected] = React.useState([])
     return (
         <SharedGroupContainer>
             <SharedGroupText>Группы</SharedGroupText>
             <Box flex={1} >
-                <VStack  space={15} >
-                    <Checkbox zIndex={9} size="sm" borderRadius={10} value="danger" colorScheme="purple">
+                    <Checkbox marginBottom={15} size="sm" borderRadius={10} onChange={e => setCheckBox1(e)} isChecked={checkBox1} value={checkBox1} colorScheme="purple">
                         <SharedGroupElement>
                             <SharedGroupImage source={require('../../assets/images/icons/profile/desires/avatar1.png')}/>
                             <SharedGroupCheckboxText>to.kova</SharedGroupCheckboxText>
                         </SharedGroupElement>
                     </Checkbox>
-                    <Checkbox zIndex={9} size="sm" borderRadius={10} value="danger" colorScheme="purple">
+                    <Checkbox marginBottom={15} size="sm" borderRadius={10} onChange={e => setCheckBox2(e)} isChecked={checkBox2} value={checkBox2} colorScheme="purple">
                         <SharedGroupElement>
                             <SharedGroupImage source={require('../../assets/images/icons/profile/desires/avatar1.png')}/>
                             <SharedGroupCheckboxText>to.kova</SharedGroupCheckboxText>
                         </SharedGroupElement>
                     </Checkbox>
-                    <Checkbox zIndex={9} size="sm" borderRadius={10} value="danger" colorScheme="purple">
+                    <Checkbox size="sm" borderRadius={10} onChange={e => setCheckBox3(e)} isChecked={checkBox3} colorScheme="purple" value={checkBox3}>
                         <SharedGroupElement>
                             <SharedGroupImage source={require('../../assets/images/icons/profile/desires/avatar1.png')}/>
                             <SharedGroupCheckboxText>to.kova</SharedGroupCheckboxText>
                         </SharedGroupElement>
                     </Checkbox>
-                </VStack>
             </Box>
         </SharedGroupContainer>
     );

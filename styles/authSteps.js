@@ -14,10 +14,10 @@ export const AuthStepHeader = styled.View`
   height: 44px;
   width: 100%;
   display: flex;
-    justify-content: ${props => props.jc};
+  justify-content: ${props => props.jc};
   flex-direction: row;
   align-items: center;
-  margin-bottom: 48px;
+  margin-bottom: ${props => props.mb ? props.mb : 48}px;
 `;
 
 export const ExitImage = styled.Image`
@@ -36,6 +36,14 @@ export const AuthStepContent = styled.View`
   display: flex;
   align-items: center;
   margin-top: ${props => props.mt}px;
+`;
+
+export const AuthStepCancelText = styled.Text`
+  font-family: 'Nunito';
+  font-weight: 600;
+  font-size: 16px;
+  color: #8424FF;
+
 `;
 
 export const AuthStepContentHeader = styled.View`

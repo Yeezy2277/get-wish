@@ -1,18 +1,26 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native'
-import {ButtonAuthLabel} from "../../styles/shared";
+import {ButtonAuthLabel, ButtonAuthLabelVariant2} from "../../styles/shared";
 import {TouchableHighlight, ImageBackground} from "react-native";
+import {Box, Image} from "native-base";
 
-function AuthButton({children, active, onPress, style}) {
+function AuthButton({children, active, onPress, style, higlightStyle, variant = 'big', text}) {
     return (
-        <View style={{...styles.linearGradient, ...style}}>
-            <ImageBackground source={active ? require('../../assets/images/icons/Buttons.png') : require('../../assets/images/icons/ButtonsDisabled.png')} resizeMode="cover"
-                            style={{...styles.linearGradient, ...style}}>
-                <TouchableHighlight style={styles.higlight} underlayColor={'none'} onPress={onPress}>
-                    <ButtonAuthLabel>{children}</ButtonAuthLabel>
-                </TouchableHighlight>
-            </ImageBackground>
-        </View>
+        <>
+            {variant === 'big' ? <View style={{...styles.linearGradient, ...style}}>
+                <ImageBackground source={active ? require('../../assets/images/icons/Buttons.png') : require('../../assets/images/icons/ButtonsDisabled.png')} resizeMode="cover"
+                                 style={{...styles.linearGradient, ...style}}>
+                    <TouchableHighlight style={{...styles.higlight, ...higlightStyle}} underlayColor={'none'} onPress={onPress}>
+                        <ButtonAuthLabel>{children}</ButtonAuthLabel>
+                    </TouchableHighlight>
+                </ImageBackground>
+            </View> : <Box style={{height: 46, maxWidth: 162.5, display: 'flex', borderRadius: 12, flex: 1}} _text={{
+                color: "#8424FF"
+            }} >
+                <Image width="100%" borderRadius={12} height={46} position="relative"  source={require('../../assets/images/icons/Buttons.png')} resizeMode="cover"/>
+                <ButtonAuthLabelVariant2 onPress={onPress}>{text}</ButtonAuthLabelVariant2>
+            </Box>}
+        </>
     );
 }
 

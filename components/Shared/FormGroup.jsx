@@ -11,6 +11,7 @@ import Icon from "./Icon";
 import {Pressable, Platform} from 'react-native';
 import CalendarShared from "../Calendar/Calendar";
 import moment from "moment";
+import {navigateAction} from "../../functions/NavigationService";
 
 function FormGroup({forms, last = false}) {
     const [modalVisible, setModalVisible] = React.useState(false)
@@ -22,7 +23,7 @@ function FormGroup({forms, last = false}) {
         </FormGroupLine>
     }
 
-    const renderFormGroupElement = (type, name, value, last = false) => {
+    const renderFormGroupElement = (type, name, value, link, last = false) => {
         switch (type) {
             case 'input': {
                 return <>
@@ -39,7 +40,7 @@ function FormGroup({forms, last = false}) {
                         <FormGroupText>{name}</FormGroupText>
                         <FormGroupSelect>
                             <FormGroupSelectText>{value}</FormGroupSelectText>
-                            <Icon style={{marginLeft: 12}} source={require('../../assets/images/icons/profile/arrow.png')}/>
+                            <Icon handlePressIcon={() => navigateAction(link.name, link.params)} style={{marginLeft: 12}} source={require('../../assets/images/icons/profile/arrow.png')}/>
                         </FormGroupSelect>
                     </FormGroupElement>
                     {!last && renderLine()}
@@ -74,7 +75,7 @@ function FormGroup({forms, last = false}) {
         <FormGroupContainer lst={last ? 0 : 20}>
             {forms && forms.map((el, idx, row) => {
                 return <React.Fragment key={idx}>
-                    {renderFormGroupElement(el.type, el.name, el.value, idx + 1 === row.length)}
+                    {renderFormGroupElement(el.type, el.name, el.value, el.link,idx + 1 === row.length)}
                 </React.Fragment>
             })}
         </FormGroupContainer>

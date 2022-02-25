@@ -1,11 +1,11 @@
 import {useToast} from "native-base";
 
-const useToasts = (duration = 1000) => {
+const useToasts = (duration = 1000, title = "Дата рождения изменена") => {
     const toast = useToast();
 
     const show = () => {
         return toast.show({
-            title: "Дата рождения изменена",
+            title: title,
             status: "success",
             isClosable: false,
             placement: "bottom",

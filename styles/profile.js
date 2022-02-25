@@ -123,7 +123,7 @@ export const DesiresScreenElementContentBottomIconContainer = styled.View`
 
 export const DesiresScreenElementContentBottomIcon = styled.Image`
   width: 10px;
-  height: 10px;
+  height: ${props => props.h}px;
 `;
 
 export const DesiresScreenElementContentBottomAvatar = styled.Image`
@@ -336,4 +336,192 @@ export const ShareScreenButtonPanel = styled.View`
   display: flex;
   align-items: center;
   flex-direction: row;
+`;
+
+export const ActionDesires = styled.View`
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  width: 100%;
+`;
+
+export const ActionDesiresImageContainer = styled.View`
+  height: 250px;
+  display: flex;
+  position: relative;
+  width: 100%;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  position: relative;
+`;
+
+export const ActionDesiresImage = styled.Image`
+  height: 250px;
+  display: flex;
+  width: 100%;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+`;
+
+export const ActionDesiresCount = styled.View`
+  width: 42px;
+  right: 15px;
+  bottom: 15px;
+  flex-direction: row;
+  position: absolute;
+  height: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 8px 2px 6px;
+  background: rgba(26, 26, 26, 0.6);
+  border-radius: 6px;
+`;
+
+export const ActionDesiresCountText = styled.Text`
+  font-family: 'Nunito';
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  color: #FFFFFF;
+`;
+
+export const ActionDesiresCountIcon = styled.Image`
+  width: 14px;
+  height: 11px;
+`;
+
+export const ActionDesiresRow = styled.View`
+  margin-top: 17px;
+  padding: 0 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ActionDesiresRowHeader = styled.View`
+  display: flex;
+  padding-bottom: 15px;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+`;
+
+
+export const ActionDesiresRowHeaderAvatar = styled.Image`
+  width: 26px;
+  height: 26px;
+  border-radius: 13px;
+`;
+
+export const ActionDesiresRowHeaderName = styled.Text`
+  font-family: 'Nunito';
+  font-weight: 600;
+  font-size: 15px;
+  margin-left: 15px;
+  color: #1A1A1A;
+`;
+
+export const ActionDesiresActions = styled.View`
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ActionDesiresActionsText = styled.Text`
+  font-family: 'Nunito';
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  color: #8424FF;
+`;
+
+export const ActionDesiresActionsIcon = styled.Image`
+  width: 8px;
+  transform: rotate(180deg);
+  height: 12px;
+  margin-left: 7px;
+`;
+
+export const ActionDesiresRowLinks = styled.View`
+  display: flex;
+  width: 100%;
+  margin-top: 18px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const ActionDesiresRowLinksIcon = styled.Image`
+  width: 13px;
+  height: ${props => props.h}px;
+`;
+
+export const ActionDesiresRowLinksText = styled.Text`
+  font-family: 'Nunito';
+  font-weight: 600;
+  font-size: 16px;
+  color: #8424FF;
+`;
+
+export const ActionDesiresRowLinksMenu = styled.Image`
+  width: 4px;
+  height: 20px;
+`;
+
+export const ActionDesiresRowName = styled.Text`
+  font-family: 'Nunito';
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 18px;
+  line-height: 25px;
+  color: #1A1A1A;
+`;
+
+export const ActionDesiresRowDescription = styled.Text`
+  font-family: 'Nunito';
+  font-size: 15px;
+  line-height: 20px;
+  margin-top: 10px;
+  color: #1A1A1A;
+`;
+
+export const ActionElementChild = styled.View`
+  padding: 25px 20px 10px 20px;
+  display: flex;
+  background-color: #fff;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  
+`;
+
+export const ActionDesiresChildName = styled.Text`
+  font-family: 'Nunito';
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 25px;
+  color: #1A1A1A;
+  max-width: 221px;
+  text-align: center;
+`;
+
+
+export const ActionDesiresChildDescription = styled.Text`
+  font-family: 'Nunito';
+  font-size: 13px;
+  margin-top: 8px;
+  line-height: 18px;
+  color: #7C82A5;
+`;
+
+export const ActionDesiresChildButton = styled.View`
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
 `;

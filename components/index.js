@@ -12,5 +12,6 @@ export { default as Icon } from './Shared/Icon';
 export { default as ProfileAvatar } from './Profile/ProfileAvatar';
 export { default as ReservedDesires } from './Profile/ReservedDesires';
 export { default as DesiresElement } from './Desires/DesiresElement';
+export { default as DesiresScreenElementActionsheet } from './Desires/DesiresScreenElementActionsheet';
 export { default as DesiresScreenElement } from './Desires/DesiresScreenElement';
 export { default as LoaderNickname } from './Loaders/LoaderNickname';
