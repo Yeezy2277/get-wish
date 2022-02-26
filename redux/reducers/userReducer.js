@@ -1,7 +1,7 @@
 import {LOGOUT, SET_AUTH, SET_DATA, SET_NICKNAME, SET_USER_INFO} from "../constants/userConstants";
 
 const initialState = {
-    isAuth: true,
+    isAuth: false,
     nickname: false,
     userInfo: null,
     avatar: null,

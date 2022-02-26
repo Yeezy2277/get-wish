@@ -151,6 +151,35 @@ export const EnterNickNameStepContainer = styled.View`
     height: 272px;
 `
 
+export const ChangeNicknameP1 = styled.Text`
+  font-family: 'Nunito';
+  font-size: 13px;
+  line-height: 18px;
+  max-width: 335px;
+  color: #7C82A5;
+  margin-top: 20px;
+
+`
+
+export const ChangeNicknameP2 = styled.Text`
+  font-family: 'Nunito';
+  font-size: 13px;
+  line-height: 18px;
+  max-width: 335px;
+  color: #7C82A5;
+  margin-top: 10px;
+
+`
+
+export const ChangeNicknamePurple = styled.Text`
+  font-family: 'Nunito';
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: #8424FF;
+
+`
+
 export const EnterNickNameInfo = styled.Text`
     max-width: 325px;
     align-self: center;

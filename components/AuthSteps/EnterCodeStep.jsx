@@ -15,6 +15,7 @@ import EnterCodeStepTimer from "./EnterCodeStepTimer";
 import {checkCode} from "../../redux/actions/authActions";
 import {navigateAction} from "../../functions/NavigationService";
 import useToasts from "../../hooks/useToast";
+import {updatePhone} from "../../redux/actions/userActions";
 
 function EnterCodeStep(props) {
     const {data, handleChangeObject, onNextStep} = React.useContext(AuthContext)
@@ -74,8 +75,14 @@ function EnterCodeStep(props) {
         const phoneNumber = data.phoneNumber.split(' ').join('')
         if (!disabledNext) {
             if (props?.isChangePhone) {
-                await navigateAction('MainProfile')
-                show()
+                await updatePhone(`+7${phoneNumber}`, codes.join('')).then(async () => {
+                    navigateAction('MainProfile')
+                    show()
+                }).catch(() => {
+                    setCodes(['', '', '', ''])
+                    state?.focus()
+                    setError(true)
+                })
             } else {
                 await checkCode(`+7${phoneNumber}`, codes.join('')).then(async () => {
                     onNextStep()

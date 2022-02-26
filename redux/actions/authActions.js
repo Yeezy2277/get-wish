@@ -43,7 +43,8 @@ export const checkAvailability = async (username) => {
 
 export const getUser = async () => {
     try {
-         return parseResponse(await $authHost.get('/api/v1/user'))
+         const {data} = parseResponse(await $authHost.get('/api/v1/user'))
+         return data
     } catch (e) {
         console.log('error', e)
     }

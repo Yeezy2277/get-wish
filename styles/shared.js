@@ -33,6 +33,16 @@ export const NicknameContainer = styled.View`
   position: relative;
 `;
 
+export const TextFieldTwoContainer = styled.View`
+  font-family: 'Nunito';
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+  position: relative;
+`;
+
+
 export const NicknameBottom = styled.View`
   display: flex;
   flex-direction: column;
@@ -49,6 +59,42 @@ export const NicknameLabel = styled.View`
   top: 9px;
 `;
 
+export const TextFieldLabel = styled.View`
+  position: absolute;
+  left: 11px;
+  z-index: 10;
+  top: 11px;
+`;
+
+export const PressableTextField = styled.Pressable`
+  position: absolute;
+  right: 15px;
+  z-index: 10;
+  height: 16px;
+  width: 16px;
+  border-radius: 8px;
+  top: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+
+export const TextFieldCloseIcon = styled.Image`
+  z-index: 10;
+  height: 16px;
+  width: 16px;
+  border-radius: 8px;
+`;
+
+
+export const TextFieldLabelText = styled.Text`
+  font-size: 15px;
+  line-height: 20px;
+  color: #7C82A5;
+`;
+
+
 export const NicknameLabelText = styled.Text`
   font-size: 12px;
   line-height: 16px;
@@ -64,6 +110,20 @@ export const NicknameInput = styled.TextInput`
   padding-left: ${props => props.errorAnimation || 18}px;
   padding-bottom: 9px;
   padding-top: 27px;
+  color: #1A1A1A;
+`;
+
+export const TextFieldTwoInput = styled.TextInput`
+  width: 100%;
+  height: 42px;
+  background-color: #F7F7F7;
+  border-radius: 12px;
+  font-size: 15px;
+  line-height: 20px;
+  padding-right: 35px;
+  padding-left: ${props => props.errorAnimation || 97}px;
+  padding-bottom: 11px;
+  padding-top: 11px;
   color: #1A1A1A;
 `;
 
@@ -187,7 +247,7 @@ export const FormGroupButtonText = styled.Text`
   font-weight: bold;
   font-size: 15px;
   line-height: 20px;
-  color: #8424FF;
+  color: ${props => props.color || '#1A1A1A'};
 `;
 
 

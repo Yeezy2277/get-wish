@@ -10,6 +10,7 @@ import {AuthContext} from "../../screens/Auth/AuthScreen";
 import {userCRUD} from "../../http/CRUD";
 import {SET_AUTH, SET_USER_INFO} from "../../redux/constants/userConstants";
 import {InteractionManager, Text} from "react-native";
+import {changeUserInfo} from "../../redux/actions/authActions";
 
 function EnterNicknameStep() {
     const {data, handleChangeObject, navigation, dispatch} = useContext(AuthContext)
@@ -33,7 +34,7 @@ function EnterNicknameStep() {
         (async function () {
             setLoading(true)
             try {
-                const user = await userCRUD.search()
+                const {data: user} = await userCRUD.search()
                 if (user) {
                     await dispatch({type: SET_USER_INFO, payload: user})
                     if (user?.username) {
@@ -49,10 +50,12 @@ function EnterNicknameStep() {
 
     const onHandleRegistration = async () => {
         if (canRegistration) {
-            const res = await userCRUD.search()
+            const {data: res} = await userCRUD.search()
             await userCRUD.edit(res.id, {
                 username: data.username,
                 phone: data.phone
+            }).then(async ({data}) => {
+                await changeUserInfo('userInfo', data)
             })
             dispatch({type: SET_AUTH, payload: true})
             navigation.navigate('MainNavigator', { screen: 'Main' })

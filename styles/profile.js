@@ -21,6 +21,7 @@ export const AvatarTouchableHighlight = styled.TouchableHighlight`
   border-radius: 20px;
   bottom: -5px;
   box-shadow: 0 0 5px rgba(0, 99, 249, 0.15);
+  
   right: -13px;
   width: 36px;
 `;
@@ -524,4 +525,23 @@ export const ActionDesiresChildButton = styled.View`
   flex-direction: row;
   align-items: center;
   
+`;
+
+export const ChangeNicknameContainer = styled.View`
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 20px 0 20px;
+`;
+
+export const ChangeNicknameHeader = styled.View`
+  padding-top: 44px;
+  height: 88px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
 `;

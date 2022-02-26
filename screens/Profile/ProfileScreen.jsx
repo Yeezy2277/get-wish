@@ -8,6 +8,10 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {useSelector} from "react-redux";
 import {useActionSheet} from "@expo/react-native-action-sheet";
 import {navigateAction} from "../../functions/NavigationService";
+import {delay} from "../../functions";
+import {userCRUD} from "../../http/CRUD";
+import {changeUserInfo, checkAvailability} from "../../redux/actions/authActions";
+import useToasts from "../../hooks/useToast";
 
 export const ProfileContext = React.createContext(undefined)
 
@@ -38,6 +42,31 @@ function ProfileScreen({navigation}) {
             })
     }
 
+    const [firstname, setFirstname] = React.useState(userInfo?.firstname)
+    const [secondname, setSecondname] = React.useState(userInfo?.secondname)
+
+    const handleFirstName = async (e) => {
+        setFirstname(e)
+        await delay(1500)
+        await userCRUD.edit(userInfo.id, {
+            ...userInfo,
+            firstname: e,
+        }).then(async ({data}) => {
+            await changeUserInfo('userInfo', data)
+        })
+    }
+
+
+    const handleSecondName = async (e) => {
+        setSecondname(e)
+            await userCRUD.edit(userInfo.id, {
+                ...userInfo,
+                secondname: e,
+            }).then(async ({data}) => {
+                await changeUserInfo('userInfo', data)
+            })
+    }
+
     return (
             <ScrollView style={styles.container}>
                 <MainContainer>
@@ -49,13 +78,13 @@ function ProfileScreen({navigation}) {
                         </ProfileHeader>
                         <ReservedDesires/>
                         <FormGroup forms={[
-                            {type: 'input', name: 'Имя'},
-                            {type: 'input', name: 'Фамилия'},
+                            {type: 'input', name: 'Имя', value: firstname, handle: handleFirstName},
+                            {type: 'input', name: 'Фамилия', value: secondname, handle: handleSecondName},
                             {type: 'date', name: 'Дата рождения'},
                         ]}/>
                         <FormGroup forms={[
                             {type: 'select', name: 'Телефон', value: userInfo?.phone, link: {name: 'ChangePhoneScreen'}},
-                            {type: 'select', name: 'Никнейм', value: `@${userInfo?.username}`},
+                            {type: 'select', name: 'Никнейм', value: `@${userInfo?.username}`, link: {name: 'ChangeNicknameStep'}},
                         ]}/>
                         <FormGroup last forms={[
                             {type: 'switch', name: 'Приватный профиль'},

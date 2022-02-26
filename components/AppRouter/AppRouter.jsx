@@ -17,7 +17,7 @@ function AppRouter() {
         (async function () {
             setLoading(true)
             await refresh().then(async () => {
-                const user = await userCRUD.search()
+                const {data: user} = await userCRUD.search()
                 if (user) {
                     dispatch({type: SET_USER_INFO, payload: user})
                     if (!user?.username) {

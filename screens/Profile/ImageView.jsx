@@ -1,16 +1,20 @@
 import React from 'react';
-import {ScrollView, StyleSheet, Dimensions, View} from "react-native";
+import {ScrollView, StyleSheet, Dimensions, View, Text} from "react-native";
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import {
     ImageViewBottom,
     ImageViewCancel,
     ImageViewContainer,
     ImageViewHeader,
-    ImageViewSource, ImageViewSourceContainer, ImageViewSourceCrop,
+    ImageViewSource, ImageViewSourceContainer,
     ImageViewTitle
 } from "../../styles/profile";
 import MaskedView from '@react-native-community/masked-view';
-import {changeUserInfo} from "../../redux/actions/authActions";
+import * as FileSystem from "expo-file-system/build/FileSystem";
+import {useSelector} from "react-redux";
+import {updateAvatar} from "../../redux/actions/userActions";
+import * as ImagePicker from "expo-image-picker";
+import useLoader from "../../hooks/useLoader";
 
 const {  width } = Dimensions.get('window')
 
@@ -24,6 +28,8 @@ function dimensions() {
 }
 
 function ImageView(props) {
+    const {start, stop, loading} = useLoader(false);
+    const {userInfo} = useSelector((state) => state.user);
     const params = props.route?.params
     const [url, setUrl] = React.useState(null)
 
@@ -39,15 +45,16 @@ function ImageView(props) {
         (async function () {
             const manipResult = await manipulateAsync(
                 params?.image.localUri || params?.image.uri,
-                [
-                        { crop: {
-                                originX: ((params?.image.width) / 5),
-                                originY: ((params?.image.height) / 5),
-                                width: ((params?.image.width) / 1.5),
-                                height: ((params?.image.height) / 1.5)
-                            } },
-                ],
-                { compress: 1, format: SaveFormat.PNG }
+                // [
+                //         { crop: {
+                //                 originX: ((params?.image.width) / 2),
+                //                 originY: ((params?.image.height) / 2),
+                //                 width: ((params?.image.width) / 1.5),
+                //                 height: ((params?.image.height) / 1.5)
+                //             } },
+                // ],
+                [],
+                { compress: 0.5, format: SaveFormat.JPEG }
             );
             setUrl(manipResult)
         }())
@@ -58,8 +65,68 @@ function ImageView(props) {
     }
 
     const handleSubmit = async () => {
-        changeUserInfo('avatar', url)
-        handleBack()
+        start()
+        const base64 = await FileSystem.readAsStringAsync(url?.uri, { encoding: 'base64' });
+        await updateAvatar(base64, userInfo?.id).then(handleBack)
+        stop()
+    }
+
+    const handleChangeLibrary = async () => {
+        let image = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: false,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        const manipResult = await manipulateAsync(
+            image.localUri || image.uri,
+            // [
+            //     { crop: {
+            //             originX: ((image.width) / 5),
+            //             originY: ((image.height) / 5),
+            //             width: ((image.width) / 1.5),
+            //             height: ((image.height) / 1.5)
+            //         } },
+            // ],
+            [],
+            { compress: 0.5, format: SaveFormat.JPEG }
+        );
+        setUrl(manipResult)
+    }
+
+    const handleChangeCamera = async () => {
+        const {status} = ImagePicker.requestCameraPermissionsAsync()
+        if (status !== "granted") {
+            let image = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: false,
+                aspect: [4, 3],
+                quality: 1,
+            });
+            if (!image.cancelled) {
+                const manipResult = await manipulateAsync(
+                    image.localUri || image.uri,
+                    // [
+                    //     { crop: {
+                    //             originX: ((image.width) / 5),
+                    //             originY: ((image.height) / 5),
+                    //             width: ((image.width) / 1.5),
+                    //             height: ((image.height) / 1.5)
+                    //         } },
+                    // ],
+                    [],
+                    { compress: 0.5, format: SaveFormat.JPEG }
+                );
+                setUrl(manipResult)
+            }
+        } else {
+            alert('Нет доступа')
+        }
+
+    }
+
+    if (loading) {
+        return <Text>Загрузка</Text>
     }
 
     return (
@@ -94,7 +161,7 @@ function ImageView(props) {
 
                 </ImageViewSourceContainer>
                 <ImageViewBottom>
-                    <ImageViewCancel>Выбрать другое</ImageViewCancel>
+                    {params?.camera ? <ImageViewCancel onPress={handleChangeCamera}>Переснять</ImageViewCancel> : <ImageViewCancel onPress={handleChangeLibrary}>Выбрать другое</ImageViewCancel>}
                     <ImageViewCancel onPress={handleSubmit} bold>Использовать</ImageViewCancel>
                 </ImageViewBottom>
             </ImageViewContainer>

@@ -1,12 +1,14 @@
 import React, {useContext} from 'react';
 import {Icon} from "../index";
 import {Avatar, AvatarTouchableHighlight} from "../../styles/profile";
-import {Image } from "react-native";
+import {Image, Platform} from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import {ProfileContext} from "../../screens/Profile/ProfileScreen";
 import {useSelector} from "react-redux";
 import {connectActionSheet, useActionSheet} from "@expo/react-native-action-sheet";
 import {changeUserInfo} from "../../redux/actions/authActions";
+import {updateAvatar} from "../../redux/actions/userActions";
+import {androidShadow} from "../../functions";
 
 function ProfileAvatar({...props}) {
     const { showActionSheetWithOptions } = useActionSheet();
@@ -37,14 +39,15 @@ function ProfileAvatar({...props}) {
                     const {status} = ImagePicker.requestCameraPermissionsAsync()
                     if (status !== "granted") {
                         let image = await ImagePicker.launchCameraAsync({
-                            mediaTypes: ImagePicker.MediaTypeOptions.All,
+                            mediaTypes: ImagePicker.MediaTypeOptions.Images,
                             allowsEditing: false,
                             aspect: [4, 3],
                             quality: 1,
                         });
                         if (!image.cancelled) {
                             navigation.push('ImageView', {
-                                image
+                                image,
+                                camera: true
                             })
                         }
                     } else {
@@ -56,8 +59,8 @@ function ProfileAvatar({...props}) {
     }
 
     const {navigation} = useContext(ProfileContext)
-    const {avatar} = useSelector((state) => state.user);
-    const hasPhoto = avatar?.uri
+    const {userInfo} = useSelector((state) => state.user);
+    const hasPhoto = userInfo?.avatar
 
     const handleChangeAvatar = () => {
         if (hasPhoto) {
@@ -82,7 +85,7 @@ function ProfileAvatar({...props}) {
                                 userInterfaceStyle: 'dark'
                             }, async (buttonIndex) => {
                                 if (buttonIndex === 1) {
-                                    return changeUserInfo('avatar', {})
+                                    await updateAvatar(null, userInfo?.id)
                                 }
                             })
                     }
@@ -96,8 +99,8 @@ function ProfileAvatar({...props}) {
 
     return (
         <Avatar>
-            <Icon {...props} source={avatar?.uri ? {uri: avatar?.uri} : require('../../assets/images/icons/profile/avatar.png')}/>
-            <AvatarTouchableHighlight onPress={handleChangeAvatar} underlayColor={'none'}>
+            <Icon {...props} source={userInfo?.avatar ? {uri: `https://${userInfo?.avatar}`} : require('../../assets/images/icons/profile/avatar.png')}/>
+            <AvatarTouchableHighlight style={Platform.OS === 'android' && androidShadow} onPress={handleChangeAvatar} underlayColor={'none'}>
                 <Image style={{ height: 15, width: 18}} source={require('../../assets/images/icons/profile/edit.png')}/>
             </AvatarTouchableHighlight>
         </Avatar>

@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {
+    ChangeNicknameStep,
     ChangePhoneScreen,
     DesiresScreen,
     ImageView,
@@ -25,13 +26,14 @@ function MyStack() {
                 <Stack.Screen options={{headerShown: false}} name="ImageView" component={ImageView} />
                 <Stack.Screen options={{headerShown: false}} name="ShareScreen" component={ShareScreen} />
                 <Stack.Screen options={{headerShown: false}} name="ChangePhoneScreen" component={ChangePhoneScreen} />
+                <Stack.Screen options={{headerShown: false}} name="ChangeNicknameStep" component={ChangeNicknameStep} />
                 <Stack.Screen options={{header: (navigation) => <Header title="Зарезервированные желания" navigation={navigation}/>}} name="DesiresScreen" component={DesiresScreen} />
             </Stack.Navigator>
     );
 }
 
 function TabStack() {
-    const {avatar} = useSelector((state) => state.user);
+    const {userInfo} = useSelector((state) => state.user);
     return (
         <Tab.Navigator
             initialRouteName="Main"
@@ -51,7 +53,7 @@ function TabStack() {
                     tabBarOptions: { showIcon: true },
                     tabBarIcon: ({ tintColor }) => {
                         return <Image resizeMode="cover" style={{ width: 26, height: 26, borderRadius: 13 }} source={
-                            avatar?.uri ? {uri: avatar?.uri} : require('../../assets/images/icons/bottom/profile.png')}/>
+                            userInfo?.avatar ? {uri: `https://${userInfo?.avatar}`} : require('../../assets/images/icons/bottom/profile.png')}/>
                     },
                     tabBarLabel: 'Профиль',
                 })}

@@ -9,6 +9,7 @@ export { default as ShareGroup } from './Shared/ShareGroup';
 export { default as ModalCalendar } from './Calendar/ModalCalendar';
 export { default as Calendar } from './Calendar/Calendar';
 export { default as Icon } from './Shared/Icon';
+export { default as TextFieldTwo } from './Shared/TextFieldTwo';
 export { default as ProfileAvatar } from './Profile/ProfileAvatar';
 export { default as ReservedDesires } from './Profile/ReservedDesires';
 export { default as DesiresElement } from './Desires/DesiresElement';

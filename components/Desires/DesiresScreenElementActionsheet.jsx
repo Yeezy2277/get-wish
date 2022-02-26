@@ -1,6 +1,6 @@
 import React from 'react';
 import {Actionsheet, Box, Button, Divider} from "native-base";
-import {Platform, ScrollView} from 'react-native';
+import {Platform, Pressable, ScrollView} from 'react-native';
 import {
     ActionDesires,
     ActionDesiresActions,
@@ -22,10 +22,26 @@ import {
 } from "../../styles/profile";
 import AuthButton from "../Shared/AuthButton";
 import useToasts from "../../hooks/useToast";
+import {useActionSheet} from "@expo/react-native-action-sheet";
 
 function DesiresScreenElementActionsheet({open, setOpen}) {
     const [openChild, setOpenChild] = React.useState(false)
     const {show} = useToasts(2000, 'Резерв желания отменен')
+    const { showActionSheetWithOptions } = useActionSheet();
+
+    const handleClickImage = () => {
+        return showActionSheetWithOptions(
+            {
+                options: ["Отмена", "Поделиться"],
+                cancelButtonIndex: 0,
+                userInterfaceStyle: 'dark'
+            }, async (buttonIndex) => {
+                if (buttonIndex === 1) {
+
+                }
+            })
+    }
+
 
     return (
         <>
@@ -57,7 +73,9 @@ function DesiresScreenElementActionsheet({open, setOpen}) {
                                 <ActionDesiresRowLinksIcon resizeMode="contain" h={Platform.OS === 'android' ? 10 : 13} source={require('../../assets/images/icons/profile/desires/link.png')}/>
                                 <ActionDesiresRowLinksText>zara.ru</ActionDesiresRowLinksText>
                             </Box>
-                            <ActionDesiresRowLinksMenu source={require('../../assets/images/icons/profile/desires/menu.png')}/>
+                            <Pressable style={{zIndex: 2, width: 10}} onPress={handleClickImage}>
+                                <ActionDesiresRowLinksMenu source={require('../../assets/images/icons/profile/desires/menu.png')}/>
+                            </Pressable>
                         </ActionDesiresRowLinks>
                         <ActionDesiresRowName>Рождественский свитер</ActionDesiresRowName>
                         <ActionDesiresRowDescription>

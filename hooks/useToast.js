@@ -19,13 +19,10 @@ const useToasts = (duration = 1000, title = "Дата рождения изме�
                 fontFamily: "Nunito",
                 borderRadius: 10,
                 marginBottom: '10%',
-                shadowOffset: {
-                    width: 0,
-                    height: 1,
-                },
-                shadowOpacity: 0.20,
-                shadowRadius: 1.41,
-                elevation: 2,
+                shadowOffset: {width: 10, height: 10},
+                shadowColor: 'black',
+                shadowOpacity: 1,
+                elevation: 3,
             }
         })
 
