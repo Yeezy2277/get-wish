@@ -55,10 +55,13 @@ function FormGroup({forms, last = false}) {
                 return <>
                     <FormGroupElement>
                         <FormGroupText>{name}</FormGroupText>
-                        <FormGroupSelect>
-                            <FormGroupSelectText>{value}</FormGroupSelectText>
-                            <Icon handlePressIcon={() => navigateAction(link.name, link.params)} style={{marginLeft: 12}} source={require('../../assets/images/icons/profile/arrow.png')}/>
-                        </FormGroupSelect>
+                            <FormGroupSelect >
+                                <Pressable style={{paddingRight: 12}} onPress={() => navigateAction(link.name, link.params)}>
+                                    <FormGroupSelectText >{value}</FormGroupSelectText>
+                                </Pressable>
+                                <Icon handlePressIcon={() => navigateAction(link.name, link.params)}  source={require('../../assets/images/icons/profile/arrow.png')}/>
+                            </FormGroupSelect>
+
                     </FormGroupElement>
                     {!last && renderLine()}
                 </>

@@ -1,4 +1,5 @@
 import {useToast} from "native-base";
+import {Platform} from "react-native";
 
 const useToasts = (duration = 1000, title = "Дата рождения изменена") => {
     const toast = useToast();
@@ -19,10 +20,11 @@ const useToasts = (duration = 1000, title = "Дата рождения изме�
                 fontFamily: "Nunito",
                 borderRadius: 10,
                 marginBottom: '10%',
-                shadowOffset: {width: 10, height: 10},
-                shadowColor: 'black',
-                shadowOpacity: 1,
-                elevation: 3,
+                shadowOffset: {width: Platform.OS === 'android' ? 5 : 0, height: Platform.OS === 'android' ? 5 : 1},
+                shadowColor: Platform.OS === 'android' && 'black',
+                shadowOpacity: Platform.OS === 'android' ? 1 : 0.20,
+                shadowRadius: Platform.OS === 'ios' && 1.41,
+                elevation: Platform.OS === 'android' ? 3 : 0,
             }
         })
 

@@ -218,7 +218,7 @@ export const FormGroupTextInput = styled.TextInput`
   height: 20px;
 `;
 
-export const FormGroupSelect = styled.Text`
+export const FormGroupSelect = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;

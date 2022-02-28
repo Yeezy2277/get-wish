@@ -4,8 +4,11 @@ import {logout, refresh} from "../redux/actions/authActions";
 import NavigationService from "../functions/NavigationService";
 import store from '../redux/index'
 import {LOGOUT, SET_NICKNAME} from "../redux/constants/userConstants";
+import useToasts from "../hooks/useToast";
+import {Alert} from "react-native";
 
 const {dispatch} = store
+
 
 const $host = axios.create({
   baseURL: 'https://dev.wish.mediapark.com.ru'
@@ -34,8 +37,10 @@ $authHost.interceptors.response.use(response => {
       }
     })
   }
-  throw error;
+  throw error
 })
+
+
 
 $authHost.interceptors.request.use(authIntterceptor)
 

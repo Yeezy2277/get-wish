@@ -23,6 +23,7 @@ import {
 import AuthButton from "../Shared/AuthButton";
 import useToasts from "../../hooks/useToast";
 import {useActionSheet} from "@expo/react-native-action-sheet";
+import {navigateAction} from "../../functions/NavigationService";
 
 function DesiresScreenElementActionsheet({open, setOpen}) {
     const [openChild, setOpenChild] = React.useState(false)
@@ -37,7 +38,9 @@ function DesiresScreenElementActionsheet({open, setOpen}) {
                 userInterfaceStyle: 'dark'
             }, async (buttonIndex) => {
                 if (buttonIndex === 1) {
-
+                    navigateAction('ShareScreen')
+                    setOpen(false)
+                    setOpenChild(false)
                 }
             })
     }
@@ -73,7 +76,7 @@ function DesiresScreenElementActionsheet({open, setOpen}) {
                                 <ActionDesiresRowLinksIcon resizeMode="contain" h={Platform.OS === 'android' ? 10 : 13} source={require('../../assets/images/icons/profile/desires/link.png')}/>
                                 <ActionDesiresRowLinksText>zara.ru</ActionDesiresRowLinksText>
                             </Box>
-                            <Pressable style={{zIndex: 2, width: 10}} onPress={handleClickImage}>
+                            <Pressable style={{zIndex: 2, width: 50, height: 25, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 8, flexDirection: 'row'}} onPress={handleClickImage}>
                                 <ActionDesiresRowLinksMenu source={require('../../assets/images/icons/profile/desires/menu.png')}/>
                             </Pressable>
                         </ActionDesiresRowLinks>

@@ -31,7 +31,7 @@ function DesiresScreenElement() {
                 userInterfaceStyle: 'dark'
             }, async (buttonIndex) => {
                 if (buttonIndex === 1) {
-
+                    navigateAction('ShareScreen')
                 }
             })
     }
@@ -44,7 +44,7 @@ function DesiresScreenElement() {
                 <DesiresScreenElementContent>
                     <DesiresScreenElementContentHeader>
                         <DesiresScreenElementContentHeaderTitle>Новогодний свитер</DesiresScreenElementContentHeaderTitle>
-                        <Pressable style={{zIndex: 2, width: 10}} onPress={handleClickImage}>
+                        <Pressable style={{zIndex: 2, height: 20, width: 50, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 15, flexDirection: 'row'}} onPress={handleClickImage}>
                             <DesiresScreenElementContentHeaderImage resizeMode="contain" source={require('../../assets/images/icons/profile/desires/menu.png')}/>
                         </Pressable>
                     </DesiresScreenElementContentHeader>
