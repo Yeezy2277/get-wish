@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AuthStep from "./AuthStep";
 import AuthButton from "../Shared/AuthButton";
 import {AuthContext} from "../../screens/Auth/AuthScreen";
@@ -10,7 +11,7 @@ import {
     EnterCodeStepBottom,
     EnterCodeStepContainer
 } from "../../styles/authSteps";
-import {StyleSheet, TextInput, InteractionManager, Platform} from "react-native";
+import {StyleSheet, TextInput, InteractionManager} from "react-native";
 import EnterCodeStepTimer from "./EnterCodeStepTimer";
 import {checkCode} from "../../redux/actions/authActions";
 import {navigateAction} from "../../functions/NavigationService";
@@ -18,7 +19,7 @@ import useToasts from "../../hooks/useToast";
 import {updatePhone} from "../../redux/actions/userActions";
 
 function EnterCodeStep(props) {
-    const {data, handleChangeObject, onNextStep} = React.useContext(AuthContext)
+    const {data, handleChangeObject, onNextStep, step} = React.useContext(AuthContext)
     const {show} = useToasts(2000, 'Телефон успешно изменен')
     const [codes, setCodes] = React.useState(['', '', '', ''])
     const handleChangeInput = (text, index) => {
@@ -50,7 +51,7 @@ function EnterCodeStep(props) {
                 state.focus()
             })
         }
-    }, [state])
+    }, [state, step])
 
     const handleKeyPress = (keyValue, index) => {
         if (keyValue === 'Backspace' && index !== 0 && !codes[index]) {
@@ -70,6 +71,11 @@ function EnterCodeStep(props) {
         disabledNext = !el;
     })
 
+    const clearCode = () => {
+        setCodes(['', '', '', ''])
+        state?.focus()
+        setError(true)
+    }
 
     const onPressCodeStep = async () => {
         const phoneNumber = data.phoneNumber.split(' ').join('')
@@ -79,17 +85,13 @@ function EnterCodeStep(props) {
                     navigateAction('MainProfile')
                     show()
                 }).catch(() => {
-                    setCodes(['', '', '', ''])
-                    state?.focus()
-                    setError(true)
+                    clearCode()
                 })
             } else {
                 await checkCode(`+7${phoneNumber}`, codes.join('')).then(async () => {
                     onNextStep()
                 }).catch(() => {
-                    setCodes(['', '', '', ''])
-                    state?.focus()
-                    setError(true)
+                    clearCode()
                 })
             }
         }
@@ -111,6 +113,7 @@ function EnterCodeStep(props) {
                                 onChangeText={text => handleChangeInput(text, index)}
                                 id={String(index)}
                                 keyboardType="numeric"
+                                autoFocus={index === 0}
                                 style={styles.inputStyle}
                                 value={code}
                             />
@@ -136,9 +139,12 @@ const styles = StyleSheet.create({
         color: '#1A1A1A',
         paddingLeft: 5,
         marginTop: 0,
-        fontSize: Platform.OS === 'android' ? 27 : 30,
+        fontSize: 27,
     }
 })
 
+EnterCodeStep.propTypes = {
+    isChangePhone: PropTypes.bool,
+};
 
 export default EnterCodeStep;

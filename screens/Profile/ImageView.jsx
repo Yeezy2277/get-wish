@@ -15,8 +15,9 @@ import {useSelector} from "react-redux";
 import {updateAvatar} from "../../redux/actions/userActions";
 import * as ImagePicker from "expo-image-picker";
 import useLoader from "../../hooks/useLoader";
+import {HStack, Spinner} from "native-base";
 
-const {  width } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 
 function roundOff(v) {
     return Math.round(v)
@@ -33,6 +34,15 @@ function ImageView(props) {
     const params = props.route?.params
     const [url, setUrl] = React.useState(null)
 
+    const manipulateImage = async (image) => {
+        const manipResult = await manipulateAsync(
+            image.localUri || image.uri,
+            [],
+            { compress: 0.5, format: SaveFormat.JPEG }
+        );
+        setUrl(manipResult)
+    }
+
     React.useEffect(() => {
         const parent = props.navigation.getParent()
         parent.setOptions({tabBarStyle: {display: 'none'}})
@@ -41,22 +51,10 @@ function ImageView(props) {
         }
     }, [])
 
+
     React.useEffect(() => {
         (async function () {
-            const manipResult = await manipulateAsync(
-                params?.image.localUri || params?.image.uri,
-                // [
-                //         { crop: {
-                //                 originX: ((params?.image.width) / 2),
-                //                 originY: ((params?.image.height) / 2),
-                //                 width: ((params?.image.width) / 1.5),
-                //                 height: ((params?.image.height) / 1.5)
-                //             } },
-                // ],
-                [],
-                { compress: 0.5, format: SaveFormat.JPEG }
-            );
-            setUrl(manipResult)
+            await manipulateImage(params?.image)
         }())
     }, [params?.image]);
 
@@ -78,20 +76,7 @@ function ImageView(props) {
             aspect: [4, 3],
             quality: 1,
         });
-        const manipResult = await manipulateAsync(
-            image.localUri || image.uri,
-            // [
-            //     { crop: {
-            //             originX: ((image.width) / 5),
-            //             originY: ((image.height) / 5),
-            //             width: ((image.width) / 1.5),
-            //             height: ((image.height) / 1.5)
-            //         } },
-            // ],
-            [],
-            { compress: 0.5, format: SaveFormat.JPEG }
-        );
-        setUrl(manipResult)
+        await manipulateImage(image)
     }
 
     const handleChangeCamera = async () => {
@@ -104,29 +89,17 @@ function ImageView(props) {
                 quality: 1,
             });
             if (!image.cancelled) {
-                const manipResult = await manipulateAsync(
-                    image.localUri || image.uri,
-                    // [
-                    //     { crop: {
-                    //             originX: ((image.width) / 5),
-                    //             originY: ((image.height) / 5),
-                    //             width: ((image.width) / 1.5),
-                    //             height: ((image.height) / 1.5)
-                    //         } },
-                    // ],
-                    [],
-                    { compress: 0.5, format: SaveFormat.JPEG }
-                );
-                setUrl(manipResult)
+                await manipulateImage(image)
             }
         } else {
             alert('Нет доступа')
         }
-
     }
 
     if (loading) {
-        return <Text>Загрузка</Text>
+        return <HStack backgroundColor="#fff" height="100%" width="100%" justifyContent="center" alignItems="center">
+            <Spinner color="indigo.500" size="lg" />
+        </HStack>;
     }
 
     return (
@@ -136,7 +109,6 @@ function ImageView(props) {
                     <ImageViewCancel onPress={handleBack}>Отмена</ImageViewCancel>
                     <ImageViewTitle>Фото профиля</ImageViewTitle>
                 </ImageViewHeader>
-                {/*<Image style={styles.image} source={{uri: params?.image.uri}}/>*/}
                 <ImageViewSourceContainer >
                     <MaskedView
                         style={{ flex: 1, backgroundColor: 'transparent' }}

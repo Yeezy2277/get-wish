@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     FormGroupButtonText,
     FormGroupContainer,
@@ -8,7 +9,7 @@ import {
     FormGroupTextInput, FormGroupTextSwitch
 } from "../../styles/shared";
 import Icon from "./Icon";
-import {Pressable} from 'react-native';
+import {Platform, Pressable} from 'react-native';
 import CalendarShared from "../Calendar/Calendar";
 import moment from "moment";
 import {navigateAction} from "../../functions/NavigationService";
@@ -46,7 +47,7 @@ function FormGroup({forms, last = false}) {
                 return <>
                     <FormGroupElement>
                         <FormGroupText>{name}</FormGroupText>
-                        <FormGroupTextInput onChangeText={handleChange} value={value} placeholderTextColor="#C8CCE1" placeholder="Не указано"/>
+                        <FormGroupTextInput android={Platform.OS === 'android'} onChangeText={handleChange} value={value} placeholderTextColor="#C8CCE1" placeholder="Не указано"/>
                     </FormGroupElement>
                     {!last && renderLine()}
                 </>
@@ -101,6 +102,11 @@ function FormGroup({forms, last = false}) {
             })}
         </FormGroupContainer>
     );
+}
+
+FormGroup.propTypes = {
+    last: PropTypes.bool,
+    forms: PropTypes.arrayOf(Object),
 }
 
 export default FormGroup;

@@ -1,15 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     ReservedDesiresContainer,
     ReservedDesiresPlaceholder,
     ReservedDesiresRow,
     ReservedDesiresTitle
 } from "../../styles/profile";
-import DesiresElement from "../Desires/DesiresElement";
+import {navigateAction} from "../../functions/NavigationService";
+import {DesiresElement} from "../index";
 
 function ReservedDesires({empty = false}) {
     return (
-        <ReservedDesiresContainer>
+        <ReservedDesiresContainer onPress={() => navigateAction('DesiresScreen')}>
             <ReservedDesiresTitle>Зарезервированные желания</ReservedDesiresTitle>
             {empty && <ReservedDesiresPlaceholder>Загляни на странички своих друзей, чтобы выбрать желания, которые хочешь
                 исполнить.
@@ -22,6 +24,10 @@ function ReservedDesires({empty = false}) {
             </ReservedDesiresRow> }
         </ReservedDesiresContainer>
     );
+}
+
+ReservedDesires.propTypes = {
+    empty: PropTypes.bool
 }
 
 export default ReservedDesires;

@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Actionsheet, Box, Button, Divider} from "native-base";
-import {Platform, Pressable, ScrollView} from 'react-native';
+import {Platform, Pressable} from 'react-native';
 import {
     ActionDesires,
     ActionDesiresActions,
@@ -113,5 +114,11 @@ function DesiresScreenElementActionsheet({open, setOpen}) {
         </>
     );
 }
+
+DesiresScreenElementActionsheet.propTypes = {
+    open: PropTypes.bool,
+    setOpen: PropTypes.func,
+}
+
 
 export default DesiresScreenElementActionsheet;

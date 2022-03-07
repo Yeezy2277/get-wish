@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {HeaderArrow, HeaderPressable, HeaderRow, HeaderTitle} from "../../styles/shared";
 
 function Header({navigation, title}) {
@@ -10,6 +11,11 @@ function Header({navigation, title}) {
             <HeaderTitle>{title}</HeaderTitle>
         </HeaderRow>
     );
+}
+
+Header.propTypes = {
+    navigation: PropTypes.object,
+    title: PropTypes.string,
 }
 
 export default Header;

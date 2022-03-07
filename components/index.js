@@ -6,7 +6,6 @@ export { default as PhoneNumber } from './Shared/PhoneNumber';
 export { default as Nickname } from './Shared/Nickname';
 export { default as FormGroup } from './Shared/FormGroup';
 export { default as ShareGroup } from './Shared/ShareGroup';
-export { default as ModalCalendar } from './Calendar/ModalCalendar';
 export { default as Calendar } from './Calendar/Calendar';
 export { default as Icon } from './Shared/Icon';
 export { default as TextFieldTwo } from './Shared/TextFieldTwo';

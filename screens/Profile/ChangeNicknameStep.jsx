@@ -3,19 +3,15 @@ import {Pressable, Text} from 'native-base'
 import {Formik, Field} from "formik";
 import * as yup from 'yup'
 import {
-    HeaderTitle,
-    NicknameContainer,
-    NicknameLabel,
-    NicknameLabelText, PressableTextField, TextFieldCloseIcon,
+    HeaderTitle, PressableTextField, TextFieldCloseIcon,
     TextFieldLabel,
     TextFieldLabelText, TextFieldTwoContainer
 } from "../../styles/shared";
-import {Nickname, TextFieldTwo} from "../../components/index";
+import {TextFieldTwo} from "../../components/index";
 import {
     AuthStepCancelText, ChangeNicknameP1, ChangeNicknameP2, ChangeNicknamePurple,
     EnterNickNameStepContainer,
 } from "../../styles/authSteps";
-import {InteractionManager} from "react-native";
 import {ChangeNicknameContainer, ChangeNicknameHeader} from "../../styles/profile";
 import {navigateAction} from "../../functions/NavigationService";
 import {useSelector} from "react-redux";
@@ -36,10 +32,9 @@ function ChangeNicknameStep(props) {
     const {userInfo} = useSelector((state) => state.user);
 
     const [username, setUserName] = React.useState(userInfo?.username)
-
     const [availability, setAvailability] = React.useState(false)
+
     const {show} = useToasts(2000, 'Никнейм успешно изменен')
-    const [state, setState] = React.useState({})
 
     const nicknameValidationSchema = yup.object().shape({
         nickName: yup
@@ -103,7 +98,6 @@ function ChangeNicknameStep(props) {
                                     <TextFieldCloseIcon source={require('../../assets/images/icons/closeIcon.png')} resizeMode="cover"/>
                                 </PressableTextField>
                                 <Field
-                                    setState={setState}
                                     setCanRegistration={setCanRegistration}
                                     availability={availability} setAvailability={setAvailability}
                                     component={TextFieldTwo}

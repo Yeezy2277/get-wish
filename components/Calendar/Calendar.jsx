@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Platform } from 'react-native'
 import useToasts from "../../hooks/useToast";
@@ -36,6 +37,13 @@ function CalendarShared({show, setShow, date, setDate}) {
             onCancel={() => setShow(false)}
         />
     )
+}
+
+CalendarShared.propTypes = {
+    show: PropTypes.bool,
+    setShow: PropTypes.func,
+    setDate: PropTypes.func,
+    date: PropTypes.instanceOf(Date),
 }
 
 export default CalendarShared;

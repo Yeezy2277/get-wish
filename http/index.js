@@ -1,11 +1,9 @@
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {logout, refresh} from "../redux/actions/authActions";
+import {refresh} from "../redux/actions/authActions";
 import NavigationService from "../functions/NavigationService";
 import store from '../redux/index'
 import {LOGOUT, SET_NICKNAME} from "../redux/constants/userConstants";
-import useToasts from "../hooks/useToast";
-import {Alert} from "react-native";
 
 const {dispatch} = store
 

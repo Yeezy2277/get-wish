@@ -8,10 +8,8 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {useSelector} from "react-redux";
 import {useActionSheet} from "@expo/react-native-action-sheet";
 import {navigateAction} from "../../functions/NavigationService";
-import {delay} from "../../functions";
 import {userCRUD} from "../../http/CRUD";
-import {changeUserInfo, checkAvailability} from "../../redux/actions/authActions";
-import useToasts from "../../hooks/useToast";
+import {changeUserInfo} from "../../redux/actions/authActions";
 
 export const ProfileContext = React.createContext(undefined)
 
@@ -47,10 +45,9 @@ function ProfileScreen({navigation}) {
 
     const handleFirstName = async (e) => {
         setFirstname(e)
-        await delay(1500)
         await userCRUD.edit(userInfo.id, {
             ...userInfo,
-            firstname: e,
+            firstname: e ? e : '',
         }).then(async ({data}) => {
             await changeUserInfo('userInfo', data)
         })
@@ -61,7 +58,7 @@ function ProfileScreen({navigation}) {
         setSecondname(e)
             await userCRUD.edit(userInfo.id, {
                 ...userInfo,
-                secondname: e,
+                secondname: e ? e : '',
             }).then(async ({data}) => {
                 await changeUserInfo('userInfo', data)
             })

@@ -1,4 +1,5 @@
 import React, {useContext} from 'react';
+import PropTypes from 'prop-types';
 import {
     AuthStepCancelText,
     AuthStepContainer,
@@ -10,6 +11,7 @@ import {Image, TouchableHighlight} from "react-native";
 import {AuthContext} from "../../screens/Auth/AuthScreen";
 import {logout} from "../../redux/actions/authActions";
 import {navigateAction} from "../../functions/NavigationService";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 function AuthStep({title, text, children, maxWidth, mt, back, exit, isChangePhone, isFirstStep}) {
     const {onPrevStep, dispatch, onReloadStep} = useContext(AuthContext)
@@ -20,6 +22,11 @@ function AuthStep({title, text, children, maxWidth, mt, back, exit, isChangePhon
     }
 
     return (
+        <KeyboardAwareScrollView
+            resetScrollToCoords={{ x: 0, y: 0 }}
+            style={{ backgroundColor: '#fff' }}
+            scrollEnabled={false}
+        >
         <AuthStepContainer>
             <AuthStepContent mt={mt}>
                 {back && <AuthStepHeader jc={"flex-start"}>
@@ -44,7 +51,19 @@ function AuthStep({title, text, children, maxWidth, mt, back, exit, isChangePhon
                 {children}
             </AuthStepContent>
         </AuthStepContainer>
+        </KeyboardAwareScrollView>
     );
 }
+
+AuthStep.propTypes = {
+    title: PropTypes.string,
+    text: PropTypes.string,
+    maxWidth: PropTypes.number,
+    mt: PropTypes.number,
+    back: PropTypes.bool,
+    exit: PropTypes.bool,
+    isChangePhone: PropTypes.bool,
+    isFirstStep: PropTypes.bool,
+};
 
 export default AuthStep;

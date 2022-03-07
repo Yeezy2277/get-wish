@@ -5,7 +5,7 @@ function useLoader(loadingDefault = true, errorDefault = false) {
     const [error, _setError] = React.useState(errorDefault);
 
     const setError = React.useCallback((message) => {
-        _setLoading(false); // Ведь нет ситуаций когда есть ошибка, но ещё не окончилась загрузка?
+        _setLoading(false);
         _setError(message);
     }, []);
 

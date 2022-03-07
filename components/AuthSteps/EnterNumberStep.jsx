@@ -1,4 +1,5 @@
 import React, {useContext} from 'react';
+import PropTypes from 'prop-types';
 import AuthStep from "./AuthStep";
 import {PhoneNumber} from "../index";
 import {TextOffer, TextOfferPurple} from "../../styles/authSteps";
@@ -22,12 +23,16 @@ function EnterNumberStep(props) {
 
     return (
         <AuthStep isFirstStep isChangePhone={props?.isChangePhone} mt={props?.isChangePhone ? 44 : 136} maxWidth={266} text="На этот номер будет отправлено СМС с кодом подтверждения" title="Введи номер телефона">
-            <PhoneNumber/>
-            {!props?.isChangePhone && <TextOffer>Нажимая на кнопку, ты соглашаешься с <TextOfferPurple>политикой
-                конфиденциальности и условиями использованиями</TextOfferPurple></TextOffer>}
-            <AuthButton style={{marginTop: props?.isChangePhone && 100}} onPress={onPressNumberStep} active={!disabledNext}>Получить код</AuthButton>
+                <PhoneNumber/>
+                {!props?.isChangePhone && <TextOffer>Нажимая на кнопку, ты соглашаешься с <TextOfferPurple>политикой
+                    конфиденциальности и условиями использованиями</TextOfferPurple></TextOffer>}
+                <AuthButton style={{marginTop: props?.isChangePhone && 100}} onPress={onPressNumberStep} active={!disabledNext}>Получить код</AuthButton>
         </AuthStep>
     );
 }
+
+EnterNumberStep.propTypes = {
+    isChangePhone: PropTypes.bool,
+};
 
 export default EnterNumberStep;

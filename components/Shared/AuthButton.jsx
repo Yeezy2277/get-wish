@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {StyleSheet, View} from 'react-native'
 import {ButtonAuthLabel, ButtonAuthLabelVariant2} from "../../styles/shared";
 import {TouchableHighlight, ImageBackground} from "react-native";
@@ -42,5 +43,14 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
+
+AuthButton.propTypes = {
+    active: PropTypes.bool,
+    onPress: PropTypes.func,
+    higlightStyle: PropTypes.object,
+    style: PropTypes.object,
+    variant: PropTypes.string,
+    text: PropTypes.string,
+}
 
 export default AuthButton;

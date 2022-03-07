@@ -6,10 +6,9 @@ import {
     SharedGroupImage,
     SharedGroupText
 } from "../../styles/shared";
-import {Checkbox, VStack, Box} from "native-base";
+import {Checkbox, Box} from "native-base";
 
 function ShareGroup({checkBox3, checkBox1, setCheckBox1, setCheckBox2, setCheckBox3, checkBox2}) {
-    const [selected, setSelected] = React.useState([])
     return (
         <SharedGroupContainer>
             <SharedGroupText>Группы</SharedGroupText>

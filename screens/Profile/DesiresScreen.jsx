@@ -1,9 +1,9 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from "react-native";
 import {DesiresScreenRow} from "../../styles/profile";
-import DesiresScreenElement from "../../components/Desires/DesiresScreenElement";
+import {DesiresScreenElement} from "../../components";
 
-function DesiresScreen(props) {
+function DesiresScreen() {
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.container}>
             <DesiresScreenRow>

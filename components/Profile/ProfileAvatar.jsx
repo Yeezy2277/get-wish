@@ -6,7 +6,6 @@ import * as ImagePicker from 'expo-image-picker';
 import {ProfileContext} from "../../screens/Profile/ProfileScreen";
 import {useSelector} from "react-redux";
 import {connectActionSheet, useActionSheet} from "@expo/react-native-action-sheet";
-import {changeUserInfo} from "../../redux/actions/authActions";
 import {updateAvatar} from "../../redux/actions/userActions";
 import {androidShadow} from "../../functions";
 
@@ -36,8 +35,8 @@ function ProfileAvatar({...props}) {
                         })
                     }
                 } else if (buttonIndex === 2) {
-                    const {status} = ImagePicker.requestCameraPermissionsAsync()
-                    if (status !== "granted") {
+                    const {status} = await ImagePicker.requestCameraPermissionsAsync()
+                    if (status === "granted") {
                         let image = await ImagePicker.launchCameraAsync({
                             mediaTypes: ImagePicker.MediaTypeOptions.Images,
                             allowsEditing: false,

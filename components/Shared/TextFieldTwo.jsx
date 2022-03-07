@@ -11,7 +11,7 @@ function TextFieldTwo(props) {
         field: { name, onChange, value },
         form: { errors, touched, submitForm, isSubmitting, setErrors},
         setCanRegistration,
-        availability, setAvailability, setState
+        availability, setAvailability
     } = props
     let timeout
     let timeoutAnimation
@@ -67,7 +67,7 @@ function TextFieldTwo(props) {
 
     return (
         <>
-            <TextFieldTwoInput ref={(input) => { setState(input)}} errorAnimation={errorAnimation && 90} value={value}
+            <TextFieldTwoInput errorAnimation={errorAnimation && 90} value={value}
                            onChangeText={async (text) => {
                                if (text.length !== 0) {
                                    if (text.match(/^(?=.*[a-z_.])[\w.]+$/)) {

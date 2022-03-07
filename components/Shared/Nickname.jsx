@@ -1,5 +1,5 @@
 import React from 'react';
-import {NicknameError, NicknameField, NicknameInput, NicknameSuccess} from "../../styles/shared";
+import {NicknameError, NicknameInput, NicknameSuccess} from "../../styles/shared";
 import {LoaderNickname} from "../index";
 import {Animated} from "react-native";
 import Easing from "react-native-web/dist/vendor/react-native/Animated/Easing";

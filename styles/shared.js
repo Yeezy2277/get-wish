@@ -210,7 +210,7 @@ export const FormGroupTextSwitch = styled.Text`
 
 export const FormGroupTextInput = styled.TextInput`
   font-family: 'Nunito';
-  font-size: 15px;
+  font-size: ${props => props.android ? 12 : 15}px;
   margin-top: 0;
   text-align: right;
   color: #1A1A1A;

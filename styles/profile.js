@@ -26,7 +26,7 @@ export const AvatarTouchableHighlight = styled.TouchableHighlight`
   width: 36px;
 `;
 
-export const ReservedDesiresContainer = styled.View`
+export const ReservedDesiresContainer = styled.Pressable`
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -4,7 +4,7 @@ import {StyleSheet, InteractionManager, Platform} from "react-native";
 import {AuthContext} from "../../screens/Auth/AuthScreen";
 import {PhoneContainer, PhonePrefix} from "../../styles/authSteps";
 
-function PhoneNumber(props) {
+function PhoneNumber() {
     const {data, handleChangeObject} = useContext(AuthContext)
     const [state, setState] = React.useState({})
 
@@ -28,6 +28,7 @@ function PhoneNumber(props) {
                 }}
                 style={styles.input}
                 keyboardType="numeric"
+                autoFocus={true}
             />
         </PhoneContainer>
     );
@@ -36,7 +37,7 @@ function PhoneNumber(props) {
 const styles = StyleSheet.create({
     input: {
         fontFamily: 'Nunito',
-        width: 204,
+        minWidth: 204,
         fontStyle: 'normal',
         height: 41,
         color: '#1A1A1A',

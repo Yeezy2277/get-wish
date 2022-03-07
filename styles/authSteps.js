@@ -58,6 +58,7 @@ export const AuthStepContentHeaderTitle = styled.Text`
   font-size: 20px;
   line-height: 27.28px;
   color: #1A1A1A;
+  text-align: center;
 `;
 
 export const AuthStepContentHeaderText = styled.Text`

@@ -40,7 +40,9 @@ function TabStack() {
             tabBarOptions={{
                 activeTintColor: COLORS.purple,
             }}
-            screenOptions={{ headerShown: false }}
+            screenOptions={(_) => {
+                return { headerShown: false }
+            }}
         >
             <Tab.Screen
                 name="Main"
@@ -49,14 +51,17 @@ function TabStack() {
             <Tab.Screen
                 name="Profile"
                 component={MyStack}
-                options={({ route }) => ({
-                    tabBarOptions: { showIcon: true },
-                    tabBarIcon: ({ tintColor }) => {
-                        return <Image resizeMode="cover" style={{ width: 26, height: 26, borderRadius: 13 }} source={
-                            userInfo?.avatar ? {uri: `https://${userInfo?.avatar}`} : require('../../assets/images/icons/bottom/profile.png')}/>
-                    },
-                    tabBarLabel: 'Профиль',
-                })}
+                options={(params) => {
+                    // const route = navigationRef?.current?.getCurrentRoute()
+                    const isProfile =  true
+                    return {tabBarOptions: { showIcon: true },
+                        tabBarIcon: ({ tintColor }) => {
+                            return <Image resizeMode="cover" style={{ width: 26, height: 26, borderRadius: 13, borderWidth: (userInfo?.avatar && isProfile) && 2,
+                                borderColor: (userInfo?.avatar && isProfile) && '#8424FF'}} source={
+                                userInfo?.avatar ? {uri: `https://${userInfo?.avatar}`} : require('../../assets/images/icons/bottom/profile.png')}/>
+                        },
+                        tabBarLabel: 'Профиль',}
+                }}
             />
         </Tab.Navigator>
     )
