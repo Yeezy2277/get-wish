@@ -12,6 +12,7 @@ import {
 import { AuthContext } from '../../screens/Auth/AuthScreen';
 import { logout } from '../../redux/actions/authActions';
 import { navigateAction } from '../../functions/NavigationService';
+import { COLORS } from '../../functions/constants';
 
 function AuthStep({
   title, text, children, maxWidth, mt, back, exit, isChangePhone, isFirstStep
@@ -23,24 +24,28 @@ function AuthStep({
     onReloadStep();
   };
 
+  const goToMain = () => {
+    navigateAction('MainProfile');
+  };
+
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{ x: 0, y: 0 }}
-      style={{ backgroundColor: '#fff' }}
+      style={{ backgroundColor: COLORS.white }}
       scrollEnabled={false}
     >
       <AuthStepContainer>
         <AuthStepContent mt={mt}>
           {back && (
           <AuthStepHeader jc="flex-start">
-            <TouchableHighlight underlayColor="none" onPress={() => onPrevStep()}>
+            <TouchableHighlight underlayColor="none" onPress={onPrevStep}>
               <Image style={{ width: 9, height: 16 }} source={require('../../assets/images/icons/arrow.png')} />
             </TouchableHighlight>
           </AuthStepHeader>
           )}
           {isChangePhone && isFirstStep && (
           <AuthStepHeader mb={58} jc="flex-start">
-            <TouchableHighlight underlayColor="none" onPress={() => navigateAction('MainProfile')}>
+            <TouchableHighlight underlayColor="none" onPress={goToMain}>
               <AuthStepCancelText>Отмена</AuthStepCancelText>
             </TouchableHighlight>
           </AuthStepHeader>

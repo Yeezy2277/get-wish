@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { DesiresScreenRow } from '../../styles/profile';
 import { DesiresScreenElement } from '../../components';
+import { COLORS } from '../../functions/constants';
 
 function DesiresScreen() {
   return (
@@ -21,7 +22,7 @@ function DesiresScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: COLORS.white2
   },
 });
 

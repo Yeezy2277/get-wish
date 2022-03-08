@@ -67,33 +67,36 @@ function Nickname(props) {
     }, 100);
   };
 
+  const handleChangeTextInput = async (text) => {
+    if (text.length !== 0) {
+      if (text.match(/^(?=.*[a-z_.])[\w.]+$/)) {
+        await onChange(name)(text);
+        if (loading) {
+          setLoading(false);
+        } else if (text.length >= 3) {
+          await showLoading(text);
+        }
+      } else {
+        await animationError();
+      }
+    } else {
+      await onChange(name)(text);
+      if (loading) {
+        setLoading(false);
+      } else if (text.length >= 3) {
+        await showLoading(text);
+      }
+    }
+
+  };
+
   return (
     <>
       <NicknameInput
         ref={(input) => { setState(input); }}
         errorAnimation={errorAnimation && 15}
         value={value}
-        onChangeText={async (text) => {
-          if (text.length !== 0) {
-            if (text.match(/^(?=.*[a-z_.])[\w.]+$/)) {
-              await onChange(name)(text);
-              if (loading) {
-                setLoading(false);
-              } else if (text.length >= 3) {
-                await showLoading(text);
-              }
-            } else {
-              await animationError();
-            }
-          } else {
-            await onChange(name)(text);
-            if (loading) {
-              setLoading(false);
-            } else if (text.length >= 3) {
-              await showLoading(text);
-            }
-          }
-        }}
+        onChangeText={handleChangeTextInput}
         autoCapitalize="none"
       />
       {!hasError && availability && isSubmitting && !preLoading && !loading

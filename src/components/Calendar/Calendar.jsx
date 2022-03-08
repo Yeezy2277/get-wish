@@ -15,8 +15,12 @@ function CalendarShared({
   const { show: showToast } = useToasts();
   const { userInfo } = useSelector((state) => state.user);
 
+  const showOff = () => {
+    setShow(false);
+  };
+
   const handleConfirm = async (dateFromPicker) => {
-    await setShow(false);
+    showOff();
     setDate(dateFromPicker);
     await userCRUD.edit(userInfo.id, {
       ...userInfo,
@@ -36,7 +40,7 @@ function CalendarShared({
       onConfirm={handleConfirm}
       cancelTextIOS="Отмена"
       confirmTextIOS="Выбрать"
-      onCancel={() => setShow(false)}
+      onCancel={showOff}
     />
   );
 }

@@ -35,9 +35,13 @@ function DesiresScreenElement() {
     });
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <>
-      <Pressable style={{ zIndex: 1 }} onPress={() => setOpen(true)}>
+      <Pressable style={{ zIndex: 1 }} onPress={handleOpen}>
         <DesiresScreenElementContainer style={Platform.OS === 'android' && androidShadow}>
           <DesiresScreenElementImage resizeMode="cover" source={require('../../assets/images/icons/profile/desires/example1.png')} />
           <DesiresScreenElementContent>

@@ -50,9 +50,23 @@ function DesiresScreenElementActionsheet({ open, setOpen }) {
     });
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCloseChild = () => {
+    setOpenChild(false);
+  };
+
+  const handleCloseButton = () => {
+    handleClose();
+    handleCloseChild();
+    show();
+  };
+
   return (
     <>
-      <Actionsheet padding={0} isOpen={open} onClose={() => setOpen(false)}>
+      <Actionsheet padding={0} isOpen={open} onClose={handleClose}>
         <Actionsheet.Content padding={0} backgroundColor="#fff">
           <ActionDesires>
             <ActionDesiresImageContainer>
@@ -116,7 +130,7 @@ function DesiresScreenElementActionsheet({ open, setOpen }) {
           </ActionDesires>
         </Actionsheet.Content>
       </Actionsheet>
-      <Actionsheet padding={0} isOpen={openChild} onClose={() => setOpenChild(false)}>
+      <Actionsheet padding={0} isOpen={openChild} onClose={handleCloseChild}>
         <Actionsheet.Content backgroundColor="#fff" padding={0}>
           <ActionElementChild>
             <ActionDesiresChildName>
@@ -138,15 +152,11 @@ function DesiresScreenElementActionsheet({ open, setOpen }) {
                 _text={{
                   color: '#8424FF'
                 }}
-                onPress={() => {
-                  setOpen(false);
-                  setOpenChild(false);
-                  show();
-                }}
+                onPress={handleCloseButton}
               >
                 Да, я передумал
               </Button>
-              <AuthButton variant="small" onPress={() => setOpenChild(false)} text="Упс, закрыть" />
+              <AuthButton variant="small" onPress={handleCloseChild} text="Упс, закрыть" />
             </ActionDesiresChildButton>
           </ActionElementChild>
         </Actionsheet.Content>

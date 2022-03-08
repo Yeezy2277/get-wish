@@ -10,8 +10,11 @@ import { navigateAction } from '../../functions/NavigationService';
 import { DesiresElement } from '../index';
 
 function ReservedDesires({ empty = false }) {
+  const goToDesires = () => {
+    navigateAction('DesiresScreen');
+  };
   return (
-    <ReservedDesiresContainer onPress={() => navigateAction('DesiresScreen')}>
+    <ReservedDesiresContainer onPress={goToDesires}>
       <ReservedDesiresTitle>Зарезервированные желания</ReservedDesiresTitle>
       {empty && (
       <ReservedDesiresPlaceholder>

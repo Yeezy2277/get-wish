@@ -56,6 +56,9 @@ function FormGroup({ forms, last = false }) {
         );
       }
       case 'select': {
+        const goToAction = () => {
+          navigateAction(link.name, link.params);
+        };
         return (
           <>
             <FormGroupElement>
@@ -63,11 +66,11 @@ function FormGroup({ forms, last = false }) {
               <FormGroupSelect>
                 <Pressable
                   style={{ paddingRight: 12 }}
-                  onPress={() => navigateAction(link.name, link.params)}
+                  onPress={goToAction}
                 >
                   <FormGroupSelectText>{value}</FormGroupSelectText>
                 </Pressable>
-                <Icon handlePressIcon={() => navigateAction(link.name, link.params)} source={require('../../assets/images/icons/profile/arrow.png')} />
+                <Icon handlePressIcon={goToAction} source={require('../../assets/images/icons/profile/arrow.png')} />
               </FormGroupSelect>
 
             </FormGroupElement>
@@ -93,6 +96,9 @@ function FormGroup({ forms, last = false }) {
         );
       }
       case 'date': {
+        const showModal = () => {
+          setModalVisible(true);
+        };
         return (
           <>
             <FormGroupElementDate>
@@ -103,7 +109,7 @@ function FormGroup({ forms, last = false }) {
                 show={modalVisible}
                 setShow={setModalVisible}
               />
-              <Pressable onPress={() => setModalVisible(true)}>
+              <Pressable onPress={showModal}>
                 <FormGroupButtonText color={!userInfo?.birthdate && COLORS.purple}>
                   {userInfo?.birthdate ? moment(userInfo?.birthdate).format('YYYY-MM-DD') : 'Добавить'}
                 </FormGroupButtonText>

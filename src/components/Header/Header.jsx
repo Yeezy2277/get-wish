@@ -5,9 +5,12 @@ import {
 } from '../../styles/shared';
 
 function Header({ navigation, title }) {
+  const goBack = () => {
+    navigation.navigation.goBack();
+  };
   return (
     <HeaderRow>
-      <HeaderPressable onPress={() => navigation.navigation.goBack()}>
+      <HeaderPressable onPress={goBack}>
         <HeaderArrow source={require('../../assets/images/icons/arrow.png')} />
       </HeaderPressable>
       <HeaderTitle>{title}</HeaderTitle>
