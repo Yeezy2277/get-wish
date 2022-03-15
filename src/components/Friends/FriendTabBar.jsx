@@ -1,12 +1,19 @@
 import React from 'react';
 import { Box, Text } from 'native-base';
+import { useDispatch } from 'react-redux';
 import { FriendTabBarContainer, FriendTabBarImage } from '../../styles/shared';
 import { COLORS } from '../../functions/constants';
+import { SET_TYPE_SEARCH } from '../../redux/constants/userConstants';
 
 function FriendTabBar({
   active, jumpTo, index, title, image, imageActive, notification
 }) {
+  const dispatch = useDispatch();
   const goTo = () => {
+    dispatch({
+      type: SET_TYPE_SEARCH,
+      payload: index
+    });
     jumpTo(index);
   };
   return (

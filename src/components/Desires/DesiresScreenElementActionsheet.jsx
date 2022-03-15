@@ -30,8 +30,11 @@ import AuthButton from '../Shared/AuthButton';
 import useToasts from '../../hooks/useToast';
 import { navigateAction } from '../../functions/NavigationService';
 import { COLORS } from '../../functions/constants';
+import { TutorialFriendWishList } from '../index';
 
-function DesiresScreenElementActionsheet({ open, setOpen }) {
+function DesiresScreenElementActionsheet({
+  open, setOpen, friend, showTutorial, setShowTutorial
+}) {
   const [openChild, setOpenChild] = React.useState(false);
   const { show } = useToasts(2000, 'Резерв желания отменен');
   const { showActionSheetWithOptions } = useActionSheet();
@@ -66,8 +69,13 @@ function DesiresScreenElementActionsheet({ open, setOpen }) {
 
   return (
     <>
-      <Actionsheet padding={0} isOpen={open} onClose={handleClose}>
-        <Actionsheet.Content padding={0} backgroundColor="#fff">
+      <Actionsheet
+        padding={0}
+        isOpen={open}
+        position="relative"
+        onClose={handleClose}
+      >
+        <Actionsheet.Content style={{ elevation: 0 }} padding={0} backgroundColor="#fff">
           <ActionDesires>
             <ActionDesiresImageContainer>
               <ActionDesiresImage source={require('../../assets/images/icons/profile/desires/example1Bg.png')} />
@@ -77,6 +85,7 @@ function DesiresScreenElementActionsheet({ open, setOpen }) {
               </ActionDesiresCount>
             </ActionDesiresImageContainer>
             <ActionDesiresRow>
+              {!friend && (
               <ActionDesiresRowHeader>
                 <ActionDesiresRowHeaderAvatar source={require('../../assets/images/icons/profile/desires/avatar1.png')} />
                 <ActionDesiresRowHeaderName>anastasia_efremova</ActionDesiresRowHeaderName>
@@ -85,7 +94,8 @@ function DesiresScreenElementActionsheet({ open, setOpen }) {
                   <ActionDesiresActionsIcon source={require('../../assets/images/icons/arrow.png')} />
                 </ActionDesiresActions>
               </ActionDesiresRowHeader>
-              <Divider />
+              )}
+              {!friend && <Divider />}
               <ActionDesiresRowLinks>
                 <Box
                   style={{
@@ -129,6 +139,7 @@ function DesiresScreenElementActionsheet({ open, setOpen }) {
             </ActionDesiresRow>
           </ActionDesires>
         </Actionsheet.Content>
+        {showTutorial && <TutorialFriendWishList setShowTutorial={setShowTutorial} />}
       </Actionsheet>
       <Actionsheet padding={0} isOpen={openChild} onClose={handleCloseChild}>
         <Actionsheet.Content backgroundColor="#fff" padding={0}>

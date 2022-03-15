@@ -5,6 +5,8 @@ export const COLORS = {
   purple2: '#ff00ff',
   black: '#1A1A1A',
   black2: '#00000077',
+  black3: 'rgba(0, 0, 0, 0.8)',
+  overlay: 'rgba(0, 0, 0, 0.2)',
   gray: '#7C82A5',
   extralightGray: '#F7F7F7',
   purple: '#8424FF',

@@ -1,27 +1,23 @@
 import React from 'react';
-import { View } from 'native-base';
+import { Box, PresenceTransition, View } from 'native-base';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { useWindowDimensions } from 'react-native';
-import { FriendTabBar, SearchHeader } from '../../components';
+import { useSelector } from 'react-redux';
+import {
+  FriendsQuery, FriendsRequest, FriendTabBar, SearchHeader
+} from '../../components';
 import { FriendsContainer } from '../../styles/friends';
 import { FriendTabBars } from '../../styles/shared';
-import { COLORS } from '../../functions/constants';
 import { FriendsFirst } from '../index';
-
-function FirstRoute() {
-  return <View style={{ flex: 1, backgroundColor: COLORS.red }} />;
-}
-
-function SecondRoute() {
-  return <View style={{ flex: 1, backgroundColor: COLORS.purple }} />;
-}
+import { COLORS } from '../../functions/constants';
 
 function Friends(props) {
   const renderScene = SceneMap({
-    first: FriendsFirst,
-    second: SecondRoute,
-    third: FirstRoute,
+    friend: FriendsFirst,
+    request: FriendsRequest,
+    query: FriendsQuery,
   });
+  const { openPanel } = useSelector((state) => state.generic);
 
   const { navigation } = props;
   const layout = useWindowDimensions();
@@ -29,20 +25,20 @@ function Friends(props) {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {
-      key: 'first',
+      key: 'friend',
       title: 'Друзья',
       imageActive: require('../../assets/images/icons/tabs/first_active.png'),
       image: require('../../assets/images/icons/tabs/first.png')
     },
     {
-      key: 'second',
+      key: 'request',
       title: 'Заявки',
       notification: true,
       imageActive: require('../../assets/images/icons/tabs/second_active.png'),
       image: require('../../assets/images/icons/tabs/second.png')
     },
     {
-      key: 'third',
+      key: 'query',
       title: 'Запросы',
       imageActive: require('../../assets/images/icons/tabs/third_active.png'),
       image: require('../../assets/images/icons/tabs/third.png')
@@ -54,22 +50,40 @@ function Friends(props) {
       <View height="100%" width="100%">
         <TabView
           renderTabBar={({ navigationState, jumpTo }) => {
+            if (!openPanel) {
+              return (
+                <PresenceTransition
+                  visible={!openPanel}
+                  initial={{
+                    opacity: 0
+                  }}
+                  animate={{
+                    opacity: 1,
+                    transition: {
+                      duration: 250
+                    }
+                  }}
+                >
+                  <FriendTabBars>
+                    {navigationState?.routes.map((el, idx) => (
+                      <FriendTabBar
+                        key={el.key}
+                        index={el.key}
+                        title={el.title}
+                        image={el.image}
+                        notification={el.notification}
+                        imageActive={el.imageActive}
+                        jumpTo={jumpTo}
+                        active={navigationState.index === idx}
+                        {...props}
+                      />
+                    ))}
+                  </FriendTabBars>
+                </PresenceTransition>
+              );
+            }
             return (
-              <FriendTabBars>
-                {navigationState?.routes.map((el, idx) => (
-                  <FriendTabBar
-                    key={el.key}
-                    index={el.key}
-                    title={el.title}
-                    image={el.image}
-                    notification={el.notification}
-                    imageActive={el.imageActive}
-                    jumpTo={jumpTo}
-                    active={navigationState.index === idx}
-                    {...props}
-                  />
-                ))}
-              </FriendTabBars>
+              <Box height="44px" width="100%" backgroundColor={COLORS.white2} />
             );
           }}
           navigationState={{ index, routes }}

@@ -7,7 +7,7 @@ import { Box, Image } from 'native-base';
 import { ButtonAuthLabel, ButtonAuthLabelVariant2 } from '../../styles/shared';
 
 function AuthButton({
-  children, active, onPress, style, higlightStyle, variant = 'big', text
+  children, active, onPress, style, higlightStyle, lineHeightText, variant = 'big', text
 }) {
   if (variant === 'big') {
     return (
@@ -33,8 +33,13 @@ function AuthButton({
         color: '#8424FF'
       }}
     >
-      <Image width="100%" borderRadius={12} height={46} position="relative" source={require('../../assets/images/icons/Buttons.png')} resizeMode="cover" />
-      <ButtonAuthLabelVariant2 onPress={onPress}>{text}</ButtonAuthLabelVariant2>
+      <Image width="100%" borderRadius={12} height={46} position="relative" source={require('../../assets/images/icons/Buttons.png')} resizeMode="cover" style={{ ...higlightStyle }} />
+      <ButtonAuthLabelVariant2
+        lineHeightText={lineHeightText}
+        onPress={onPress}
+      >
+        {text}
+      </ButtonAuthLabelVariant2>
     </Box>
   );
 

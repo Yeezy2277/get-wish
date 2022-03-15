@@ -13,6 +13,11 @@ export function CRUD(baseUrl) {
         $authHost.get(`${API}/${baseUrl}`)
       );
     },
+    searchFilter(params = {}) {
+      return parseResponse(
+        $authHost.post(`${API}/${baseUrl}/query`, params, defaultConfig)
+      );
+    },
     get(id) {
       return parseResponse($authHost.get(`${API}/${baseUrl}/${id}`));
     },

@@ -1,4 +1,4 @@
-import styled from "styled-components/native/dist/styled-components.native.esm";
+import styled from 'styled-components/native/dist/styled-components.native.esm';
 
 export const ProfileHeader = styled.View`
   display: flex;
@@ -39,6 +39,19 @@ export const ReservedDesiresContainer = styled.Pressable`
   margin-bottom: 20px;
 `;
 
+export const ReservedDesiresUserContainer = styled.ImageBackground`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 5px rgba(0, 99, 249, 0.15);
+  padding: 15px;
+  height: 158px;
+  width: 100%;
+  border-radius: 10px;
+  background-color: #F7F7F7;
+  margin-bottom: 10px;
+`;
+
 export const ReservedDesiresTitle = styled.Text`
   font-weight: bold;
   font-family: 'Nunito';
@@ -46,6 +59,24 @@ export const ReservedDesiresTitle = styled.Text`
   line-height: 20px;
   text-align: center;
   color: #1A1A1A;
+`;
+
+export const ReservedDesiresUserTitle = styled.Text`
+  font-weight: bold;
+  font-family: 'Nunito';
+  align-self: flex-start;
+  font-size: 18px;
+  line-height: 20px;
+  color: #1A1A1A;
+`;
+
+export const ReservedDesiresUserSubTitle = styled.Text`
+  font-family: 'Nunito';
+  margin-top: 5px;
+  align-self: flex-start;
+  font-size: 13px;
+  line-height: 17px;
+  color: #7C82A5;
 `;
 
 export const ReservedDesiresRow = styled.View`
@@ -62,7 +93,6 @@ export const DesiresElementColumn = styled.View`
   max-width: 58px;
   height: 100%;
 `;
-
 
 export const DesiresScreenRow = styled.View`
   margin-top: 20px;
@@ -124,7 +154,7 @@ export const DesiresScreenElementContentBottomIconContainer = styled.View`
 
 export const DesiresScreenElementContentBottomIcon = styled.Image`
   width: 10px;
-  height: ${props => props.h}px;
+  height: ${(props) => props.h}px;
 `;
 
 export const DesiresScreenElementContentBottomAvatar = styled.Image`
@@ -141,7 +171,6 @@ export const DesiresScreenElementContentBottomText = styled.Text`
   color: #8424FF;
   margin-left: 7px;
 `;
-
 
 export const DesiresScreenElementContentHeader = styled.View`
   display: flex;
@@ -163,7 +192,6 @@ export const DesiresScreenElementContentHeaderImage = styled.Image`
   height: 15px;
 
 `;
-
 
 export const DesiresElementImage = styled.Image`
   position: relative;
@@ -190,7 +218,6 @@ export const DesiresElementAvatar = styled.TouchableHighlight`
   right: -7px;
   width: 28px;
 `;
-
 
 export const ReservedDesiresPlaceholder = styled.Text`
   font-family: 'Nunito';
@@ -238,10 +265,9 @@ export const ImageViewBottom = styled.View`
   padding: 0 20px 0 19px;
 `;
 
-
 export const ImageViewCancel = styled.Text`
   font-family: 'Nunito';
-  font-weight: ${props => props.bold ? 'bold' : 600};
+  font-weight: ${(props) => (props.bold ? 'bold' : 600)};
   font-size: 16px;
   line-height: 22px;
   color: #ffffff;
@@ -275,14 +301,12 @@ export const ImageViewSourceContainer = styled.View`
   background-color: #000000;
 `;
 
-
 export const ImageViewSource = styled.Image`
   position: relative;
   width: 375px;
   height: 375px;
   z-index: 2;
 `;
-
 
 export const ShareScreenHeader = styled.View`
   position: relative;
@@ -315,7 +339,6 @@ export const ModalCancelText = styled.Text`
   color: #8424FF;
 `;
 
-
 export const ShareScreenTitle = styled.Text`
   font-family: 'Nunito';
   font-weight: bold;
@@ -336,7 +359,6 @@ export const SearchScreenImage = styled.Image`
   margin-left: 15px;
 `;
 
-
 export const ShareScreenPressable = styled.Pressable`
   width: 20px;
   top: 56px;
@@ -344,7 +366,6 @@ export const ShareScreenPressable = styled.Pressable`
   position: absolute;
   right: 20px;
 `;
-
 
 export const ShareScreenButtonPanel = styled.View`
   margin-top: 10px;
@@ -424,7 +445,6 @@ export const ActionDesiresRowHeader = styled.View`
   align-items: center;
 `;
 
-
 export const ActionDesiresRowHeaderAvatar = styled.Image`
   width: 26px;
   height: 26px;
@@ -472,7 +492,7 @@ export const ActionDesiresRowLinks = styled.View`
 
 export const ActionDesiresRowLinksIcon = styled.Image`
   width: 13px;
-  height: ${props => props.h}px;
+  height: ${(props) => props.h}px;
 `;
 
 export const ActionDesiresRowLinksText = styled.Text`
@@ -485,6 +505,11 @@ export const ActionDesiresRowLinksText = styled.Text`
 export const ActionDesiresRowLinksMenu = styled.Image`
   width: 4px;
   height: 20px;
+`;
+
+export const LinksMenu = styled.Image`
+  width: 3px;
+  height: 15px;
 `;
 
 export const ActionDesiresRowName = styled.Text`
@@ -523,7 +548,6 @@ export const ActionDesiresChildName = styled.Text`
   max-width: 221px;
   text-align: center;
 `;
-
 
 export const ActionDesiresChildDescription = styled.Text`
   font-family: 'Nunito';

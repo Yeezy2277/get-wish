@@ -5,8 +5,10 @@ import { Provider } from 'react-redux';
 import { extendTheme, NativeBaseProvider } from 'native-base';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import * as SplashScreen from 'expo-splash-screen';
+import Toast from 'react-native-toast-message';
 import { AppRouter } from './src/components';
 import store from './src/redux';
+import { toastConfig } from './src/functions/helpers';
 
 TextInput.defaultProps.selectionColor = '#8424FF';
 
@@ -20,7 +22,6 @@ SplashScreen.preventAutoHideAsync()
 
 export default function App() {
   const [loadingApp, setLoadingApp] = React.useState(false);
-
   console.disableYellowBox = true;
 
   React.useEffect(() => {
@@ -55,6 +56,7 @@ export default function App() {
           <AppRouter />
         </ActionSheetProvider>
       </NativeBaseProvider>
+      <Toast config={toastConfig} />
     </Provider>
   );
 }

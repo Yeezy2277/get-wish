@@ -19,7 +19,9 @@ import DesiresScreenElementActionsheet from './DesiresScreenElementActionsheet';
 import { androidShadow } from '../../functions';
 import { navigateAction } from '../../functions/NavigationService';
 
-function DesiresScreenElement() {
+function DesiresScreenElement({
+  friend, setShowTutorial, showTutorial
+}) {
   const [open, setOpen] = React.useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -35,13 +37,14 @@ function DesiresScreenElement() {
     });
   };
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpen = async () => {
+    await setOpen(true);
+    setShowTutorial(true);
   };
 
   return (
     <>
-      <Pressable style={{ zIndex: 1 }} onPress={handleOpen}>
+      <Pressable style={{ zIndex: 1, position: 'relative' }} onPress={handleOpen}>
         <DesiresScreenElementContainer style={Platform.OS === 'android' && androidShadow}>
           <DesiresScreenElementImage resizeMode="cover" source={require('../../assets/images/icons/profile/desires/example1.png')} />
           <DesiresScreenElementContent>
@@ -68,12 +71,18 @@ function DesiresScreenElement() {
                   zara.ru
                 </DesiresScreenElementContentBottomText>
               </DesiresScreenElementContentBottomIconContainer>
-              <DesiresScreenElementContentBottomAvatar resizeMode="cover" source={require('../../assets/images/icons/profile/desires/avatar1.png')} />
+              {!friend && <DesiresScreenElementContentBottomAvatar resizeMode="cover" source={require('../../assets/images/icons/profile/desires/avatar1.png')} />}
             </DesiresScreenElementContentBottom>
           </DesiresScreenElementContent>
         </DesiresScreenElementContainer>
       </Pressable>
-      <DesiresScreenElementActionsheet open={open} setOpen={setOpen} />
+      <DesiresScreenElementActionsheet
+        showTutorial={showTutorial}
+        setShowTutorial={setShowTutorial}
+        friend={friend}
+        open={open}
+        setOpen={setOpen}
+      />
     </>
   );
 }

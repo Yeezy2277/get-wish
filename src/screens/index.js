@@ -1,5 +1,8 @@
 export { default as Friends } from './Friends/Friends';
-export { default as FriendsFirst } from './Friends/FriendsFirst';
+export { default as UserProfile } from './Friends/UserProfile';
+export { default as UserWishList } from './Friends/UserWishList';
+export { default as UserPost } from './Friends/UserPost';
+export { default as FriendsFirst } from '../components/Friends/FriendsFirst';
 export { default as AuthScreen } from './Auth/AuthScreen';
 export { default as MainScreen } from './Auth/MainScreen';
 export { default as ProfileScreen } from './Profile/ProfileScreen';

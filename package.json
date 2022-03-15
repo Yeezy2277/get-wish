@@ -11,6 +11,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^7.5.4",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-native-community/datetimepicker": "^5.1.0",
@@ -30,6 +31,7 @@
     "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
     "formik": "^2.2.9",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "native-base": "^3.3.7",
     "patch-package": "^6.4.7",
@@ -45,6 +47,7 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-svg": "12.1.1",
     "react-native-tab-view": "^3.1.1",
+    "react-native-toast-message": "^2.1.1",
     "react-native-web": "0.17.1",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
@@ -53,7 +56,6 @@
     "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.3",
     "url": "^0.11.0",
-    "@babel/eslint-parser": "^7.5.4",
     "yup": "^0.32.11"
   },
   "devDependencies": {

@@ -1,5 +1,10 @@
 export const SET_AUTH = 'SET_AUTH';
 export const LOGOUT = 'LOGOUT';
+export const SET_SEARCH_START = 'SET_SEARCH_START';
+export const SET_SEARCH_DATA = 'SET_SEARCH_DATA';
+export const SET_SEARCH_SUCCESS = 'SET_SEARCH_SUCCESS';
+export const SET_SEARCH = 'SET_SEARCH';
 export const SET_USER_INFO = 'SET_USER_INFO';
 export const SET_NICKNAME = 'SET_NICKNAME';
 export const SET_DATA = 'SET_DATA';
+export const SET_TYPE_SEARCH = 'SET_TYPE_SEARCH';

@@ -1,4 +1,4 @@
-import styled from "styled-components/native/dist/styled-components.native.esm";
+import styled from 'styled-components/native/dist/styled-components.native.esm';
 
 export const ButtonAuthLabel = styled.Text`
   font-family: 'Nunito';
@@ -20,9 +20,8 @@ export const ButtonAuthLabelVariant2 = styled.Text`
   text-align: center;
   font-size: 15px;
   color: #FFFFFF;
-  line-height: 45px;
+  line-height: ${(props) => (props.lineHeightText ? props.lineHeightText : 45)}px;
 `;
-
 
 export const NicknameContainer = styled.View`
   font-family: 'Nunito';
@@ -42,7 +41,6 @@ export const TextFieldTwoContainer = styled.View`
   position: relative;
 `;
 
-
 export const NicknameBottom = styled.View`
   display: flex;
   flex-direction: column;
@@ -50,7 +48,6 @@ export const NicknameBottom = styled.View`
   width: 100%;
   margin-top: auto;
 `;
-
 
 export const NicknameLabel = styled.View`
   position: absolute;
@@ -79,7 +76,6 @@ export const PressableTextField = styled.Pressable`
   align-items: center;
 `;
 
-
 export const TextFieldCloseIcon = styled.Image`
   z-index: 10;
   height: 16px;
@@ -87,13 +83,11 @@ export const TextFieldCloseIcon = styled.Image`
   border-radius: 8px;
 `;
 
-
 export const TextFieldLabelText = styled.Text`
   font-size: 15px;
   line-height: 20px;
   color: #7C82A5;
 `;
-
 
 export const NicknameLabelText = styled.Text`
   font-size: 12px;
@@ -107,7 +101,7 @@ export const NicknameInput = styled.TextInput`
   border-radius: 12px;
   font-size: 15px;
   line-height: 20px;
-  padding-left: ${props => props.errorAnimation || 18}px;
+  padding-left: ${(props) => props.errorAnimation || 18}px;
   padding-bottom: 9px;
   padding-top: 27px;
   color: #1A1A1A;
@@ -121,7 +115,7 @@ export const TextFieldTwoInput = styled.TextInput`
   font-size: 15px;
   line-height: 20px;
   padding-right: 35px;
-  padding-left: ${props => props.errorAnimation || 97}px;
+  padding-left: ${(props) => props.errorAnimation || 97}px;
   padding-bottom: 11px;
   padding-top: 11px;
   color: #1A1A1A;
@@ -145,7 +139,6 @@ export const NicknameSuccess = styled.Text`
   margin-top: 10px;
 `;
 
-
 export const NicknameField = styled.View`
   display: flex;
   flex-direction: column;
@@ -155,7 +148,7 @@ export const FormGroupContainer = styled.View`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: ${props => props.lst}px;
+  margin-bottom: ${(props) => props.lst}px;
   background: #F7F7F7;
   border-radius: 12px;
 `;
@@ -192,7 +185,6 @@ export const FormGroupLineElement = styled.View`
   background-color: #EBEFFF;
 `;
 
-
 export const FormGroupText = styled.Text`
   font-family: 'Nunito';
   font-size: 15px;
@@ -210,7 +202,7 @@ export const FormGroupTextSwitch = styled.Text`
 
 export const FormGroupTextInput = styled.TextInput`
   font-family: 'Nunito';
-  font-size: ${props => props.android ? 12 : 15}px;
+  font-size: ${(props) => (props.android ? 12 : 15)}px;
   margin-top: 0;
   text-align: right;
   color: #1A1A1A;
@@ -229,14 +221,12 @@ export const FormGroupSwitch = styled.Switch`
   height: 30px;
 `;
 
-
 export const FormGroupSelectText = styled.Text`
   font-family: 'Nunito';
   font-size: 15px;
   color: #1A1A1A;
   line-height: 20px;
 `;
-
 
 export const FormGroupButton = styled.TouchableHighlight`
   
@@ -247,9 +237,8 @@ export const FormGroupButtonText = styled.Text`
   font-weight: bold;
   font-size: 15px;
   line-height: 20px;
-  color: ${props => props.color || '#1A1A1A'};
+  color: ${(props) => props.color || '#1A1A1A'};
 `;
-
 
 export const HeaderRow = styled.View`
   display: flex;
@@ -267,12 +256,46 @@ export const HeaderArrow = styled.Image`
   width: 8px;
 `;
 
+export const HeaderArrowMore = styled.Image`
+  height: 4px;
+  width: 20px;
+`;
+
+export const HeaderAvatar = styled.Image`
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+`;
+
 export const HeaderPressable = styled.Pressable`
   width: 26px;
   height: 26px;
   position: absolute;
+  z-index: 10;
   top: 58px;
   left: 20px;
+`;
+
+export const HeaderPressableMore = styled.Pressable`
+  width: 26px;
+  height: 26px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  top: 53px;
+  right: 20px;
+`;
+
+export const HeaderPressableAvatar = styled.Pressable`
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 51px;
+  right: 20px;
 `;
 
 export const HeaderTitle = styled.Text`
@@ -305,7 +328,6 @@ export const SharedGroupElement = styled.View`
   align-items: center;
 `;
 
-
 export const SharedGroupImage = styled.Image`
   height: 40px;
   margin-left: 20px;
@@ -326,9 +348,10 @@ export const SharedGroupCheckboxText = styled.Text`
 export const ModalContent = styled.View`
   display: flex;
   flex-direction: row;
+  background-color: #fff;
   justify-content: space-between;
   width: 100%;
-  height: 100%;
+  height: 96px;
   align-items: center;
   padding-left: 20px;
   padding-bottom: 12px;
@@ -343,7 +366,6 @@ export const FriendTabBars = styled.View`
     background-color: #fff;
 `;
 
-
 export const FriendTabBarContainer = styled.Pressable`
     width: 33.333%;
     background-color: #fff;
@@ -351,7 +373,19 @@ export const FriendTabBarContainer = styled.Pressable`
     display: flex;
     flex-direction: row;
     border-bottom-width: 2px;
-    border-bottom-color: ${props => props.active ? '#8424FF' : '#fff'};
+    border-bottom-color: ${(props) => (props.active ? '#8424FF' : '#fff')};
+    justify-content: center;
+    align-items: center;
+`;
+
+export const TabBarPanelContainer = styled.Pressable`
+    width: 50%;
+    background-color: #fff;
+    height: 39px;
+    display: flex;
+    flex-direction: row;
+    border-bottom-width: 2px;
+    border-bottom-color: ${(props) => (props.active ? '#8424FF' : '#fff')};
     justify-content: center;
     align-items: center;
 `;
@@ -362,3 +396,7 @@ export const FriendTabBarImage = styled.Image`
     height: 16px;
 `;
 
+export const TabBarPanelImage = styled.Image`
+    width: 18px;
+    height: 18px;
+`;
