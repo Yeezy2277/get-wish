@@ -8,7 +8,7 @@ function DesiresUser() {
   const { oneUser } = useSelector((state) => state.user);
   return (
     <ScrollView>
-      {oneUser?.private ? (
+      {(oneUser?.private && !oneUser?.is_friend) ? (
         <PrivateAccount />
       )
         : (

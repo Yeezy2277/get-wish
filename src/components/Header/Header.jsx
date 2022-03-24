@@ -15,8 +15,9 @@ import { searchPanelHandler } from '../../redux/actions/genericActions';
 function Header({
   navigation, title, more, morePress, avatar, search
 }) {
+  const { route } = navigation;
   const goBack = async () => {
-    if (search) {
+    if (search && !route.params?.noSearch) {
       await searchPanelHandler(true);
       navigation.navigation.goBack();
     } else {

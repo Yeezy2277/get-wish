@@ -30,9 +30,8 @@ function AuthStep({
 
   return (
     <KeyboardAwareScrollView
-      resetScrollToCoords={{ x: 0, y: 0 }}
-      style={{ backgroundColor: COLORS.white }}
-      scrollEnabled={false}
+      style={{ backgroundColor: COLORS.white, flex: 1 }}
+      contentContainerStyle={{ flex: 1 }}
     >
       <AuthStepContainer>
         <AuthStepContent mt={mt}>

@@ -2,9 +2,23 @@ export const SET_AUTH = 'SET_AUTH';
 export const LOGOUT = 'LOGOUT';
 export const SET_SEARCH_START = 'SET_SEARCH_START';
 export const SET_SEARCH_DATA = 'SET_SEARCH_DATA';
+export const DELETE_ID_FROM_DATA = 'DELETE_ID_FROM_DATA';
 export const SET_SEARCH_SUCCESS = 'SET_SEARCH_SUCCESS';
 export const SET_SEARCH = 'SET_SEARCH';
 export const SET_USER_INFO = 'SET_USER_INFO';
 export const SET_NICKNAME = 'SET_NICKNAME';
 export const SET_DATA = 'SET_DATA';
+export const SEND_REQUEST = 'SEND_REQUEST';
+export const ACCEPT_FRIEND = 'ACCEPT_FRIEND';
+export const CANCEL_REQUEST = 'CANCEL_REQUEST';
+export const CANCEL_FRIEND = 'CANCEL_FRIEND';
 export const SET_TYPE_SEARCH = 'SET_TYPE_SEARCH';
+export const SET_OUTGOING = 'SET_OUTGOING';
+export const SET_INCOMING = 'SET_INCOMING';
+export const SET_FRIENDS = 'SET_FRIENDS';
+
+export const SET_SEARCH_OUTGOING = 'SET_SEARCH_OUTGOING';
+export const SET_SEARCH_INCOMING = 'SET_SEARCH_INCOMING';
+export const SET_SEARCH_FRIENDS = 'SET_SEARCH_FRIENDS';
+
+export const HANDLE_FRIEND = 'HANDLE_FRIEND';

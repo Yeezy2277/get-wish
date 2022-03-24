@@ -2,7 +2,7 @@
   "name": "wishlist",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --dev-client",
     "lint": "eslint *.js **/*.js",
     "android": "expo run:android",
     "postinstall": "patch-package",

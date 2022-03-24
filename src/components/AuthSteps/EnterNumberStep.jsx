@@ -33,7 +33,7 @@ function EnterNumberStep({ isChangePhone }) {
       </TextOffer>
       )}
       <AuthButton
-        style={{ marginTop: isChangePhone && 100 }}
+        style={{ marginTop: isChangePhone ? 100 : 0 }}
         onPress={onPressNumberStep}
         active={!disabledNext}
       >

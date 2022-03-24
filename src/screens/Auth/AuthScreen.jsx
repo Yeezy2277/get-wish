@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { EnterCodeStep, EnterNicknameStep, EnterNumberStep } from '../../components';
+import { COLORS } from '../../functions/constants';
 
 export const AuthContext = React.createContext(undefined);
 
@@ -57,7 +58,9 @@ function AuthScreen(props) {
 
   return (
     <AuthContext.Provider value={params}>
-      {loading ? <Text>загрузка</Text> : <Step />}
+      {loading ? <Text>загрузка</Text> : (
+        <Step />
+      )}
     </AuthContext.Provider>
   );
 }

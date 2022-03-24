@@ -31,7 +31,7 @@ function UserPosts() {
 
   return (
     <ScrollView>
-      {oneUser?.private ? (
+      {(oneUser?.private && !oneUser?.is_friend) ? (
         <PrivateAccount />
       ) : (
         <HStack maxWidth="100%" flexWrap="wrap">

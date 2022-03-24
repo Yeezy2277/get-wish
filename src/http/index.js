@@ -8,11 +8,11 @@ import { LOGOUT, SET_NICKNAME } from '../redux/constants/userConstants';
 const { dispatch } = store;
 
 const $host = axios.create({
-  baseURL: 'https://dev.wish.mediapark.com.ru'
+  baseURL: 'https://wish.dev39.ru'
 });
 
 const $authHost = axios.create({
-  baseURL: 'https://dev.wish.mediapark.com.ru'
+  baseURL: 'https://wish.dev39.ru'
 });
 
 const authIntterceptor = async (config) => {

@@ -18,32 +18,63 @@ function Friends(props) {
     query: FriendsQuery,
   });
   const { openPanel } = useSelector((state) => state.generic);
+  const {
+    typeSearch, incomingRequest, outgoingRequest, friends
+  } = useSelector((state) => state.user);
 
   const { navigation } = props;
   const layout = useWindowDimensions();
 
+  const all = React.useCallback(() => {
+    return incomingRequest
+      ?.reduce((total, amount) => {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!amount.hasOwnProperty('status')) {
+          total += 1;
+        }
+        return total;
+      }, 0);
+  }, [incomingRequest]);
+
   const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    {
-      key: 'friend',
-      title: 'Друзья',
-      imageActive: require('../../assets/images/icons/tabs/first_active.png'),
-      image: require('../../assets/images/icons/tabs/first.png')
-    },
-    {
-      key: 'request',
-      title: 'Заявки',
-      notification: true,
-      imageActive: require('../../assets/images/icons/tabs/second_active.png'),
-      image: require('../../assets/images/icons/tabs/second.png')
-    },
-    {
-      key: 'query',
-      title: 'Запросы',
-      imageActive: require('../../assets/images/icons/tabs/third_active.png'),
-      image: require('../../assets/images/icons/tabs/third.png')
-    },
-  ]);
+
+  const routes = React.useMemo(() => {
+    return [
+      {
+        key: 'friend',
+        title: 'Друзья',
+        imageActive: require('../../assets/images/icons/tabs/first_active.png'),
+        image: require('../../assets/images/icons/tabs/first.png')
+      },
+      {
+        key: 'request',
+        title: 'Заявки',
+        notification: !!all(),
+        imageActive: require('../../assets/images/icons/tabs/second_active.png'),
+        image: require('../../assets/images/icons/tabs/second.png')
+      },
+      {
+        key: 'query',
+        title: 'Запросы',
+        imageActive: require('../../assets/images/icons/tabs/third_active.png'),
+        image: require('../../assets/images/icons/tabs/third.png')
+      },
+    ];
+  }, [all]);
+
+  const hasPadding = React.useCallback(() => {
+    if (typeSearch === 'friend' && friends?.length) {
+      return true;
+    } if (typeSearch === 'request' && incomingRequest?.length) {
+      return true;
+    } if (typeSearch === 'query' && outgoingRequest?.length) {
+      return true;
+    }
+    return false;
+  }, [friends?.length, incomingRequest?.length, outgoingRequest?.length, typeSearch]);
+
+  const hP = hasPadding();
+
   return (
     <FriendsContainer>
       <SearchHeader navigation={navigation} title="Друзья" />
@@ -83,7 +114,7 @@ function Friends(props) {
               );
             }
             return (
-              <Box height="44px" width="100%" backgroundColor={COLORS.white2} />
+              <Box height={hP ? '0px' : '44px'} width="100%" backgroundColor={COLORS.white2} />
             );
           }}
           navigationState={{ index, routes }}

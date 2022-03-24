@@ -3,10 +3,11 @@ import { Button } from 'native-base';
 import { COLORS } from '../../functions/constants';
 
 function SharedButton({
-  style, textStyle, children, flex = true
+  style, textStyle, children, onPress, color, flex = true
 }) {
   return (
     <Button
+      onPress={onPress}
       style={{
         backgroundColor: COLORS.white,
         height: 30,
@@ -17,7 +18,7 @@ function SharedButton({
         ...style
       }}
       _text={{
-        color: '#8424FF',
+        color: color || '#8424FF',
         fontSize: 14,
         lineHeight: 16,
         ...textStyle

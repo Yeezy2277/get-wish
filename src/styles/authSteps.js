@@ -7,6 +7,7 @@ export const AuthStepContainer = styled.View`
   display: flex;
   flex-direction: column;
   background-color: #fff;
+  flex: 1;
   font-family: 'Nunito';
 `;
 

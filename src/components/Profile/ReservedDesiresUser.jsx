@@ -13,7 +13,7 @@ function ReservedDesiresUser() {
   const { showActionSheetWithOptions } = useActionSheet();
   const state = new ActionSheets(showActionSheetWithOptions);
   return (
-    <Pressable onPress={goToUserWishLists}>
+    <Pressable shadow={1} onPress={goToUserWishLists}>
       <ReservedDesiresUserContainer
         imageStyle={{ borderRadius: 10 }}
         resizeMode="cover"
@@ -26,7 +26,7 @@ function ReservedDesiresUser() {
           </Pressable>
         </HStack>
         <ReservedDesiresUserSubTitle>11 желаний</ReservedDesiresUserSubTitle>
-        <HStack marginTop="15px" space={5} alignSelf="flex-start">
+        <HStack marginTop="15px" space={3} justifyContent="center">
           <Image borderRadius={10} size={68} source={require('../../assets/images/icons/profile/desires/example1.png')} />
           <Image borderRadius={10} size={68} source={require('../../assets/images/icons/profile/desires/example1.png')} />
           <Image borderRadius={10} size={68} source={require('../../assets/images/icons/profile/desires/example1.png')} />

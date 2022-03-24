@@ -1,23 +1,51 @@
 import React from 'react';
-import { View, Spinner, Text } from 'native-base';
+import {
+  View, Spinner, Text, ScrollView
+} from 'native-base';
 import { useSelector } from 'react-redux';
+import { RefreshControl } from 'react-native';
 import { COLORS } from '../../functions/constants';
 import { FriendsContainerFirst, FriendsImageEmpty } from '../../styles/friends';
 import AuthButton from '../Shared/AuthButton';
 import { searchPanelHandler } from '../../redux/actions/genericActions';
 import { ListFriends } from '../index';
+import { getFriends } from '../../redux/actions/userActions';
+import { declOfNum } from '../../functions/helpers';
 
 function FriendsFirst({ empty = true }) {
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    getFriends().then(() => setRefreshing(false));
+  }, []);
+  React.useEffect(() => {
+    const getData = async () => {
+      await getFriends();
+    };
+    getData();
+  }, []);
 
   const openPanel = async () => {
     await searchPanelHandler(true);
   };
-  const { loading, users } = useSelector((state) => state.user);
+  const { loading, users, friends } = useSelector((state) => state.user);
 
   return (
-    <View height="100%" width="100%" paddingTop={empty ? '30px' : '20px'} backgroundColor={COLORS.white2}>
+    <ScrollView
+      refreshControl={(
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+    )}
+      height="100%"
+      width="100%"
+      paddingTop={!friends?.length ? '30px' : '20px'}
+      backgroundColor={COLORS.white2}
+    >
       <FriendsContainerFirst>
-        {empty ? (
+        {!friends?.length ? (
           <>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/friends/empty_friends.png')} />
             <Text color={COLORS.black} marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">Куда все подевались?</Text>
@@ -31,19 +59,9 @@ function FriendsFirst({ empty = true }) {
               text="Найти друзей"
             />
           </>
-        ) : loading ? <Spinner color="indigo.500" size="lg" /> : users.length
-          ? <ListFriends add title="Глобальный поиск" data={users} /> : (
-            <Text
-              marginLeft="20px"
-              alignSelf="flex-start"
-              fontSize="15px"
-              color={COLORS.gray}
-            >
-              Ничего не найдено :(
-            </Text>
-          )}
+        ) : <ListFriends title={`${friends?.length} ${declOfNum(friends?.length, ['друг', 'друга', 'друзей'])}`} data={friends} />}
       </FriendsContainerFirst>
-    </View>
+    </ScrollView>
   );
 }
 

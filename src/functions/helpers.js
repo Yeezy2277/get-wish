@@ -14,8 +14,8 @@ export function goToMain() {
   navigateAction('MainProfile');
 }
 
-export function goToUserProfile() {
-  navigateAction('UserProfile');
+export function goToUserProfile(params) {
+  navigateAction('UserProfile', params);
 }
 
 export function goToUserWishLists() {
@@ -48,9 +48,14 @@ export const goToShare = (showActionSheetWithOptions) => {
   };
 };
 
+export function declOfNum(number, words) {
+  return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
+}
+
 export const toastConfig = {
   search: ({ text1 }) => (
     <View
+      zIndex={9999}
       shadow={1}
       height="50px"
       maxWidth="335px"
