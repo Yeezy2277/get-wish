@@ -18,15 +18,18 @@ import DesiresScreenElementActionsheet from "./DesiresScreenElementActionsheet";
 import {androidShadow} from "../../functions";
 import {navigateAction} from "../../functions/NavigationService";
 import {useActionSheet} from "@expo/react-native-action-sheet";
+import {useI18n} from "../../i18n/i18n";
 
 function DesiresScreenElement() {
     const [open, setOpen] = React.useState(false)
     const { showActionSheetWithOptions } = useActionSheet();
 
+    const t = useI18n()
+
     const handleClickImage = () => {
         return showActionSheetWithOptions(
             {
-                options: ["Отмена", "Поделиться"],
+                options: [t('cancel'), t('share')],
                 cancelButtonIndex: 0,
                 userInterfaceStyle: 'dark'
             }, async (buttonIndex) => {

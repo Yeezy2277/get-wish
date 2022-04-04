@@ -2,6 +2,7 @@ import React from 'react';
 import {TimerContainer, TimerNumber, TimerTexts, TimerTextSendAgain} from "../../styles/authSteps";
 import {sendCode} from "../../redux/actions/authActions";
 import {AuthContext} from "../../screens/Auth/AuthScreen";
+import {useI18n} from "../../i18n/i18n";
 
 function EnterCodeStepTimer() {
     const [seconds, setSeconds ] = React.useState(60);
@@ -26,15 +27,17 @@ function EnterCodeStepTimer() {
         setSeconds(60)
     }
 
+    const t = useI18n();
+
     return (
         seconds !== 0 ?
             <TimerContainer>
-                <TimerTexts>Отправить повторно</TimerTexts>
+                <TimerTexts>{t('auth_resendCode')}</TimerTexts>
                 <TimerNumber>0:{seconds}</TimerNumber>
             </TimerContainer>
          : <>
                 <TimerContainer>
-                    <TimerTextSendAgain onPress={handleSendCodeAgain}>Отправить повторно</TimerTextSendAgain>
+                    <TimerTextSendAgain onPress={handleSendCodeAgain}>{t('auth_resendCode')}</TimerTextSendAgain>
                 </TimerContainer>
         </>
     );

@@ -17,6 +17,7 @@ import {checkCode} from "../../redux/actions/authActions";
 import {navigateAction} from "../../functions/NavigationService";
 import useToasts from "../../hooks/useToast";
 import {updatePhone} from "../../redux/actions/userActions";
+import {useI18n} from "../../i18n/i18n";
 
 function EnterCodeStep(props) {
     const {data, handleChangeObject, onNextStep, step} = React.useContext(AuthContext)
@@ -97,8 +98,10 @@ function EnterCodeStep(props) {
         }
     }
 
+    const t = useI18n();
+
     return (
-        <AuthStep back={true} mt={44} maxWidth={276} text="На этот номер был отправлен код подтверждения. Введи его в поле ниже." title={`+7 ${data.phoneNumber}`}>
+        <AuthStep back={true} mt={44} maxWidth={276} text={t('auth_codeWillBeSent')} title={`+7 ${data.phoneNumber}`}>
             <EnterCodeStepContainer>
                 <Codes>
                     {codes.map((code, index) => (
@@ -120,10 +123,10 @@ function EnterCodeStep(props) {
                         </CodeElement>
                     ))}
                 </Codes>
-                {error && <CodeTextError>Введён неверный код</CodeTextError>}
+                {error && <CodeTextError>{t('auth_errorInvalidCode')}</CodeTextError>}
                 <EnterCodeStepBottom>
                     <EnterCodeStepTimer/>
-                    <AuthButton onPress={onPressCodeStep} active={!disabledNext}>Подтвердить</AuthButton>
+                    <AuthButton onPress={onPressCodeStep} active={!disabledNext}>{t('confirm')}</AuthButton>
                 </EnterCodeStepBottom>
             </EnterCodeStepContainer>
         </AuthStep>

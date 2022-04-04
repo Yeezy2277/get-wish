@@ -18,6 +18,7 @@ import {useSelector} from "react-redux";
 import {userCRUD} from "../../http/CRUD";
 import useToasts from "../../hooks/useToast";
 import {changeUserInfo} from "../../redux/actions/authActions";
+import {useI18n} from "../../i18n/i18n";
 
 function ChangeNicknameStep(props) {
 
@@ -34,15 +35,17 @@ function ChangeNicknameStep(props) {
     const [username, setUserName] = React.useState(userInfo?.username)
     const [availability, setAvailability] = React.useState(false)
 
-    const {show} = useToasts(2000, 'Никнейм успешно изменен')
+    const t = useI18n();
+
+    const {show} = useToasts(2000, t('profile_nicknameChanged'))
 
     const nicknameValidationSchema = yup.object().shape({
         nickName: yup
             .string()
-            .matches(/^(?=.*[a-z_.])[\w.]+$/,  "Допустимые символы: a-z, 0-9, . и _")
-            .min(3, 'Никнейм должен содержать минимум 3 символа')
-            .max(30, 'Никнейм должен содержать максимум 30 символов')
-            .required('Обязательное поле')
+            .matches(/^(?=.*[a-z_.])[\w.]+$/, t('auth_errorNicknameFormat'))
+            .min(3, t('auth_errorNicknameMinLength'))
+            .max(30, t('auth_errorNicknameMaxLength'))
+            .required(t('requiredField'))
     })
 
     const [canRegistration, setCanRegistration] = React.useState(false)
@@ -64,11 +67,11 @@ function ChangeNicknameStep(props) {
         <ChangeNicknameContainer>
             <ChangeNicknameHeader>
                 <Pressable onPress={() => navigateAction('MainProfile')}>
-                    <AuthStepCancelText>Отмена</AuthStepCancelText>
+                    <AuthStepCancelText>{t('cancel')}</AuthStepCancelText>
                 </Pressable>
-                <HeaderTitle>Никнейм</HeaderTitle>
+                <HeaderTitle>{t('nickname')}</HeaderTitle>
                 <Pressable onPress={handleChangeNickname}>
-                    <Text color={canRegistration ? "#8424FF" : '#D4DAEC'} fontFamily="Nunito" fontWeight={"bold"} fontSize={16}>Готово</Text>
+                    <Text color={canRegistration ? "#8424FF" : '#D4DAEC'} fontFamily="Nunito" fontWeight={"bold"} fontSize={16}>{t('done')}</Text>
                 </Pressable>
             </ChangeNicknameHeader>
             <Formik
@@ -90,7 +93,7 @@ function ChangeNicknameStep(props) {
                     return (
                         <EnterNickNameStepContainer>
                             <TextFieldTwoContainer>
-                                <TextFieldLabel><TextFieldLabelText>Никнейм</TextFieldLabelText></TextFieldLabel>
+                                <TextFieldLabel><TextFieldLabelText>{t('nickname')}</TextFieldLabelText></TextFieldLabel>
                                 <PressableTextField onPress={() => {
                                     setUserName('')
                                     setFieldValue('nickName', '')
@@ -105,10 +108,10 @@ function ChangeNicknameStep(props) {
                                 />
                             </TextFieldTwoContainer>
                             <ChangeNicknameP1>
-                                Это твой публичный никнейм, по которому другие пользователи могут тебя найти или упоминать в своих публикациях.
+                                {t('profile_nicknameInfo')}
                             </ChangeNicknameP1>
-                            <ChangeNicknameP2>Ты можешь использовать символы <ChangeNicknamePurple>a-z</ChangeNicknamePurple>, <ChangeNicknamePurple>0-9</ChangeNicknamePurple>, <ChangeNicknamePurple>.</ChangeNicknamePurple> и <ChangeNicknamePurple>_</ChangeNicknamePurple> .</ChangeNicknameP2>
-                            <ChangeNicknameP2>Длина от 3 до 30 символов.</ChangeNicknameP2>
+                            <ChangeNicknameP2>{t('auth_nicknameChars')} <ChangeNicknamePurple>a-z</ChangeNicknamePurple>, <ChangeNicknamePurple>0-9</ChangeNicknamePurple>, <ChangeNicknamePurple>.</ChangeNicknamePurple> и <ChangeNicknamePurple>_</ChangeNicknamePurple> .</ChangeNicknameP2>
+                            <ChangeNicknameP2>{t('auth_nicknameLength')}</ChangeNicknameP2>
                         </EnterNickNameStepContainer>
                     )
                 }}

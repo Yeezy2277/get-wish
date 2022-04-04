@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {Text} from "react-native";
 import {EnterCodeStep, EnterNicknameStep, EnterNumberStep} from "../../components";
 import {useDispatch, useSelector} from "react-redux";
+import {useI18n} from "../../i18n/i18n";
 
 export const AuthContext = React.createContext(undefined)
 
@@ -51,10 +52,11 @@ function AuthScreen(props) {
         setLoading(false)
     }, [screenProps]);
 
+    const t = useI18n();
 
     return (
         <AuthContext.Provider value={{onReloadStep, dispatch, navigation, step, onNextStep, data, handleChangeObject, onPrevStep}}>
-            {loading ? <Text>загрузка</Text> : <Step/>}
+            {loading ? <Text>{t('loading')}</Text> : <Step/>}
         </AuthContext.Provider>
     );
 }

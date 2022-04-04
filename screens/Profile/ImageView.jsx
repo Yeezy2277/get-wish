@@ -16,6 +16,7 @@ import {updateAvatar} from "../../redux/actions/userActions";
 import * as ImagePicker from "expo-image-picker";
 import useLoader from "../../hooks/useLoader";
 import {HStack, Spinner} from "native-base";
+import {useI18n} from "../../i18n/i18n";
 
 const { width } = Dimensions.get('window')
 
@@ -79,6 +80,8 @@ function ImageView(props) {
         await manipulateImage(image)
     }
 
+    const t = useI18n();
+
     const handleChangeCamera = async () => {
         const {status} = ImagePicker.requestCameraPermissionsAsync()
         if (status !== "granted") {
@@ -92,7 +95,7 @@ function ImageView(props) {
                 await manipulateImage(image)
             }
         } else {
-            alert('Нет доступа')
+            alert(t('accessDenied'))
         }
     }
 
@@ -106,10 +109,10 @@ function ImageView(props) {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.container}>
             <ImageViewContainer>
                 <ImageViewHeader>
-                    <ImageViewCancel onPress={handleBack}>Отмена</ImageViewCancel>
-                    <ImageViewTitle>Фото профиля</ImageViewTitle>
+                    <ImageViewCancel onPress={handleBack}>{t('cancel')}</ImageViewCancel>
+                    <ImageViewTitle>{t('profile_photo')}</ImageViewTitle>
                 </ImageViewHeader>
-                <ImageViewSourceContainer >
+                <ImageViewSourceContainer>
                     <MaskedView
                         style={{ flex: 1, backgroundColor: 'transparent' }}
                         maskElement={
@@ -133,8 +136,8 @@ function ImageView(props) {
 
                 </ImageViewSourceContainer>
                 <ImageViewBottom>
-                    {params?.camera ? <ImageViewCancel onPress={handleChangeCamera}>Переснять</ImageViewCancel> : <ImageViewCancel onPress={handleChangeLibrary}>Выбрать другое</ImageViewCancel>}
-                    <ImageViewCancel onPress={handleSubmit} bold>Использовать</ImageViewCancel>
+                    {params?.camera ? <ImageViewCancel onPress={handleChangeCamera}>Переснять</ImageViewCancel> : <ImageViewCancel onPress={handleChangeLibrary}>{t('profile_selectAnotherPhoto')}</ImageViewCancel>}
+                    <ImageViewCancel onPress={handleSubmit} bold>{t('use')}</ImageViewCancel>
                 </ImageViewBottom>
             </ImageViewContainer>
         </ScrollView>

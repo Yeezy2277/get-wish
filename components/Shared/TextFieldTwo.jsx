@@ -5,6 +5,7 @@ import {Animated} from "react-native";
 import Easing from "react-native-web/dist/vendor/react-native/Animated/Easing";
 import {delay} from "../../functions";
 import {checkAvailability} from "../../redux/actions/authActions";
+import {useI18n} from "../../i18n/i18n";
 
 function TextFieldTwo(props) {
     const {
@@ -65,6 +66,8 @@ function TextFieldTwo(props) {
         }, 100);
     }
 
+    const t = useI18n();
+
     return (
         <>
             <TextFieldTwoInput errorAnimation={errorAnimation && 90} value={value}
@@ -82,8 +85,8 @@ function TextFieldTwo(props) {
                                }
                            }}
                            autoCapitalize="none"/>
-            {!hasError && availability && isSubmitting && !preLoading && !loading && <NicknameSuccess>Никнейм свободен</NicknameSuccess>}
-            {!hasError && !availability && isSubmitting && !preLoading && !loading && <NicknameError>К сожалению, этот никнейм уже занят</NicknameError>}
+            {!hasError && availability && isSubmitting && !preLoading && !loading && <NicknameSuccess>{t('auth_nicknameAvailable')}</NicknameSuccess>}
+            {!hasError && !availability && isSubmitting && !preLoading && !loading && <NicknameError>{t('auth_nicknameNotAvailable')}</NicknameError>}
             {hasError && !preLoading && !loading && <NicknameError>{errors[name]}</NicknameError>}
             {loading && <LoaderNickname loading={loading} animate_state={animate_state} spin={spin} spinValue={spinValue}/>}
         </>

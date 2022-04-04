@@ -8,6 +8,7 @@ import {HStack, NativeBaseProvider, Spinner} from "native-base";
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import * as SplashScreen from 'expo-splash-screen';
 import {View} from "react-native";
+import './i18n/i18n';
 TextInput.defaultProps.selectionColor = '#8424FF'
 
 

@@ -12,9 +12,12 @@ import {AuthContext} from "../../screens/Auth/AuthScreen";
 import {logout} from "../../redux/actions/authActions";
 import {navigateAction} from "../../functions/NavigationService";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {useI18n} from "../../i18n/i18n";
 
 function AuthStep({title, text, children, maxWidth, mt, back, exit, isChangePhone, isFirstStep}) {
     const {onPrevStep, dispatch, onReloadStep} = useContext(AuthContext)
+
+    const t = useI18n()
 
     const handleLogout = async () => {
         await dispatch(logout())
@@ -36,7 +39,7 @@ function AuthStep({title, text, children, maxWidth, mt, back, exit, isChangePhon
                 </AuthStepHeader>}
                 {isChangePhone && isFirstStep && <AuthStepHeader mb={58} jc={"flex-start"}>
                     <TouchableHighlight underlayColor={'none'} onPress={() => navigateAction('MainProfile')}>
-                        <AuthStepCancelText>Отмена</AuthStepCancelText>
+                        <AuthStepCancelText>{t('cancel')}</AuthStepCancelText>
                     </TouchableHighlight>
                 </AuthStepHeader>}
                 {exit && <AuthStepHeader jc={"flex-end"}>

@@ -13,6 +13,7 @@ import {FlexContainer} from "../../styles/main";
 import {Button, Image} from "native-base";
 import {ShareGroup} from "../../components";
 import AuthButton from "../../components/Shared/AuthButton";
+import {useI18n} from "../../i18n/i18n";
 
 function ShareScreen(props) {
 
@@ -45,11 +46,13 @@ function ShareScreen(props) {
         setCheckBox3(true)
     }
 
+    const t = useI18n();
+
     return (
         <>
             <ShareScreenHeader>
-                <ShareScreenCancelText onPress={() => navigateAction('MainProfile')}>Отмена</ShareScreenCancelText>
-                <ShareScreenTitle>Получатели</ShareScreenTitle>
+                <ShareScreenCancelText onPress={() => navigateAction('MainProfile')}>{t('cancel')}</ShareScreenCancelText>
+                <ShareScreenTitle>{t('share_recipients')}</ShareScreenTitle>
                 <ShareScreenPressable>
                     <ShareScreenImage source={require('../../assets/images/icons/profile/desires/search.png')}/>
                 </ShareScreenPressable>
@@ -59,14 +62,14 @@ function ShareScreen(props) {
                     <ShareScreenButtonPanel>
                         <Button style={{backgroundColor: '#F7F7F7', borderRadius: 10, flex: 1, marginRight: 10}} _text={{
                             color: "#8424FF"
-                        }} onPress={onChangeCheckBoxTrue}>Выбрать всех</Button>
+                        }} onPress={onChangeCheckBoxTrue}>{t('selectAll')}</Button>
                         <Button isDisabled={isDisabled} style={{backgroundColor: '#F7F7F7', borderRadius: 10, flex: 1}} _text={{
                             color: !isDisabled ? "#8424FF" : '#C8CCE1'
-                        }} onPress={onChangeCheckBoxFalse}>Снять выбор</Button>
+                        }} onPress={onChangeCheckBoxFalse}>{t('unselect')}</Button>
                     </ShareScreenButtonPanel>
                     <ShareGroup setCheckBox1={setCheckBox1} setCheckBox2={setCheckBox2} setCheckBox3={setCheckBox3} checkBox1={checkBox1} checkBox2={checkBox2} checkBox3={checkBox3}/>
                     <AuthButton style={{marginTop: 'auto', marginBottom: 44}} active={!isDisabled}>
-                        {sendSeparately ? 'Отправить по отдельности' :  'Отправить'}
+                        {sendSeparately ? t('share_sendSeparately') : t('send')}
                     </AuthButton>
                 </FlexContainer>
             </ScrollView>

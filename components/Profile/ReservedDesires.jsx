@@ -8,14 +8,15 @@ import {
 } from "../../styles/profile";
 import {navigateAction} from "../../functions/NavigationService";
 import {DesiresElement} from "../index";
+import {useI18n} from "../../i18n/i18n";
 
 function ReservedDesires({empty = false}) {
+    const t = useI18n();
+
     return (
         <ReservedDesiresContainer onPress={() => navigateAction('DesiresScreen')}>
-            <ReservedDesiresTitle>Зарезервированные желания</ReservedDesiresTitle>
-            {empty && <ReservedDesiresPlaceholder>Загляни на странички своих друзей, чтобы выбрать желания, которые хочешь
-                исполнить.
-                Они появятся здесь.</ReservedDesiresPlaceholder>}
+            <ReservedDesiresTitle>{t('profile_reservedDesires')}</ReservedDesiresTitle>
+            {empty && <ReservedDesiresPlaceholder>{t('profile_reservedDesiresEmpty')}</ReservedDesiresPlaceholder>}
             {!empty && <ReservedDesiresRow>
                 <DesiresElement/>
                 <DesiresElement/>

@@ -25,16 +25,20 @@ import AuthButton from "../Shared/AuthButton";
 import useToasts from "../../hooks/useToast";
 import {useActionSheet} from "@expo/react-native-action-sheet";
 import {navigateAction} from "../../functions/NavigationService";
+import {useI18n} from "../../i18n/i18n";
 
 function DesiresScreenElementActionsheet({open, setOpen}) {
     const [openChild, setOpenChild] = React.useState(false)
-    const {show} = useToasts(2000, 'Резерв желания отменен')
+
+    const t = useI18n();
+    const {show} = useToasts(2000, t('desires_reserveCancel'))
     const { showActionSheetWithOptions } = useActionSheet();
+
 
     const handleClickImage = () => {
         return showActionSheetWithOptions(
             {
-                options: ["Отмена", "Поделиться"],
+                options: [t('cancel'), t('share')],
                 cancelButtonIndex: 0,
                 userInterfaceStyle: 'dark'
             }, async (buttonIndex) => {
@@ -65,7 +69,7 @@ function DesiresScreenElementActionsheet({open, setOpen}) {
                             <ActionDesiresRowHeaderAvatar source={require('../../assets/images/icons/profile/desires/avatar1.png')}/>
                             <ActionDesiresRowHeaderName>anastasia_efremova</ActionDesiresRowHeaderName>
                             <ActionDesiresActions>
-                                <ActionDesiresActionsText>В вишлист</ActionDesiresActionsText>
+                                <ActionDesiresActionsText>{t('desires_toWishList')}</ActionDesiresActionsText>
                                 <ActionDesiresActionsIcon source={require('../../assets/images/icons/arrow.png')}/>
                             </ActionDesiresActions>
                         </ActionDesiresRowHeader>
@@ -87,7 +91,7 @@ function DesiresScreenElementActionsheet({open, setOpen}) {
                         </ActionDesiresRowDescription>
                         <Button style={{backgroundColor: '#F7F7F7', height: 50, marginBottom: 10, borderRadius: 10, marginTop: 30}} _text={{
                             color: "#8424FF"
-                        }} onPress={() => setOpenChild(true)}>Отменить резервирование</Button>
+                        }} onPress={() => setOpenChild(true)}>{t('desires_cancelReservedWish')}</Button>
                     </ActionDesiresRow>
                 </ActionDesires>
             </Actionsheet.Content>
@@ -95,9 +99,8 @@ function DesiresScreenElementActionsheet({open, setOpen}) {
             <Actionsheet padding={0} isOpen={openChild} onClose={() => setOpenChild(false)} >
                 <Actionsheet.Content backgroundColor="#fff" padding={0}  >
                     <ActionElementChild>
-                        <ActionDesiresChildName>Ты передумал исполнять
-                            это желание?</ActionDesiresChildName>
-                        <ActionDesiresChildDescription>Или просто случайно сюда нажал?</ActionDesiresChildDescription>
+                        <ActionDesiresChildName>{t('desires_confirmCancelReservedWishTitle')}</ActionDesiresChildName>
+                        <ActionDesiresChildDescription>{t('desires_confirmCancelReservedWishSubtitle')}</ActionDesiresChildDescription>
                         <ActionDesiresChildButton>
                             <Button style={{backgroundColor: '#F7F7F7', height: 46, maxWidth: 162.5, borderRadius: 12, flex: 1}} _text={{
                                 color: "#8424FF"
@@ -105,8 +108,8 @@ function DesiresScreenElementActionsheet({open, setOpen}) {
                                 setOpen(false)
                                 setOpenChild(false)
                                 show()
-                            }}>Да, я передумал</Button>
-                            <AuthButton variant="small" onPress={() => setOpenChild(false)} text="Упс, закрыть"/>
+                            }}>{t('desires_confirmCancelReservedWishYes')}</Button>
+                            <AuthButton variant="small" onPress={() => setOpenChild(false)} text={t('desires_confirmCancelReservedWishNo')}/>
                         </ActionDesiresChildButton>
                     </ActionElementChild>
                 </Actionsheet.Content>

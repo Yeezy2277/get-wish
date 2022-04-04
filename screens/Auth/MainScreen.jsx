@@ -3,6 +3,7 @@ import {Container} from "../../styles/main";
 import {Button} from "react-native";
 import {deleteUser, logout} from "../../redux/actions/authActions";
 import {useDispatch, useSelector} from "react-redux";
+import {useI18n} from "../../i18n/i18n";
 
 function MainScreen(props) {
     const { navigation } = props;
@@ -17,10 +18,13 @@ function MainScreen(props) {
         await dispatch(deleteUser(userInfo))
         navigation.navigate('AuthNavigator', { screen: 'Auth' })
     }
+
+    const t = useI18n();
+
     return (
         <Container>
-            <Button title="Выйти из аккаунта" onPress={logoutHandler}/>
-            <Button title="Удалить аккаунт" onPress={deleteHandler}/>
+            <Button title={t('logout')} onPress={logoutHandler}/>
+            <Button title={t('deleteAccount')} onPress={deleteHandler}/>
         </Container>
     );
 }
