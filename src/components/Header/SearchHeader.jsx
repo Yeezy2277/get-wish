@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Box, Heading,
-  Input, Modal, Pressable, ScrollView, Spinner, Text, View
+  Input, Modal, Pressable, Spinner, Text, View
 } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
@@ -20,7 +20,7 @@ import { COLORS } from '../../functions/constants';
 import { searchPanelHandler } from '../../redux/actions/genericActions';
 import { declOfNum, goBack, toastConfig } from '../../functions/helpers';
 import {
-  clearSearchData, getFriends, getIncoming, getOutgoing, onChangeSearch
+  clearSearchData, getFriends, getIncoming, getOutgoing, onChangeSearch, sendRequest
 } from '../../redux/actions/userActions';
 import { SET_SEARCH, SET_SEARCH_DATA } from '../../redux/constants/userConstants';
 import { ListFriends } from '../index';
@@ -28,9 +28,10 @@ import useLoader from '../../hooks/useLoader';
 import ListFriendElement from '../Friends/Lists/ListFriendElement';
 import ListQueryElement from '../Friends/Lists/ListQueryElement';
 import ListRequestElement from '../Friends/Lists/ListRequestElement';
+import ListFriendsCheck from '../Friends/Lists/ListFriendsCheck';
 
 function SearchHeader({
-  cancel = false, title
+  cancel = false, title, setSelectedFriends, selectedFriends
 }) {
   const { start, stop, loading } = useLoader(false);
   const { openPanel } = useSelector((state) => state.generic);
@@ -44,6 +45,7 @@ function SearchHeader({
   const isTabFriend = React.useCallback(() => typeSearch === 'friend', [typeSearch]);
   const isTabRequest = React.useCallback(() => typeSearch === 'request', [typeSearch]);
   const isTabQuery = React.useCallback(() => typeSearch === 'query', [typeSearch]);
+  const isTabShare = React.useCallback(() => typeSearch === 'share', [typeSearch]);
 
   const allIncoming = React.useCallback(() => {
     return incomingRequestSearch
@@ -73,7 +75,10 @@ function SearchHeader({
       return true;
     } if (typeSearch === 'request' && incomingRequest?.length) {
       return true;
-    } return !!(typeSearch === 'query' && outgoingRequest?.length);
+    } if (typeSearch === 'share' && friends?.length) {
+      return true;
+    }
+    return !!(typeSearch === 'query' && outgoingRequest?.length);
 
   };
 
@@ -99,6 +104,9 @@ function SearchHeader({
     try {
       const res = await onChangeSearch(value);
       if (isTabFriend) {
+        await getFriends(value);
+      }
+      if (isTabShare) {
         await getFriends(value);
       }
       if (isTabRequest) {
@@ -163,6 +171,22 @@ function SearchHeader({
     return <SearchScreenImage source={require('../../assets/images/icons/profile/desires/search.png')} />;
   }, []);
 
+  const handlePress = async ({ id }) => {
+    await sendRequest(id).then(() => {
+      Toast.show({
+        type: 'search',
+        text1: 'Запрос на дружбу отправлен',
+        position: 'bottom',
+        bottomOffset: 95
+      });
+    });
+
+  };
+
+  const handleClose = async () => {
+    await searchPanelHandler();
+  };
+
   return (
     <>
       <ShareScreenHeader>
@@ -177,13 +201,12 @@ function SearchHeader({
           _backdrop={{
             ...(bgTr && { bg: 'transparent' })
           }}
-          zIndex={-1}
-          backgroundColor={bgTr ? COLORS.transparent : COLORS.black3}
+          backgroundColor={COLORS.black3}
           isOpen={openPanel}
           onClose={searchPanelHandler}
           size="full"
         >
-          <Box zIndex={998} paddingLeft="5px" paddingRight="5px" backgroundColor={debouncedTerm ? COLORS.white2 : COLORS.transparent} height="100%" borderTopRadius={0} borderBottomRadius={0} marginTop={0} marginBottom="auto">
+          <Box paddingLeft="5px" paddingRight="5px" backgroundColor={debouncedTerm ? COLORS.white2 : COLORS.transparent} height="100%" borderTopRadius={0} borderBottomRadius={0} marginTop={0} marginBottom="auto">
             <ModalContent>
               <Input
                 backgroundColor={COLORS.extralightGray}
@@ -191,6 +214,7 @@ function SearchHeader({
                 value={debouncedTerm}
                 onChangeText={handleChangeText}
                 height={36}
+                autoFocus
                 borderRadius={10}
                 InputLeftElement={<LeftIcon />}
                 InputRightElement={<RightIcon />}
@@ -202,27 +226,36 @@ function SearchHeader({
               />
               <ModalCancelText onPress={handleSearchPanel(false, true)}>Отмена</ModalCancelText>
             </ModalContent>
-            {debouncedTerm && (
-            <View marginTop="20px">
-              {
+            {debouncedTerm ? (
+              <View marginTop="20px" display="flex" flexDirection="column">
+                {
               loading ? <Spinner color="indigo.500" size="lg" /> : users?.length
                 ? (
                   <>
                     {isTabFriend() && friendsSearch?.length ? (
-                      <>
+                      <View maxHeight="40%">
                         <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
                           {`${friendsSearch?.length} ${declOfNum(friendsSearch?.length, ['друг', 'друга', 'друзей'])}`}
                         </Heading>
                         <ListFriendElement
                           add={false}
                           first
+                          handlePress={handlePress}
                           handleSearchPanel={handleSearchPanel}
                           data={friendsSearch}
                         />
-                      </>
+                      </View>
+                    ) : null}
+                    {isTabShare() && friendsSearch?.length ? (
+                      <ListFriendsCheck
+                        padding
+                        data={friendsSearch}
+                        selecteds={selectedFriends}
+                        setSelected={setSelectedFriends}
+                      />
                     ) : null}
                     {isTabQuery() && outgoingRequestSearch?.length ? (
-                      <>
+                      <View maxHeight="40%">
                         <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
                           {`${allOutcoming()} ${declOfNum(allOutcoming(), ['запрос', 'запроса', 'запросов'])}`}
                         </Heading>
@@ -231,10 +264,10 @@ function SearchHeader({
                           data={outgoingRequestSearch}
                           first
                         />
-                      </>
+                      </View>
                     ) : null}
                     {isTabRequest() && incomingRequestSearch?.length ? (
-                      <>
+                      <View maxHeight="40%">
                         <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
                           {`${allIncoming()} ${declOfNum(allIncoming(), ['запрос', 'запроса', 'запросов'])}`}
                         </Heading>
@@ -243,9 +276,9 @@ function SearchHeader({
                           handleSearchPanel={handleSearchPanel}
                           first
                         />
-                      </>
+                      </View>
                     ) : null}
-                    <ListFriends handleSearchPanel={handleSearchPanel} add title="Глобальный поиск" data={users} />
+                    {!isTabShare() && <ListFriends handlePress={handlePress} handleSearchPanel={handleSearchPanel} add title="Глобальный поиск" data={users} />}
                   </>
                 ) : debouncedTerm ? (
                   <Text
@@ -258,7 +291,19 @@ function SearchHeader({
                   </Text>
                 ) : null
             }
-            </View>
+              </View>
+            ) : (
+              <Pressable
+                zIndex={999}
+                onPress={handleClose}
+                display="flex"
+                flexDirection="column"
+                height="100%"
+                width="100%"
+                minHeight="100%"
+                minWidth="100%"
+                backgroundColor={COLORS.transparent}
+              />
             )}
             <Toast config={toastConfig} />
           </Box>

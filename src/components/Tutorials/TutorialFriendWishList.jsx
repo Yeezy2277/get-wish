@@ -3,6 +3,7 @@ import {
   Box, Image, Pressable, ScrollView, VStack
 } from 'native-base';
 import { Dimensions } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from '../../functions/constants';
 
 function TutorialFriendWishList({ setShowTutorial }) {
@@ -21,7 +22,13 @@ function TutorialFriendWishList({ setShowTutorial }) {
             top="8%"
             right="25px"
             position="absolute"
-            onPress={() => setShowTutorial(false)}
+            onPress={async () => {
+              await AsyncStorage.setItem(
+                'showTutorial',
+                'true'
+              );
+              setShowTutorial(false);
+            }}
           >
             <Image
               source={require('../../assets/images/icons/users/close.png')}

@@ -78,7 +78,7 @@ function ListRequestElement({ data, first = false, handleSearchPanel }) {
                     </Button>
                     <AuthButton
                       higlightStyle={{ height: 30 }}
-                      lineHeightText={30}
+                      lineHeightText={27}
                       onPress={() => acceptFriend(item?.id)}
                       style={{
                         height: 30,

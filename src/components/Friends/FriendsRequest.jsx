@@ -56,13 +56,14 @@ function FriendsRequest({ empty = false }) {
         {!incomingRequest?.length ? (
           <>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/friends/empty_request.png')} />
-            <Text color={COLORS.black} marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">Тук-тук! Кто там?</Text>
+            <Text color={COLORS.black} marginTop="14px" fontFamily="NunitoBold" fontWeight="bold" fontSize="18px" lineHeight="25px">Тук-тук! Кто там?</Text>
             <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Показалось, тут никого нет...</Text>
             <AuthButton
               style={{
                 zIndex: 999, display: 'flex', width: 172, marginTop: 40
               }}
               onPress={openPanel}
+              bxShadow
               variant="small"
               text="Позвать друзей"
             />

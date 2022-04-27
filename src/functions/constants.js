@@ -8,9 +8,11 @@ export const COLORS = {
   black3: 'rgba(0, 0, 0, 0.8)',
   overlay: 'rgba(0, 0, 0, 0.2)',
   gray: '#7C82A5',
+  gray2: '#C8CCE1',
   extralightGray: '#F7F7F7',
   purple: '#8424FF',
   transparent: 'transparent',
   white: '#F7F7F7',
+  lightGray: '#D4DAEC',
   white2: '#FFFFFF',
 };

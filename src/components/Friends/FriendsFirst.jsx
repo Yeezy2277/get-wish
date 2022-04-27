@@ -29,7 +29,7 @@ function FriendsFirst({ empty = true }) {
   const openPanel = async () => {
     await searchPanelHandler(true);
   };
-  const { loading, users, friends } = useSelector((state) => state.user);
+  const { friends } = useSelector((state) => state.user);
 
   return (
     <ScrollView
@@ -48,7 +48,7 @@ function FriendsFirst({ empty = true }) {
         {!friends?.length ? (
           <>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/friends/empty_friends.png')} />
-            <Text color={COLORS.black} marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">Куда все подевались?</Text>
+            <Text color={COLORS.black} fontFamily="NunitoBold" marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">Куда все подевались?</Text>
             <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Кажется, ты ещё ни с кем не подружился</Text>
             <AuthButton
               style={{
@@ -56,6 +56,7 @@ function FriendsFirst({ empty = true }) {
               }}
               onPress={openPanel}
               variant="small"
+              bxShadow
               text="Найти друзей"
             />
           </>

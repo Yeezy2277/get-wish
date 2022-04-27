@@ -9,20 +9,23 @@ import Toast from 'react-native-toast-message';
 import { Box, Text } from 'native-base';
 import { COLORS } from '../../functions/constants';
 import {
+  AddWish,
+  AddWishList,
   ChangeNicknameStep,
   ChangePhoneScreen,
   DesiresScreen, Friends,
   ImageView,
-  MainScreen, ProfileScreen, ShareScreen, UserPost, UserProfile, UserWishList,
+  MainScreen, ProfileScreen, ProfileWishList, ShareScreen, SwiperImage, UserPost, UserProfile, UserWishList,
 } from '../../screens';
 import { navigationRef } from '../../functions/NavigationService';
 import Header from '../Header/Header';
 import {
-  ban, cancelRequest, deleteFriend, onChangeSearch, sendRequest
+  ban, cancelRequest, deleteFriend, sendRequest
 } from '../../redux/actions/userActions';
 import { goBack, goToShareScreen, toastConfig } from '../../functions/helpers';
 import { searchPanelHandler } from '../../redux/actions/genericActions';
-import { DELETE_ID_FROM_DATA, SET_SEARCH_DATA } from '../../redux/constants/userConstants';
+import { DELETE_ID_FROM_DATA } from '../../redux/constants/userConstants';
+import ArchiveWishList from '../../screens/WishList/ArchiveWishList';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -131,6 +134,43 @@ function FriendsStack() {
       <Stack.Screen options={{ header: (navigation) => <Header avatar title="Посты" navigation={navigation} /> }} name="UserPost" component={UserPost} />
       <Stack.Screen options={{ headerShown: false }} name="UserWishList" component={UserWishList} />
       <Stack.Screen options={{ headerShown: false }} name="ShareScreen" component={ShareScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="Swiper" component={SwiperImage} />
+    </Stack.Navigator>
+  );
+}
+
+function WishListStack() {
+  return (
+    <Stack.Navigator initialRouteName="WishList">
+      <Stack.Screen options={{ headerShown: false }} name="ImageView" component={ImageView} />
+      <Stack.Screen options={{ header: (navigation) => <Header archive cancel={false} title="Вишлисты" navigation={navigation} /> }} name="WishList" component={ProfileWishList} />
+      <Stack.Screen options={{ header: (navigation) => <Header title="Архив" navigation={navigation} /> }} name="ArchiveWishList" component={ArchiveWishList} />
+      <Stack.Screen
+        options={{
+          header: (navigation) => {
+            const idEdit = navigation?.route?.params?.id;
+            return <Header cancelText cancel={false} title={idEdit ? 'Редактирование' : 'Новый вишлист'} navigation={navigation} />;
+          },
+          tabBarStyle: { display: 'none' }
+        }}
+        name="AddWishList"
+        component={AddWishList}
+      />
+      <Stack.Screen options={{ headerShown: false, tabBarStyle: { display: 'none' } }} name="ShareScreen" component={ShareScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="UserWishList" component={UserWishList} />
+      <Stack.Screen options={{ headerShown: false }} name="Swiper" component={SwiperImage} />
+      <Stack.Screen
+        options={{
+          header: (navigation) => {
+            const idEdit = navigation?.route?.params?.id;
+            return <Header cancelText cancel={false} title={idEdit ? 'Редактирование' : 'Новое желание'} navigation={navigation} />;
+          },
+          tabBarStyle: { display: 'none' }
+        }}
+        name="AddWish"
+        component={AddWish}
+      />
+
     </Stack.Navigator>
   );
 }
@@ -168,7 +208,7 @@ function TabStack() {
                   />
                   {all() ? (
                     <Box
-                      right={10}
+                      right={7}
                       top="10%"
                       size={18}
                       justifyContent="center"
@@ -199,6 +239,17 @@ function TabStack() {
                 />
               );
             }
+            if (route.name === 'WishLists') {
+              return (
+                <Image
+                  resizeMode="cover"
+                  style={{ width: 28, height: 28, position: 'relative' }}
+                  source={focused ? require('../../assets/images/icons/bottom/wishlist_active.png')
+                    : require('../../assets/images/icons/bottom/wishlist.png')}
+                />
+              );
+            }
+
             return <Image resizeMode="cover" style={{ width: 24, height: 20, position: 'relative' }} source={require('../../assets/images/icons/bottom/friends.png')} />;
 
           }
@@ -208,6 +259,16 @@ function TabStack() {
       <Tab.Screen
         name="Main"
         component={MainScreen}
+      />
+      <Tab.Screen
+        name="WishLists"
+        component={WishListStack}
+        options={() => {
+          return {
+            tabBarOptions: { showIcon: true },
+            tabBarLabel: 'Вишлисты',
+          };
+        }}
       />
       <Tab.Screen
         name="Friends"

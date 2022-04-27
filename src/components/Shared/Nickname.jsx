@@ -98,6 +98,8 @@ function Nickname(props) {
         value={value}
         onChangeText={handleChangeTextInput}
         autoCapitalize="none"
+        style={{ textTransform: 'lowercase' }}
+        autoCorrect={false}
       />
       {!hasError && availability && isSubmitting && !preLoading && !loading
       && <NicknameSuccess>Никнейм свободен</NicknameSuccess>}

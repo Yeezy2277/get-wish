@@ -54,13 +54,14 @@ function FriendsQuery({ empty = false }) {
         {!outgoingRequest?.length ? (
           <>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/friends/empty_query.png')} />
-            <Text color={COLORS.black} marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">Трудно сделать первый шаг?</Text>
+            <Text color={COLORS.black} marginTop="14px" fontFamily="NunitoBold" fontWeight="bold" fontSize="18px" lineHeight="25px">Трудно сделать первый шаг?</Text>
             <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Решайся, это проще, чем кажется!</Text>
             <AuthButton
               style={{
                 zIndex: 999, display: 'flex', width: 172, marginTop: 40
               }}
               onPress={openPanel}
+              bxShadow
               variant="small"
               text="Найти друзей"
             />

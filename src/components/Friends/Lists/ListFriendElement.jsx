@@ -12,21 +12,9 @@ import { changeUserInfo } from '../../../redux/actions/authActions';
 import { goToUserProfile, toastConfig } from '../../../functions/helpers';
 
 function ListFriendElement({
-  data, add, handleSearchPanel, first = false
+  data, add, handleSearchPanel, handlePress, first = false
 }) {
   const { search } = useSelector((state) => state.user);
-  const handlePress = async ({ id }) => {
-    if (add) {
-      await sendRequest(id).then(() => {
-        Toast.show({
-          type: 'search',
-          text1: 'Запрос на дружбу отправлен',
-          position: 'bottom',
-          bottomOffset: 95
-        });
-      });
-    }
-  };
 
   const handleGoToUser = async (item) => {
     const user = await userCRUD.get(item?.id);
@@ -61,7 +49,7 @@ function ListFriendElement({
           borderColor="coolGray.200"
         >
           <HStack space={3} alignItems="center">
-            <Pressable onPress={() => handleGoToUser(item)} display="flex" alignItems="center" flexDirection="row">
+            <Pressable onPress={() => handleGoToUser(item, add)} flex={1} display="flex" alignItems="center" flexDirection="row">
               <Avatar
                 size="40px"
                 source={item?.avatar ? {
@@ -104,7 +92,6 @@ function ListFriendElement({
               </Pressable>
             )}
           </HStack>
-          <Toast config={toastConfig} />
         </Box>
       )}
       keyExtractor={(item) => item.id}

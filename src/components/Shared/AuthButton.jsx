@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, View, TouchableHighlight, ImageBackground
+  StyleSheet, View, TouchableHighlight, ImageBackground, Dimensions
 } from 'react-native';
 import { Box, Image } from 'native-base';
 import { ButtonAuthLabel, ButtonAuthLabelVariant2 } from '../../styles/shared';
+import { COLORS } from '../../functions/constants';
+import { generateBoxShadowStyle } from '../../functions';
 
 function AuthButton({
-  children, active, onPress, style, higlightStyle, lineHeightText, variant = 'big', text
+  children, active, onPress, style, higlightStyle, lineHeightText, variant = 'big', text, bxShadow
 }) {
   if (variant === 'big') {
     return (
@@ -27,15 +29,31 @@ function AuthButton({
   return (
     <Box
       style={{
-        height: 46, maxWidth: 162.5, display: 'flex', borderRadius: 12, flex: 1, ...style
+        height: 46,
+        maxWidth: 162.5,
+        display: 'flex',
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        position: 'relative',
+        ...style,
+        ...(bxShadow
+            && { ...generateBoxShadowStyle(-2, -3, COLORS.purple, 1, 6, 3, COLORS.black) })
       }}
       _text={{
         color: '#8424FF'
       }}
     >
-      <Image width="100%" borderRadius={12} height={46} position="relative" source={require('../../assets/images/icons/Buttons.png')} resizeMode="cover" style={{ ...higlightStyle }} />
+      <Image
+        width="100%"
+        borderRadius={12}
+        height={style?.height || 46}
+        source={require('../../assets/images/icons/Buttons.png')}
+        resizeMode="cover"
+        style={{ ...higlightStyle }}
+      />
       <ButtonAuthLabelVariant2
-        lineHeightText={lineHeightText}
         onPress={onPress}
       >
         {text}

@@ -42,7 +42,7 @@ function ListQueryElement({ data, first = false, handleSearchPanel }) {
           borderColor="coolGray.200"
         >
           <HStack space={3} alignItems="center">
-            <Pressable onPress={() => handleGoToUser(item)} display="flex" alignItems="center" flexDirection="row">
+            <Pressable onPress={() => handleGoToUser(item)} flex={1} display="flex" alignItems="center" flexDirection="row">
               <Avatar
                 size="40px"
                 source={item?.avatar ? {

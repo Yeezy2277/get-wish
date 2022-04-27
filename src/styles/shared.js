@@ -7,20 +7,11 @@ export const ButtonAuthLabel = styled.Text`
 `;
 
 export const ButtonAuthLabelVariant2 = styled.Text`
-  font-family: 'Nunito';
+  font-family: 'NunitoBold';
   position: absolute;
-  font-weight: bold;
-  top: 0;
-  height: 100%;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  justify-content: center;
-  align-items: center;
   text-align: center;
   font-size: 15px;
   color: #FFFFFF;
-  line-height: ${(props) => (props.lineHeightText ? props.lineHeightText : 45)}px;
 `;
 
 export const NicknameContainer = styled.View`
@@ -267,6 +258,11 @@ export const HeaderAvatar = styled.Image`
   border-radius: 15px;
 `;
 
+export const HeaderArchive = styled.Image`
+  height: 22px;
+  width: 24px;
+`;
+
 export const HeaderPressable = styled.Pressable`
   width: 26px;
   height: 26px;
@@ -289,12 +285,24 @@ export const HeaderPressableMore = styled.Pressable`
 
 export const HeaderPressableAvatar = styled.Pressable`
   width: 30px;
+  z-index: 999;
   height: 30px;
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   top: 51px;
+  right: 20px;
+`;
+
+export const HeaderPressableArchive = styled.Pressable`
+  width: 22px;
+  height: 24px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 55px;
   right: 20px;
 `;
 
@@ -305,6 +313,7 @@ export const HeaderTitle = styled.Text`
   line-height: 23px;
   text-align: center;
   color: #1A1A1A;
+  max-width: 253px;
 `;
 
 export const SharedGroupContainer = styled.View`
@@ -364,6 +373,18 @@ export const FriendTabBars = styled.View`
     flex-direction: row;
     align-items: center;
     background-color: #fff;
+`;
+
+export const WishListTabBarContainer = styled.Pressable`
+    width: 50%;
+    background-color: #fff;
+    height: 44px;
+    display: flex;
+    flex-direction: row;
+    border-bottom-width: 2px;
+    border-bottom-color: ${(props) => (props.active ? '#8424FF' : '#fff')};
+    justify-content: center;
+    align-items: center;
 `;
 
 export const FriendTabBarContainer = styled.Pressable`

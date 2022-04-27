@@ -45,7 +45,7 @@ export const ReservedDesiresUserContainer = styled.ImageBackground`
   align-items: center;
   box-shadow: 0 0 5px rgba(0, 99, 249, 0.15);
   padding: 15px;
-  height: 158px;
+  min-height: 158px;
   width: 100%;
   border-radius: 10px;
   background-color: #F7F7F7;
@@ -68,6 +68,7 @@ export const ReservedDesiresUserTitle = styled.Text`
   font-size: 18px;
   line-height: 20px;
   color: #1A1A1A;
+  max-width: 80%;
 `;
 
 export const ReservedDesiresUserSubTitle = styled.Text`
@@ -99,6 +100,7 @@ export const DesiresScreenRow = styled.View`
   padding: 0 15px 0 15px;
   display: flex;
   flex-direction: column;
+  margin-bottom: 100px;
   align-items: center;
 `;
 
@@ -134,6 +136,7 @@ export const DesiresScreenElementContentDescription = styled.Text`
   font-family: 'Nunito';
   font-size: 13px;
   line-height: 18px;
+  max-width: 90%;
   color: #7C82A5;
   margin-top: 5px;
 `;
@@ -170,6 +173,7 @@ export const DesiresScreenElementContentBottomText = styled.Text`
   line-height: 16px;
   color: #8424FF;
   margin-left: 7px;
+  max-width: 200px;
 `;
 
 export const DesiresScreenElementContentHeader = styled.View`
@@ -487,7 +491,6 @@ export const ActionDesiresRowLinks = styled.View`
   margin-top: 18px;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
 `;
 
 export const ActionDesiresRowLinksIcon = styled.Image`
@@ -497,6 +500,7 @@ export const ActionDesiresRowLinksIcon = styled.Image`
 
 export const ActionDesiresRowLinksText = styled.Text`
   font-family: 'Nunito';
+  max-width: 50px;
   font-weight: 600;
   font-size: 16px;
   color: #8424FF;
@@ -505,11 +509,6 @@ export const ActionDesiresRowLinksText = styled.Text`
 export const ActionDesiresRowLinksMenu = styled.Image`
   width: 4px;
   height: 20px;
-`;
-
-export const LinksMenu = styled.Image`
-  width: 3px;
-  height: 15px;
 `;
 
 export const ActionDesiresRowName = styled.Text`

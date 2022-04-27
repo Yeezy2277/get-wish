@@ -19,6 +19,7 @@ import {
   ImageViewTitle
 } from '../../styles/profile';
 import { COLORS } from '../../functions/constants';
+import { goBack } from '../../functions/helpers';
 
 const { width } = Dimensions.get('window');
 
@@ -32,10 +33,15 @@ function dimensions() {
   return { _borderRadius };
 }
 
-function ImageView({ route, navigation, camera }) {
+function ImageView({
+  route, navigation, camera
+}) {
   const { start, stop, loading } = useLoader(false);
   const { userInfo } = useSelector((state) => state.user);
   const params = route?.params;
+  const addWish = route?.params?.addWish;
+  const cameraNavigation = route?.params?.camera;
+  const pushWishImage = route?.params?.pushWishImage;
   const [url, setUrl] = React.useState(null);
 
   const manipulateImage = async (image) => {
@@ -61,14 +67,15 @@ function ImageView({ route, navigation, camera }) {
     }());
   }, [params?.image]);
 
-  const handleBack = () => {
-    navigation.push('MainProfile');
-  };
-
   const handleSubmit = async () => {
     start();
-    const base64 = await FileSystem.readAsStringAsync(url?.uri, { encoding: 'base64' });
-    await updateAvatar(base64, userInfo?.id).then(handleBack);
+    if (addWish) {
+      goBack();
+      pushWishImage(url);
+    } else {
+      const base64 = await FileSystem.readAsStringAsync(url?.uri, { encoding: 'base64' });
+      await updateAvatar(base64, userInfo?.id).then(goBack);
+    }
     stop();
   };
 
@@ -111,7 +118,7 @@ function ImageView({ route, navigation, camera }) {
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.container}>
       <ImageViewContainer>
         <ImageViewHeader>
-          <ImageViewCancel onPress={handleBack}>Отмена</ImageViewCancel>
+          <ImageViewCancel onPress={goBack}>Отмена</ImageViewCancel>
           <ImageViewTitle>Фото профиля</ImageViewTitle>
         </ImageViewHeader>
         <ImageViewSourceContainer>
@@ -140,7 +147,7 @@ function ImageView({ route, navigation, camera }) {
 
         </ImageViewSourceContainer>
         <ImageViewBottom>
-          {camera ? (
+          {(camera || cameraNavigation) ? (
             <ImageViewCancel onPress={handleChangeCamera}>
               Переснять
             </ImageViewCancel>

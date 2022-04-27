@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, PresenceTransition, View } from 'native-base';
 import { TabView, SceneMap } from 'react-native-tab-view';
-import { useWindowDimensions } from 'react-native';
-import { useSelector } from 'react-redux';
+import { Platform, useWindowDimensions } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   FriendsQuery, FriendsRequest, FriendTabBar, SearchHeader
 } from '../../components';
@@ -10,6 +10,7 @@ import { FriendsContainer } from '../../styles/friends';
 import { FriendTabBars } from '../../styles/shared';
 import { FriendsFirst } from '../index';
 import { COLORS } from '../../functions/constants';
+import { SET_TYPE_SEARCH } from '../../redux/constants/userConstants';
 
 function Friends(props) {
   const renderScene = SceneMap({
@@ -21,9 +22,17 @@ function Friends(props) {
   const {
     typeSearch, incomingRequest, outgoingRequest, friends
   } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const { navigation } = props;
   const layout = useWindowDimensions();
+
+  React.useEffect(() => {
+    dispatch({
+      type: SET_TYPE_SEARCH,
+      payload: 'friend'
+    });
+  }, [dispatch]);
 
   const all = React.useCallback(() => {
     return incomingRequest
@@ -114,7 +123,7 @@ function Friends(props) {
               );
             }
             return (
-              <Box height={hP ? '0px' : '44px'} width="100%" backgroundColor={COLORS.white2} />
+              <Box height={hP ? (Platform.OS === 'android' ? '44px' : '0px') : '44px'} width="100%" backgroundColor={COLORS.white2} />
             );
           }}
           navigationState={{ index, routes }}

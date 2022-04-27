@@ -2,7 +2,6 @@ import {
   HStack, Image, Text, View
 } from 'native-base';
 import React from 'react';
-import { useActionSheet } from '@expo/react-native-action-sheet';
 import NavigationService, { navigateAction, navigationRef } from './NavigationService';
 import { COLORS } from './constants';
 
@@ -18,16 +17,36 @@ export function goToUserProfile(params) {
   navigateAction('UserProfile', params);
 }
 
-export function goToUserWishLists() {
-  navigateAction('UserWishList');
+export function goToUserWishLists(params) {
+  navigateAction('UserWishList', params);
 }
 
 export function goToUserPost() {
   navigateAction('UserPost');
 }
 
-export function goToShareScreen() {
-  navigateAction('ShareScreen');
+export function goToShareScreen(props) {
+  navigateAction('ShareScreen', props);
+}
+
+export function goToArchive() {
+  navigateAction('ArchiveWishList');
+}
+
+export function goToWishList(props) {
+  navigateAction('WishList', props);
+}
+
+export function goToAddWishList(props) {
+  navigateAction('AddWishList', props);
+}
+
+export function goToSwiper(props) {
+  navigateAction('Swiper', props);
+}
+
+export function goToAddWish(props) {
+  navigateAction('AddWish', props);
 }
 
 export function goBack() {

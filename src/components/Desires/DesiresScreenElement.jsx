@@ -1,6 +1,8 @@
 import React from 'react';
 import { Platform, Pressable } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   DesiresScreenElementContainer,
   DesiresScreenElementContent,
@@ -18,14 +20,22 @@ import {
 import DesiresScreenElementActionsheet from './DesiresScreenElementActionsheet';
 import { androidShadow } from '../../functions';
 import { navigateAction } from '../../functions/NavigationService';
+import { wishCRUD } from '../../http/CRUD';
+import { SET_ONE_WISH } from '../../redux/constants/wishConstants';
+import { ActionSheets } from '../../functions/ActionSheet';
 
 function DesiresScreenElement({
-  friend, setShowTutorial, showTutorial
+  friend, setShowTutorial, showTutorial, el, isYourWishList
 }) {
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
   const { showActionSheetWithOptions } = useActionSheet();
+  const state = new ActionSheets(showActionSheetWithOptions);
 
   const handleClickImage = () => {
+    if (isYourWishList) {
+      return state.showShareActionInMyWish(el.id);
+    }
     return showActionSheetWithOptions({
       options: ['Отмена', 'Поделиться'],
       cancelButtonIndex: 0,
@@ -35,22 +45,37 @@ function DesiresScreenElement({
         navigateAction('ShareScreen');
       }
     });
+
   };
 
   const handleOpen = async () => {
+    const res = await wishCRUD.get(el?.id);
+    dispatch({
+      type: SET_ONE_WISH,
+      payload: res?.data
+    });
     await setOpen(true);
-    setShowTutorial(true);
+    const showTutorialStorage = await AsyncStorage.getItem('showTutorial');
+    if (showTutorialStorage !== null) {
+      setShowTutorial(false);
+    } else {
+      setShowTutorial(true);
+    }
   };
 
   return (
     <>
       <Pressable style={{ zIndex: 1, position: 'relative' }} onPress={handleOpen}>
         <DesiresScreenElementContainer style={Platform.OS === 'android' && androidShadow}>
-          <DesiresScreenElementImage resizeMode="cover" source={require('../../assets/images/icons/profile/desires/example1.png')} />
+          <DesiresScreenElementImage
+            resizeMode="cover"
+            source={el?.image ? { uri: el?.image }
+              : require('../../assets/images/icons/wishlist/noPhoto.png')}
+          />
           <DesiresScreenElementContent>
             <DesiresScreenElementContentHeader>
               <DesiresScreenElementContentHeaderTitle>
-                Новогодний свитер
+                {el.name}
               </DesiresScreenElementContentHeaderTitle>
               <Pressable
                 style={{
@@ -61,16 +86,18 @@ function DesiresScreenElement({
                 <DesiresScreenElementContentHeaderImage resizeMode="contain" source={require('../../assets/images/icons/profile/desires/menu.png')} />
               </Pressable>
             </DesiresScreenElementContentHeader>
-            <DesiresScreenElementContentDescription>
-              Размер 42-44
+            <DesiresScreenElementContentDescription numberOfLines={2}>
+              {el?.description}
             </DesiresScreenElementContentDescription>
             <DesiresScreenElementContentBottom>
+              {el?.link && (
               <DesiresScreenElementContentBottomIconContainer>
                 <DesiresScreenElementContentBottomIcon resizeMode="contain" h={Platform.OS === 'android' ? 7 : 10} source={require('../../assets/images/icons/profile/desires/link.png')} />
-                <DesiresScreenElementContentBottomText>
-                  zara.ru
+                <DesiresScreenElementContentBottomText numberOfLines={1}>
+                  {el?.link}
                 </DesiresScreenElementContentBottomText>
               </DesiresScreenElementContentBottomIconContainer>
+              )}
               {!friend && <DesiresScreenElementContentBottomAvatar resizeMode="cover" source={require('../../assets/images/icons/profile/desires/avatar1.png')} />}
             </DesiresScreenElementContentBottom>
           </DesiresScreenElementContent>
@@ -81,6 +108,7 @@ function DesiresScreenElement({
         setShowTutorial={setShowTutorial}
         friend={friend}
         open={open}
+        isYourWishList={isYourWishList}
         setOpen={setOpen}
       />
     </>

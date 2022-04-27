@@ -11,3 +11,7 @@ export { default as DesiresScreen } from './Profile/DesiresScreen';
 export { default as ShareScreen } from './Profile/ShareScreen';
 export { default as ChangePhoneScreen } from './Profile/ChangePhoneScreen';
 export { default as ChangeNicknameStep } from './Profile/ChangeNicknameStep';
+export { default as ProfileWishList } from './WishList/ProfileWishList';
+export { default as AddWishList } from './WishList/AddWishList';
+export { default as AddWish } from './WishList/AddWish';
+export { default as SwiperImage } from './SwiperImage';

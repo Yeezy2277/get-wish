@@ -64,7 +64,7 @@ function TopPanel() {
           </Box>
           <Box paddingRight="22.5px" paddingLeft="22.5px">
             <Text fontSize={15} fontWeight="bold" textAlign="center">0</Text>
-            <Text fontSize={13} textAlign="center">заявок</Text>
+            <Text fontSize={13} textAlign="center">желаний</Text>
           </Box>
         </HStack>
       </HStack>

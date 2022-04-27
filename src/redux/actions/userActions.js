@@ -18,33 +18,6 @@ import {
 } from '../constants/userConstants';
 import { userCRUD } from '../../http/CRUD';
 
-// const makeRequestCreator = () => {
-//   let cancel;
-//   return async (query, body) => {
-//     if (cancel) {
-//       cancel.cancel();
-//     }
-//     cancel = $authHost.CancelToken.source();
-//     try {
-//       if (resources[query]) {
-//         return resources[query];
-//       }
-//       const res = await $authHost(query, { cancelToken: cancel.token, ...body });
-//
-//       const result = res.data.results;
-//       resources[query] = result;
-//
-//       return result;
-//     } catch (error) {
-//       if ($authHost.isCancel(error)) {
-//         console.log('Request canceled', error.message);
-//       } else {
-//         console.log('Something went wrong: ', error.message);
-//       }
-//     }
-//   };
-// };
-
 export const clearSearchData = () => {
   store?.dispatch({
     type: SET_DATA,

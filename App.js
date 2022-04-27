@@ -13,7 +13,8 @@ import { toastConfig } from './src/functions/helpers';
 TextInput.defaultProps.selectionColor = '#8424FF';
 
 const customFonts = {
-  Nunito: require('./src/assets/fonts/NunitoRegular.ttf')
+  Nunito: require('./src/assets/fonts/NunitoRegular.ttf'),
+  NunitoBold: require('./src/assets/fonts/NunitoBold.ttf')
 };
 
 SplashScreen.preventAutoHideAsync()
@@ -50,13 +51,13 @@ export default function App() {
   });
 
   return (
-    <Provider store={store}>
-      <NativeBaseProvider theme={theme}>
+    <NativeBaseProvider theme={theme}>
+      <Provider store={store}>
         <ActionSheetProvider>
           <AppRouter />
         </ActionSheetProvider>
-      </NativeBaseProvider>
-      <Toast config={toastConfig} />
-    </Provider>
+        <Toast config={toastConfig} />
+      </Provider>
+    </NativeBaseProvider>
   );
 }

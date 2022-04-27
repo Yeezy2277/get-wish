@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { EnterCodeStep, EnterNicknameStep, EnterNumberStep } from '../../components';
-import { COLORS } from '../../functions/constants';
 
 export const AuthContext = React.createContext(undefined);
 
