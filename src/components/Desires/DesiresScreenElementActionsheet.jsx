@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Actionsheet, Avatar, Box, Button, Divider, Image, Pressable, Text
+  Actionsheet, Avatar, Box, Button, Divider, Image, Link, Pressable, Text
 } from 'native-base';
 import { Platform } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
 import {
   ActionDesires,
@@ -35,6 +35,7 @@ import { goToSwiper } from '../../functions/helpers';
 import { ActionSheets } from '../../functions/ActionSheet';
 import { deleteReserveWish, getCountInUser } from '../../redux/actions/wishListActions';
 import DesiresScreenElementActionsheetReserv from './DesiresScreenElementActionsheetReserv';
+import ButtonReserved from '../../sections/Buttons/ButtonReserved';
 
 function DesiresScreenElementActionsheet({
   open, setOpen, friend, showTutorial, setShowTutorial, isYourWishList
@@ -64,7 +65,7 @@ function DesiresScreenElementActionsheet({
 
   const handleCancelReserve = async () => {
     await deleteReserveWish(oneWish?.id);
-    handleClose();
+    // handleClose();
     handleCloseChild();
     Toast.show({
       type: 'search',
@@ -91,7 +92,7 @@ function DesiresScreenElementActionsheet({
     }
   };
 
-  function RenderResImage(count, cancel = false) {
+  const RenderResImage = React.useCallback((count, cancel = false) => {
     if (count === 0) {
       return (
         <Image
@@ -128,18 +129,18 @@ function DesiresScreenElementActionsheet({
         />
       );
     }
-  }
+  }, [countRes]);
 
   return (
     <>
       <Actionsheet
-        zIndex={998}
+        zIndex={2}
         padding={0}
         isOpen={open}
         position="relative"
         onClose={handleClose}
       >
-        <Actionsheet.Content zIndex={998} style={{ elevation: 0 }} padding={0} backgroundColor="#fff">
+        <Actionsheet.Content paddingBottom="20px" zIndex={998} style={{ elevation: 0 }} padding={0} backgroundColor="#fff">
           <ActionDesires>
             <ActionDesiresImageContainer>
               <Pressable onPress={handleGoToSwiper} width="100%" height="250px">
@@ -175,15 +176,25 @@ function DesiresScreenElementActionsheet({
                   }}
                 >
                   <ActionDesiresRowLinksIcon resizeMode="contain" h={Platform.OS === 'android' ? 10 : 13} source={require('../../assets/images/icons/profile/desires/link.png')} />
-                  <ActionDesiresRowLinksText
+                  <Link
+                    maxWidth="50px"
+                    fontWeight="600"
+                    marginLeft="5px"
+                    href={oneWish?.link}
+                    fontSize={16}
+                    _text={{
+                      color: COLORS.purple, textDecoration: 'none', fontWeigh: '600', maxWidth: '50px'
+                    }}
+                    color={COLORS.purple}
                     numberOfLines={1}
                   >
                     {oneWish?.link}
-                  </ActionDesiresRowLinksText>
+                  </Link>
                 </Box>
                 )}
                 {!oneWish?.link && (
                 <ActionDesiresRowName
+                  numberOfLines={2}
                   style={{ marginTop: 0 }}
                 >
                   {oneWish?.name}
@@ -205,37 +216,25 @@ function DesiresScreenElementActionsheet({
                     if (!isYourWishList) {
                       state.showShareAction(close);
                     } else {
-                      state.showShareActionInMyWish(oneWish?.id, close);
+                      state.showShareActionInMyWish(oneWish?.id, close, true);
                     }
                   }}
                 >
                   <ActionDesiresRowLinksMenu source={require('../../assets/images/icons/profile/desires/menu.png')} />
                 </Pressable>
               </ActionDesiresRowLinks>
-              {oneWish?.link && <ActionDesiresRowName>{oneWish?.name}</ActionDesiresRowName>}
+              {oneWish?.link && (
+              <ActionDesiresRowName
+                numberOfLines={2}
+              >
+                {oneWish?.name}
+              </ActionDesiresRowName>
+              )}
               <ActionDesiresRowDescription style={{ marginBottom: isYourWishList ? 20 : 0 }}>
                 {oneWish?.description}
               </ActionDesiresRowDescription>
               {!isYourWishList ? ((!oneWish?.reservated && countRes !== 3) ? (
-                <AuthButton
-                  onPress={() => {
-                    setOpenChildReserv(true);
-                  }}
-                  style={{
-                    height: 50, marginBottom: 10, alignSelf: 'center', marginTop: 30
-                  }}
-                  higlightStyle={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center'
-                  }}
-                  active
-                >
-                  <Box width="100%" height="50px" display="flex" alignItems="center" flexDirection="row">
-                    {RenderResImage(countRes)}
-                    <Text fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>Зарезервировать желание</Text>
-                  </Box>
-                </AuthButton>
+                <ButtonReserved onPress={() => setOpenChildReserv(true)} countRes={countRes} />
               ) : (!oneWish?.reservated && countRes === 3) ? (
                 <Box
                   borderRadius="12"
@@ -263,7 +262,6 @@ function DesiresScreenElementActionsheet({
                     style={{
                       backgroundColor: COLORS.white,
                       height: 50,
-                      marginBottom: 10,
                       maxWidth: 335,
                       width: '100%',
                       alignSelf: 'center',
@@ -275,7 +273,7 @@ function DesiresScreenElementActionsheet({
                     }}
                     onPress={() => setOpenChild(true)}
                   >
-                    <Box alignItems="center" flexDirection="row" width="100%" height="100%">
+                    <Box alignItems="center" flexDirection="row" width="100%" height="53px">
                       {RenderResImage(countRes, true)}
                       <Text fontSize={15} fontFamily="NunitoBold" color={COLORS.purple}>Отменить резервирование</Text>
                     </Box>
@@ -294,8 +292,9 @@ function DesiresScreenElementActionsheet({
                     backgroundColor={COLORS.extralightGray}
                     height="64px"
                   >
-                    <Avatar
+                    <Image
                       size="40px"
+                      borderRadius="20px"
                       source={oneWish?.user ? (oneWish?.user?.avatar ? { uri: `${oneWish?.user?.avatar}` }
                         : require('../../assets/images/icons/profile/avatar.png'))
                         : require('../../assets/images/icons/wishlist/anonim.png')}
@@ -324,8 +323,9 @@ function DesiresScreenElementActionsheet({
                   backgroundColor={COLORS.extralightGray}
                   height="64px"
                 >
-                  <Avatar
+                  <Image
                     size="40px"
+                    borderRadius="20px"
                     source={oneWish?.user ? oneWish?.user?.avatar ? { uri: `${oneWish?.user?.avatar}` }
                       : require('../../assets/images/icons/profile/avatar.png') : require('../../assets/images/icons/wishlist/anonim.png')}
                   />

@@ -57,7 +57,7 @@ function ImageView({
     const parent = navigation.getParent();
     parent.setOptions({ tabBarStyle: { display: 'none' } });
     return () => {
-      parent.setOptions({ tabBarStyle: { display: 'flex' } });
+      if (!pushWishImage) parent.setOptions({ tabBarStyle: { display: 'flex' } });
     };
   }, []);
 

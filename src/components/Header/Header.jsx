@@ -17,7 +17,7 @@ import { goToArchive } from '../../functions/helpers';
 import { COLORS } from '../../functions/constants';
 
 function Header({
-  navigation, title, more, morePress, avatar, search, archive, cancel = true, cancelText
+  navigation, title, more, morePress, avatar, search, archive, cancel = true, cancelText, backHandler
 }) {
   const { route } = navigation;
   const goBack = async () => {
@@ -28,15 +28,35 @@ function Header({
       navigation?.hasOwnProperty('goBack') ? navigation.goBack() : navigation.navigation.goBack();
     }
   };
+
+  const handlePressable = async () => {
+    if (backHandler) {
+      backHandler();
+    } else {
+      console.log('test');
+      await goBack();
+    }
+  };
+
   return (
     <HeaderRow>
       {cancel && (
-      <HeaderPressable onPress={goBack}>
+      <HeaderPressable onPress={handlePressable}>
         <HeaderArrow source={require('../../assets/images/icons/arrow.png')} />
       </HeaderPressable>
       )}
       {cancelText && (
-        <Text color={COLORS.purple} left={19} top="56px" position="absolute" onPress={goBack} fontSize={16} fontWeight={600}>Отмена</Text>
+        <Text
+          color={COLORS.purple}
+          left={19}
+          top="56px"
+          position="absolute"
+          onPress={handlePressable}
+          fontSize={16}
+          fontWeight={600}
+        >
+          Отмена
+        </Text>
       )}
       <HeaderTitle numberOfLines={1}>{title}</HeaderTitle>
       {more && (

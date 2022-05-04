@@ -19,10 +19,11 @@ function ChooseTheme({ active, setActive, themes }) {
 
   return (
     <ScrollView minHeight="68px" maxHeight="68px" marginTop="20px" marginBottom="24px" horizontal>
-      <HStack space={3}>
+      <HStack>
         {themes?.map((el) => {
           return (
             <Pressable
+              marginRight="15px"
               key={el.id}
               borderWidth={2}
               justifyContent="center"

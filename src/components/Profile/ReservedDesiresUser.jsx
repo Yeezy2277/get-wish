@@ -14,7 +14,7 @@ import { ActionSheets } from '../../functions/ActionSheet';
 import { androidShadow } from '../../functions';
 
 function ReservedDesiresUser({
-  isInWishList, name, id, el
+  isInWishList, name, id, el, privateMode = false, archive
 }) {
   const { showActionSheetWithOptions } = useActionSheet();
   const state = new ActionSheets(showActionSheetWithOptions);
@@ -54,7 +54,7 @@ function ReservedDesiresUser({
               if (!isInWishList) {
                 state.showShareAction();
               } else {
-                state.showShareActionInMyWishList(id, el);
+                state.showShareActionInMyWishList(id, el, privateMode, archive);
               }
             }}
             height="20px"

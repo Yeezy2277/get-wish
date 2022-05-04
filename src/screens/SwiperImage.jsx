@@ -22,7 +22,7 @@ function SwiperImage({ navigation, route: { params: { images } } }) {
 
   const renderImage = (currentPage) => {
     return (
-      <Box width="100%" height="250px">
+      <Box width="100%" height="100%" justifyContent="center" alignItems="center">
         <Image resizeMode="cover" width="100%" height="250px" source={{ uri: currentPage.source.uri }} />
       </Box>
     );

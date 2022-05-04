@@ -16,7 +16,9 @@ import {
   FormGroupContainer, FormGroupElementSwitch, FormGroupSwitch, FormGroupTextSwitch
 } from '../../styles/shared';
 import AuthButton from '../../components/Shared/AuthButton';
-import { goBack, goToShareScreen, goToWishList } from '../../functions/helpers';
+import {
+  goBack, goToShareScreen, goToUserWishLists, goToWishList
+} from '../../functions/helpers';
 import { ListFriendsMinus, Loader } from '../../components';
 import { getFriends } from '../../redux/actions/userActions';
 import useLoader from '../../hooks/useLoader';
@@ -64,8 +66,9 @@ function AddWishList({ navigation, ...props }) {
     }());
   }, [isEdit]);
 
+  const parent = navigation.getParent();
+
   React.useEffect(() => {
-    const parent = navigation.getParent();
     parent.setOptions({ tabBarStyle: { display: 'none' } });
     return () => {
       if (!addedWishId) parent.setOptions({ tabBarStyle: { display: 'flex' } });
@@ -74,7 +77,7 @@ function AddWishList({ navigation, ...props }) {
         payload: []
       });
     };
-  }, [navigation]);
+  }, []);
 
   const handleChangeSwitch = () => {
     setPrivate((prevState) => !prevState);
@@ -91,7 +94,8 @@ function AddWishList({ navigation, ...props }) {
           friends: privateWishList ? selectedFriendsLocal?.map((el) => el.id) : []
         }).then(() => {
           reload();
-          goToWishList();
+          parent.setOptions({ tabBarStyle: { display: 'flex' } });
+          goToUserWishLists({ id, backToWish: true });
           Toast.show({
             type: 'search',
             text1: 'Изменения сохранены',
@@ -110,7 +114,8 @@ function AddWishList({ navigation, ...props }) {
             setWishListAdded(response?.id);
             goBack();
           } else {
-            goToWishList();
+            goToUserWishLists({ id: response?.id, backToWish: true });
+            parent.setOptions({ tabBarStyle: { display: 'flex' } });
           }
         });
       }

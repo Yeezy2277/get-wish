@@ -8,7 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import Toast from 'react-native-toast-message';
 import { AppRouter } from './src/components';
 import store from './src/redux';
-import { toastConfig } from './src/functions/helpers';
+import { toastConfig, toastConfigWithoutNativeBase } from './src/functions/helpers';
 
 TextInput.defaultProps.selectionColor = '#8424FF';
 
@@ -51,13 +51,14 @@ export default function App() {
   });
 
   return (
-    <NativeBaseProvider theme={theme}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <NativeBaseProvider theme={theme}>
         <ActionSheetProvider>
           <AppRouter />
         </ActionSheetProvider>
         <Toast config={toastConfig} />
-      </Provider>
-    </NativeBaseProvider>
+      </NativeBaseProvider>
+      <Toast config={toastConfigWithoutNativeBase} />
+    </Provider>
   );
 }

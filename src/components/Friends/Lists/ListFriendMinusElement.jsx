@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Avatar, Text, FlatList, HStack, Pressable
+  Avatar, Text, FlatList, HStack, Pressable, Image
 } from 'native-base';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { COLORS } from '../../../functions/constants';
@@ -32,7 +32,7 @@ function SwipebleELement({ item, deleteFriendFromLocalHandler }) {
         borderColor="coolGray.200"
       >
         <Pressable size="20px" marginRight="14px" onPress={() => deleteFriendFromLocalHandler(item.id)}>
-          <Avatar
+          <Image
             size="20px"
             source={require('../../../assets/images/icons/wishlist/add/minus.png')}
           />

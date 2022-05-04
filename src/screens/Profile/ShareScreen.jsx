@@ -107,7 +107,7 @@ function ShareScreen({ navigation, ...params }) {
           {selectedFriends.length ? (
             <AuthButton
               onPress={handleSelectedFriends}
-              style={{ marginTop: 'auto', marginBottom: 44 }}
+              style={{ marginTop: 'auto', marginBottom: 20, height: 50 }}
               higlightStyle={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -115,7 +115,7 @@ function ShareScreen({ navigation, ...params }) {
               }}
               active={!isDisabled}
             >
-              <Box display="flex" alignItems="center" flexDirection="row">
+              <Box display="flex" height="53px" alignItems="center" flexDirection="row">
                 <Text marginRight="10px" fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>Сохранить выбор</Text>
                 <Box
                   display="flex"

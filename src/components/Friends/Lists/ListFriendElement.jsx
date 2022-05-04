@@ -67,7 +67,7 @@ function ListFriendElement({
             </Pressable>
             {item?.sendRequest ? (
               <SharedButton
-                textStyle={{ fontSize: 14, lineHeight: 16 }}
+                textStyle={{ fontSize: 14, lineHeight: 19 }}
                 flex={false}
                 onPress={() => cancelRequest(item.id)}
                 style={{

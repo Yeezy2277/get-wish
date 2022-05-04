@@ -7,7 +7,7 @@ import { Dimensions } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as ImagePicker from 'expo-image-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as FileSystem from 'expo-file-system/build/FileSystem';
 import { COLORS } from '../../functions/constants';
 import { WishListContainer } from '../../styles/wishlist';
@@ -15,12 +15,14 @@ import AuthButton from '../../components/Shared/AuthButton';
 import InputText from '../../components/Inputs/InputText';
 import ImagesChose from '../../components/Wish/ImagesChose';
 import useLoader from '../../hooks/useLoader';
-import { goToUserWishLists } from '../../functions/helpers';
+import { goToUserWishLists, manipulateImage } from '../../functions/helpers';
 import {
   addWish, editWish, getMyWishLists, setWishId, setWishListAdded
 } from '../../redux/actions/wishActions';
 import { Loader } from '../../components';
 import { wishCRUD } from '../../http/CRUD';
+import store from '../../redux';
+import { GO_BACK_ID } from '../../redux/constants/wishConstants';
 
 function AddWish({ navigation, ...props }) {
   const { start, stop, loading } = useLoader(false);
@@ -28,6 +30,7 @@ function AddWish({ navigation, ...props }) {
   const { myWishLists, addedWishId, addedWishIdBefore } = useSelector((state) => state.wish);
   const [serverImages, setServeImages] = React.useState([]);
   const [deleteImages, setDeleteImage] = React.useState([]);
+  const [disabled, setDisabled] = React.useState(false);
 
   const [images, setImages] = React.useState([
     { id: 1 },
@@ -36,17 +39,29 @@ function AddWish({ navigation, ...props }) {
     { id: 4 },
     { id: 5, },
   ]);
-
+  const dispatch = useDispatch();
   const id = React.useMemo(() => props?.route?.params?.id, [props?.route?.params?.id]);
+  const backEdit = React.useMemo(
+    () => props?.route?.params?.backEdit,
+    [props?.route?.params?.backEdit]
+  );
   const isEdit = !!id;
+  const parent = navigation.getParent();
 
   React.useEffect(() => {
-    const parent = navigation.getParent();
     parent.setOptions({ tabBarStyle: { display: 'none' } });
     return () => {
       parent.setOptions({ tabBarStyle: { display: 'flex' } });
     };
   }, [navigation, addedWishId]);
+
+  React.useEffect(() => {
+    return () => {
+      if (backEdit) {
+        dispatch({ type: GO_BACK_ID, payload: id });
+      }
+    };
+  }, []);
 
   React.useEffect(() => {
     (async function getData() {
@@ -97,19 +112,21 @@ function AddWish({ navigation, ...props }) {
     }());
   }, [addedWishIdBefore]);
 
-  const pushImage = (image) => {
+  const pushImage = async (image) => {
     let imagesLocal = [...images];
+    const manipulateImageLocal = await manipulateImage(image);
     imagesLocal.every((el, idx) => {
       if (!el?.image) {
-        imagesLocal[idx] = { ...imagesLocal[idx], image: image.uri };
+        imagesLocal[idx] = { ...imagesLocal[idx], image: manipulateImageLocal.uri };
         return false;
       } if (el?.image && idx === 4) {
-        imagesLocal[idx] = { ...imagesLocal[idx], image: image.uri };
+        imagesLocal[idx] = { ...imagesLocal[idx], image: manipulateImageLocal.uri };
         return false;
       }
       return true;
     });
     setImages(imagesLocal);
+    parent.setOptions({ tabBarStyle: { display: 'none' } });
   };
 
   const choseImage = () => {
@@ -129,7 +146,11 @@ function AddWish({ navigation, ...props }) {
             quality: 1,
           });
           if (!image.cancelled) {
-            pushImage(image);
+            navigation.push('ImageView', {
+              image,
+              addWish: true,
+              pushWishImage: pushImage
+            });
           }
         } else if (buttonIndex === 2) {
           const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -186,7 +207,6 @@ function AddWish({ navigation, ...props }) {
           }
         }
       } else {
-        console.log('check');
         // eslint-disable-next-line no-restricted-syntax
         for (const el of images) {
           if (el?.image) {
@@ -242,10 +262,21 @@ function AddWish({ navigation, ...props }) {
             <Text alignSelf="flex-start" fontSize="13px" color={COLORS.gray} maxWidth="308px" marginTop="10px">
               Сюда можно вставить ссылку на магазин или ещё на что-нибудь полезное
             </Text>
-            <InputText description value={description} onChange={setDescription} marginTop="20px" label="Описание" />
+            <InputText
+              disabled={disabled}
+              setDisabled={setDisabled}
+              description
+              value={description}
+              onChange={setDescription}
+              marginTop="20px"
+              label="Описание"
+            />
             <Box alignSelf="flex-start" maxWidth="320px" marginTop="10px">
               <Text alignSelf="flex-start" fontSize="13px" color={COLORS.gray}>
                 А здесь
+                {' '}
+                {(disabled || description.length === 150) ? <Text color={COLORS.red}>кратко</Text> : ''}
+                {(disabled || description.length === 150) ? ' ' : ''}
                 можно описать какие-нибудь важные детали, например, свой любимый цвет или размер
               </Text>
             </Box>

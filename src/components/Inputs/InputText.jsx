@@ -8,11 +8,10 @@ import ChoseWishActionsheet from '../Actionsheet/ChoseWishActionsheet';
 
 function InputText({
   value, onChange, marginTop = '0px', marginBottom = '0px', label = 'Название', link = false,
-  description = false, select = false, active, setActive, data
+  description = false, select = false, active, setActive, data, disabled, setDisabled
 }) {
 
   const [focused, setFocused] = React.useState(false);
-  const [disabled, setDisabled] = React.useState(false);
   const [visibleActions, setVisibleActions] = React.useState(false);
   let _animatedIsFocused = new Animated.Value(value === '' ? 0 : 1);
   let style = {

@@ -30,7 +30,7 @@ function DesiresScreenElementActionsheetWhy({
       onClose={handleClose}
     >
       <Actionsheet.Content zIndex={998} style={{ elevation: 0 }} padding={0} backgroundColor="#fff">
-        <ActionDesires style={{ paddingLeft: 20, paddingRight: 20 }}>
+        <ActionDesires style={{ paddingLeft: 20, paddingRight: 20, marginBottom: 30 }}>
           <Text textAlign="center" fontFamily="NunitoBold" fontSize={18} color={COLORS.black}>А вот почему!</Text>
           <Text fontSize={14} color={COLORS.gray} marginTop="10px" textAlign="center">Ты зарезервировал уже 3 желания этого друга.</Text>
           <Text alignSelf="center" maxWidth="335px" fontSize={14} color={COLORS.gray} marginTop="10px" textAlign="center">
@@ -38,7 +38,7 @@ function DesiresScreenElementActionsheetWhy({
             другого его желания... или попробуй осчастливить кого-нибудь ещё :)
           </Text>
           <AuthButton
-            style={{ marginTop: 25, marginBottom: 10, alignSelf: 'center' }}
+            style={{ marginTop: 25, alignSelf: 'center' }}
             active
             onPress={() => setOpen(false)}
           >

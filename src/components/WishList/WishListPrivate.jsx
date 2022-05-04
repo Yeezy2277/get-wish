@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Text, ScrollView, View, VStack, Fab, Image
+  Text, ScrollView, VStack, Fab, Image
 } from 'native-base';
 import { useSelector } from 'react-redux';
 import { COLORS } from '../../functions/constants';
@@ -57,6 +57,7 @@ function WishListPrivate({ empty = true }) {
                     <ReservedDesiresUser
                       id={el.id}
                       el={el}
+                      privateMode
                       name={el.name}
                       key={el.id}
                       isInWishList

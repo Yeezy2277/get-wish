@@ -10,6 +10,7 @@ import AuthButton from '../../Shared/AuthButton';
 import { changeUserInfo } from '../../../redux/actions/authActions';
 import { goToUserProfile } from '../../../functions/helpers';
 import { userCRUD } from '../../../http/CRUD';
+import SharedButton from '../../Shared/SharedButton';
 
 function ListRequestElement({ data, first = false, handleSearchPanel }) {
   const { search } = useSelector((state) => state.user);
@@ -58,24 +59,13 @@ function ListRequestElement({ data, first = false, handleSearchPanel }) {
               <HStack marginTop="10px" space={3} alignItems="center">
                 {item.status !== 'rejected' && item.status !== 'sent' && (
                   <>
-                    <Button
+                    <SharedButton
+                      textStyle={{ fontSize: 15, lineHeight: 21 }}
                       onPress={() => cancelFriend(item?.id, first ? 'SEARCH_IN' : 'REQUEST')}
-                      style={{
-                        backgroundColor: COLORS.white,
-                        height: 30,
-                        width: 120,
-                        maxWidth: 120,
-                        borderRadius: 10,
-                        flex: 1
-                      }}
-                      _text={{
-                        color: '#8424FF',
-                        fontSize: 14,
-                        lineHeight: 16
-                      }}
                     >
                       Отклонить
-                    </Button>
+                    </SharedButton>
+
                     <AuthButton
                       higlightStyle={{ height: 30 }}
                       lineHeightText={27}

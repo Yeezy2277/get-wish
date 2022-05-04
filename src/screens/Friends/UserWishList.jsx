@@ -11,7 +11,9 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import {
   HeaderArrow, HeaderAvatar, HeaderPressable, HeaderPressableAvatar
 } from '../../styles/shared';
-import { declOfNum, goBack, goToAddWish } from '../../functions/helpers';
+import {
+  declOfNum, goBack, goToAddWish, goToUserWishLists, goToWishList
+} from '../../functions/helpers';
 import { COLORS } from '../../functions/constants';
 import { DesiresScreenRow } from '../../styles/profile';
 import { DesiresScreenElement, Loader } from '../../components';
@@ -23,7 +25,7 @@ import AuthButton from '../../components/Shared/AuthButton';
 import useLoader from '../../hooks/useLoader';
 import { ActionSheets } from '../../functions/ActionSheet';
 
-function UserWishList({ navigation, route: { params: { id } } }) {
+function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
   const { start, stop, loading } = useLoader(false);
   const [showTutorial, setShowTutorial] = React.useState(false);
   const [showHeader, setShowHeader] = React.useState(false);
@@ -34,6 +36,7 @@ function UserWishList({ navigation, route: { params: { id } } }) {
   const { oneUser } = useSelector((state) => state.user);
   const { showActionSheetWithOptions } = useActionSheet();
   const state = new ActionSheets(showActionSheetWithOptions);
+  const parent = navigation.getParent();
 
   const isYourWishList = React.useMemo(
     () => oneWishList?.user_id === userId,
@@ -58,7 +61,16 @@ function UserWishList({ navigation, route: { params: { id } } }) {
   }, [id, reloadValue]);
 
   const handleClickOption = () => {
-    if (isYourWishList) state.showShareActionInMyWishList(oneWishList?.id, oneWishList);
+    if (isYourWishList) {
+      state.showShareActionInMyWishList(
+        oneWishList?.id,
+        oneWishList,
+        oneWishList?.private,
+        oneWishList?.is_archive,
+        null,
+        parent
+      );
+    }
   };
 
   return (
@@ -69,7 +81,20 @@ function UserWishList({ navigation, route: { params: { id } } }) {
           width="100%"
           backgroundColor={COLORS.white2}
         >
-          <Header morePress={handleClickOption} more cancel title={oneWishList?.name} navigation={navigation} />
+          <Header
+            backHandler={() => {
+              if (backToWish) {
+                goToWishList();
+              } else {
+                goBack();
+              }
+            }}
+            morePress={handleClickOption}
+            more
+            cancel
+            title={oneWishList?.name}
+            navigation={navigation}
+          />
           <FriendsContainerFirst style={{ marginTop: 76 }}>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/wishlist/wish_placeholder.png')} />
             <Text
@@ -104,10 +129,32 @@ function UserWishList({ navigation, route: { params: { id } } }) {
             height: '100%',
           }}
         >
-          {showHeader ? <Header morePress={handleClickOption} more cancel title={oneWishList?.name} navigation={navigation} />
+          {showHeader ? (
+            <Header
+              backHandler={() => {
+                if (backToWish) {
+                  goToWishList();
+                } else {
+                  return null;
+                }
+              }}
+              morePress={handleClickOption}
+              more
+              cancel
+              title={oneWishList?.name}
+              navigation={navigation}
+            />
+          )
             : (
               <>
-                <HeaderPressable onPress={goBack}>
+                <HeaderPressable onPress={() => {
+                  if (backToWish) {
+                    goToWishList();
+                  } else {
+                    goBack();
+                  }
+                }}
+                >
                   <HeaderArrow source={require('../../assets/images/icons/arrow.png')} />
                 </HeaderPressable>
                 <HeaderPressableAvatar onPress={handleClickOption}>

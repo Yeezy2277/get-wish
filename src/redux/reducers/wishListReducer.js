@@ -2,9 +2,9 @@ import {
   ADD_THEMES,
   ADD_WISH_LIST,
   ARCHIVE_WISH_LIST,
-  DELETE_WISH_LIST,
+  DELETE_WISH_LIST, DICREMENT_COUNT,
   HANDLE_DELETED_SELECTED_FRIENDS,
-  HANDLE_SELECTED_FRIENDS,
+  HANDLE_SELECTED_FRIENDS, INCREMENT_COUNT,
   SET_COUNT,
   SET_ONE_WISH_LIST,
   SET_USER_WISH_LIST,
@@ -12,6 +12,7 @@ import {
   SET_WISH_LIST_PRIVATE,
   SET_WISH_LIST_PUBLIC
 } from '../constants/wishListConstants';
+import { CANCEL_RESERVE_WISH, CANCEL_RESERVE_WISH_LIST, RESERVE_WISH_LIST } from '../constants/wishConstants';
 
 const initialState = {
   oneWishList: {},
@@ -27,10 +28,43 @@ const initialState = {
 // eslint-disable-next-line default-param-last
 export const wishListReducer = (state = initialState, action) => {
   switch (action.type) {
+    case CANCEL_RESERVE_WISH_LIST:
+      let wishes = [...state.oneWishList?.wishes];
+      let idx = wishes.findIndex((el) => el.id === action.payload);
+      wishes[idx] = { ...wishes[idx], reservated: false };
+      return {
+        ...state,
+        oneWishList: {
+          ...state.oneWishList,
+          wishes: [...wishes]
+        }
+      };
+    case RESERVE_WISH_LIST:
+      let wishesAdd = [...state.oneWishList?.wishes];
+      let idxAdd = wishesAdd.findIndex((el) => el.id === action.payload);
+      wishesAdd[idxAdd] = { ...wishesAdd[idxAdd], reservated: true };
+      return {
+        ...state,
+        oneWishList: {
+          ...state.oneWishList,
+          wishes: [...wishesAdd]
+        }
+      };
+
     case SET_COUNT:
       return {
         ...state,
         countRes: action.payload
+      };
+    case DICREMENT_COUNT:
+      return {
+        ...state,
+        countRes: state.countRes - 1
+      };
+    case INCREMENT_COUNT:
+      return {
+        ...state,
+        countRes: state.countRes + 1
       };
     case SET_ONE_WISH_LIST:
       return {

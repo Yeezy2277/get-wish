@@ -117,7 +117,7 @@ function FriendsStack() {
                   type: DELETE_ID_FROM_DATA,
                   payload: oneUser?.id
                 });
-                await searchPanelHandler(true);
+                await searchPanelHandler();
                 await goBack();
               });
             }
@@ -298,7 +298,6 @@ function App() {
   return (
     <NavigationContainer ref={navigationRef}>
       <TabStack />
-      <Toast config={toastConfig} />
     </NavigationContainer>
   );
 }

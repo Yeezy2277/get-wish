@@ -2,12 +2,18 @@ import store from '../index';
 import { $authHost } from '../../http';
 import { parseError } from '../../http/utils';
 import {
-  ADD_THEMES, ADD_WISH_LIST, ARCHIVE_WISH_LIST, RELOAD, SET_COUNT, SET_USER_WISH_LIST,
+  ADD_THEMES, ADD_WISH_LIST, ARCHIVE_WISH_LIST, DICREMENT_COUNT, INCREMENT_COUNT, RELOAD, SET_COUNT, SET_USER_WISH_LIST,
   SET_WISH_LIST_ARCHIVE,
   SET_WISH_LIST_PRIVATE,
   SET_WISH_LIST_PUBLIC
 } from '../constants/wishListConstants';
 import { wishCRUD, wishlistCRUD } from '../../http/CRUD';
+import {
+  CANCEL_RESERVE_WISH,
+  CANCEL_RESERVE_WISH_LIST,
+  RESERVE_WISH,
+  RESERVE_WISH_LIST
+} from '../constants/wishConstants';
 
 export const getCountInUser = async (userId) => {
   return new Promise((resolve, reject) => {
@@ -23,11 +29,19 @@ export const getCountInUser = async (userId) => {
   });
 };
 
-export const reserveWish = async (wishId, anon) => {
+export const reserveWish = async (wishId, anon, user) => {
   return new Promise((resolve, reject) => {
     $authHost.post(`/api/v1/wish/${wishId}/reserve`, { anon }).then(async ({ data }) => {
+      store?.dispatch({ type: INCREMENT_COUNT });
       store?.dispatch({
-        type: RELOAD,
+        type: RESERVE_WISH,
+        payload: {
+          user
+        }
+      });
+      store?.dispatch({
+        type: RESERVE_WISH_LIST,
+        payload: wishId
       });
       resolve(data?.data);
     }).catch((error) => {
@@ -39,8 +53,13 @@ export const reserveWish = async (wishId, anon) => {
 export const deleteReserveWish = async (wishId) => {
   return new Promise((resolve, reject) => {
     $authHost.delete(`/api/v1/wish/${wishId}/reserve`).then(async ({ data }) => {
+      store?.dispatch({ type: DICREMENT_COUNT });
       store?.dispatch({
-        type: RELOAD,
+        type: CANCEL_RESERVE_WISH,
+      });
+      store?.dispatch({
+        type: CANCEL_RESERVE_WISH_LIST,
+        payload: wishId
       });
       resolve(data?.data);
     }).catch((error) => {
@@ -105,14 +124,12 @@ export const getWishListUser = async ({
   });
 };
 
-export const archiveWishList = async (id, privateMode, el) => {
-  await wishlistCRUD.edit(id, { ...el, theme: el.theme.id, is_archive: true }).then(() => {
+export const archiveWishList = async (id, privateMode, el, isArchive = true) => {
+  await wishlistCRUD.edit(id, {
+    ...el, friends: [...el.friends.map((el) => el.id)], theme: el.theme.id, is_archive: isArchive
+  }).then(() => {
     store?.dispatch({
-      type: ARCHIVE_WISH_LIST,
-      payload: {
-        type: privateMode ? 2 : 1,
-        data: id
-      }
+      type: RELOAD,
     });
   });
 };

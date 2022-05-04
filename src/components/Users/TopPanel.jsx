@@ -114,7 +114,7 @@ function TopPanel() {
             _text={{
               color: COLORS.gray,
               fontSize: 15,
-              lineHeight: 20
+              lineHeight: 18
             }}
             onPress={deleteFriendHandler}
             leftIcon={<Image size="12px" source={require('../../assets/images/icons/users/check.png')} />}

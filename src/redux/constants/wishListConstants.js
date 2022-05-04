@@ -11,3 +11,5 @@ export const SET_ONE_WISH_LIST = 'SET_ONE_WISH_LIST';
 export const SET_COUNT = 'SET_COUNT';
 export const SET_USER_WISH_LIST = 'SET_USER_WISH_LIST';
 export const RELOAD = 'RELOAD';
+export const INCREMENT_COUNT = 'INCREMENT_COUNT';
+export const DICREMENT_COUNT = 'DICREMENT_COUNT';

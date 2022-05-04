@@ -1,4 +1,6 @@
 import {
+  CANCEL_RESERVE_WISH, GO_BACK_ID,
+  RESERVE_WISH,
   SET_MY_WISH_LIST, SET_ONE_WISH, SET_WISH, SET_WISH_ADDED, SET_WISH_ID
 } from '../constants/wishConstants';
 
@@ -7,6 +9,7 @@ const initialState = {
   myWishLists: [],
   oneWish: {},
   addedWishId: null,
+  goBackId: null,
   addedWishIdBefore: null,
 };
 
@@ -17,6 +20,26 @@ export const wishReducer = (state = initialState, action) => {
       return {
         ...state,
         addedWishList: action.payload
+      };
+    case GO_BACK_ID:
+      return {
+        ...state,
+        goBackId: action.payload
+      };
+    case RESERVE_WISH:
+      return {
+        ...state,
+        oneWish: { ...state.oneWish, user_id: action.payload.user, reservated: true }
+      };
+    case CANCEL_RESERVE_WISH:
+      return {
+        ...state,
+        oneWish: {
+          ...state.oneWish,
+          user_id: null,
+          user: null,
+          reservated: false
+        }
       };
     case SET_WISH_ADDED:
       return {

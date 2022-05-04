@@ -3,6 +3,7 @@ import { Platform, Pressable } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
+import { Image } from 'native-base';
 import {
   DesiresScreenElementContainer,
   DesiresScreenElementContent,
@@ -21,7 +22,7 @@ import DesiresScreenElementActionsheet from './DesiresScreenElementActionsheet';
 import { androidShadow } from '../../functions';
 import { navigateAction } from '../../functions/NavigationService';
 import { wishCRUD } from '../../http/CRUD';
-import { SET_ONE_WISH } from '../../redux/constants/wishConstants';
+import { GO_BACK_ID, SET_ONE_WISH } from '../../redux/constants/wishConstants';
 import { ActionSheets } from '../../functions/ActionSheet';
 
 function DesiresScreenElement({
@@ -31,6 +32,7 @@ function DesiresScreenElement({
   const dispatch = useDispatch();
   const { showActionSheetWithOptions } = useActionSheet();
   const state = new ActionSheets(showActionSheetWithOptions);
+  const { goBackId } = useSelector((state) => state.wish);
 
   const handleClickImage = () => {
     if (isYourWishList) {
@@ -47,6 +49,15 @@ function DesiresScreenElement({
     });
 
   };
+
+  React.useEffect(() => {
+    (async function viewModal() {
+      if (goBackId === el.id) {
+        dispatch({ type: GO_BACK_ID, payload: null });
+        await handleOpen();
+      }
+    }());
+  }, [goBackId]);
 
   const handleOpen = async () => {
     const res = await wishCRUD.get(el?.id);
@@ -74,7 +85,7 @@ function DesiresScreenElement({
           />
           <DesiresScreenElementContent>
             <DesiresScreenElementContentHeader>
-              <DesiresScreenElementContentHeaderTitle>
+              <DesiresScreenElementContentHeaderTitle numberOfLines={2} style={{ fontFamily: 'NunitoBold' }}>
                 {el.name}
               </DesiresScreenElementContentHeaderTitle>
               <Pressable
@@ -97,6 +108,15 @@ function DesiresScreenElement({
                   {el?.link}
                 </DesiresScreenElementContentBottomText>
               </DesiresScreenElementContentBottomIconContainer>
+              )}
+              {el?.reservated && (
+              <Image
+                marginLeft="auto"
+                resizeMode="contain"
+                width="18.5px"
+                height="12px"
+                source={require('../../assets/images/icons/wishlist/bron.png')}
+              />
               )}
               {!friend && <DesiresScreenElementContentBottomAvatar resizeMode="cover" source={require('../../assets/images/icons/profile/desires/avatar1.png')} />}
             </DesiresScreenElementContentBottom>

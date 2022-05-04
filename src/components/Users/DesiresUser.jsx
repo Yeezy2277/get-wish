@@ -36,7 +36,7 @@ function DesiresUser() {
                   id={el.id}
                   name={el.name}
                   key={el.id}
-                  isInWishList
+                  isInWishList={false}
                 />
               );
             }) : (

@@ -184,9 +184,8 @@ export const DesiresScreenElementContentHeader = styled.View`
 `;
 
 export const DesiresScreenElementContentHeaderTitle = styled.Text`
-  font-family: 'Nunito';
-  font-weight: bold;
   font-size: 15px;
+  max-width: 80%;
   line-height: 20px;
   color: #1A1A1A;
 `;
@@ -512,10 +511,11 @@ export const ActionDesiresRowLinksMenu = styled.Image`
 `;
 
 export const ActionDesiresRowName = styled.Text`
-  font-family: 'Nunito';
+  font-family: 'NunitoBold';
   font-weight: bold;
   font-size: 18px;
   margin-top: 18px;
+  max-width: 80%;
   line-height: 25px;
   color: #1A1A1A;
 `;

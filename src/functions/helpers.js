@@ -2,8 +2,11 @@ import {
   HStack, Image, Text, View
 } from 'native-base';
 import React from 'react';
+import { View as ViewOriginal, Image as ImageOriginal, Text as TextOriginal } from 'react-native';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import NavigationService, { navigateAction, navigationRef } from './NavigationService';
 import { COLORS } from './constants';
+import { generateBoxShadowStyle } from './index';
 
 export function goToStart() {
   NavigationService.navigate('Start');
@@ -74,7 +77,8 @@ export function declOfNum(number, words) {
 export const toastConfig = {
   search: ({ text1 }) => (
     <View
-      zIndex={9999}
+      zIndex={999999}
+      style={{ elevation: 3 }}
       shadow={1}
       height="50px"
       maxWidth="335px"
@@ -91,4 +95,42 @@ export const toastConfig = {
       </HStack>
     </View>
   )
+};
+
+export const toastConfigWithoutNativeBase = {
+  search: ({ text1 }) => (
+    <ViewOriginal
+      style={{
+        height: 50,
+        maxWidth: 335,
+        width: '100%',
+        marginLeft: 10,
+        marginRight: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 14,
+        borderRadius: 10,
+        backgroundColor: COLORS.white2,
+        zIndex: 999,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 1,
+        elevation: 5
+      }}
+    >
+      <ImageOriginal resizeMode="cover" style={{ height: 22, width: 22 }} source={require('../assets/images/icons/check.png')} />
+      <TextOriginal style={{ marginLeft: 12, fontWeight: 'bold', fontSize: 15 }}>{text1}</TextOriginal>
+    </ViewOriginal>
+  )
+};
+
+export const manipulateImage = async (image) => {
+  const manipResult = await manipulateAsync(
+    image.localUri || image.uri,
+    [],
+    { compress: 0.5, format: SaveFormat.JPEG }
+  );
+  return manipResult;
 };

@@ -10,7 +10,7 @@ import { filterWishList } from '../../redux/actions/wishListActions';
 import useLoader from '../../hooks/useLoader';
 import { Loader } from '../index';
 
-function WishListArchive({ empty = true }) {
+function WishListArchive() {
   const { start, stop, loading } = useLoader(false);
   const { reloadValue } = useSelector((state) => state.generic);
   const { archiveWishLists } = useSelector((state) => state.wishList);
@@ -46,6 +46,7 @@ function WishListArchive({ empty = true }) {
                     el={el}
                     name={el.name}
                     key={el.id}
+                    archive
                     isInWishList
                   />
                 );

@@ -59,7 +59,7 @@ function ListQueryElement({ data, first = false, handleSearchPanel }) {
               </Text>
             </Pressable>
             {item?.cancelRequest ? <SharedButton onPress={() => sendRequest(item.id, first ? 'SEARCH' : 'QUERY')} style={{ width: 150, maxWidth: 150, marginLeft: 'auto' }}>Добавить в друзья</SharedButton>
-              : <SharedButton onPress={() => cancelRequest(item.id, first ? 'SEARCH_OUT' : 'QUERY')} style={{ width: 138, maxWidth: 138, marginLeft: 'auto' }}>Отменить запрос</SharedButton>}
+              : <SharedButton onPress={() => cancelRequest(item.id, first ? 'SEARCH_OUT' : 'QUERY')} lineHeight={19} style={{ width: 138, maxWidth: 138, marginLeft: 'auto' }}>Отменить запрос</SharedButton>}
           </HStack>
         </Box>
       )}
