@@ -14,10 +14,13 @@ import { COLORS } from '../../functions/constants';
 import { getFriends } from '../../redux/actions/userActions';
 import { SET_TYPE_SEARCH } from '../../redux/constants/userConstants';
 import { HANDLE_SELECTED_FRIENDS } from '../../redux/constants/wishListConstants';
-import { goBack, goToAddWishList } from '../../functions/helpers';
+import { goBack } from '../../functions/helpers';
+import { ShareContext } from '../../functions/context';
+import SearchHeaderShare from '../../components/Header/SearchHeaderShare';
 
 function ShareScreen({ navigation, ...params }) {
   const isChooseFriend = React.useMemo(() => params?.route?.params?.chooseFriend, [params?.route]);
+  const [selectedFriends, setSelectedFriends] = React.useState([]);
   const { selectedFriends: selectedFriendsRedux } = useSelector((state) => state.wishList);
   const dispatch = useDispatch();
   React.useEffect(() => {
@@ -39,13 +42,13 @@ function ShareScreen({ navigation, ...params }) {
       payload: 'share'
     });
     if (selectedFriendsRedux?.length) {
+      console.log('selectedFriendsRedux', selectedFriendsRedux);
       setSelectedFriends([...selectedFriendsRedux]);
     }
     getData();
   }, [dispatch, selectedFriendsRedux]);
 
   const { friends } = useSelector((state) => state.user);
-  const [selectedFriends, setSelectedFriends] = React.useState([]);
 
   const onChangeCheckBoxTrue = () => {
     const ids = friends?.map((el) => el.id);
@@ -70,70 +73,90 @@ function ShareScreen({ navigation, ...params }) {
     }
   };
 
+  React.useEffect(() => {
+    return () => {
+      dispatch({
+        type: SET_TYPE_SEARCH,
+        payload: 'friend'
+      });
+    };
+  }, []);
+
+  console.log('setSelectedFriends', setSelectedFriends);
+
+  const SearchHeaderMemo = React.useMemo(() => {
+    return (
+      <SearchHeaderShare
+        cancel
+        setSelectedFriends={setSelectedFriends}
+        selectedFriends={selectedFriends}
+        title={isChooseFriend ? 'Выбери друзей' : 'Получатели'}
+      />
+    );
+  }, [setSelectedFriends, selectedFriends]);
+
   return (
-    <>
-      <SearchHeader selectedFriends={selectedFriends} setSelectedFriends={setSelectedFriends} cancel title={isChooseFriend ? 'Выбери друзей' : 'Получатели'} />
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.container}>
-        <FlexContainer>
-          <ShareScreenButtonPanel>
-            <Button
-              style={{
-                backgroundColor: COLORS.white, borderRadius: 10, flex: 1, marginRight: 10
-              }}
-              _text={{
-                color: '#8424FF'
-              }}
-              isDisabled={!friends?.length}
-              onPress={onChangeCheckBoxTrue}
-            >
-              Выбрать всех
-            </Button>
-            <Button
-              isDisabled={isDisabled}
-              style={{ backgroundColor: COLORS.white, borderRadius: 10, flex: 1 }}
-              _text={{
-                color: !isDisabled ? '#8424FF' : '#C8CCE1'
-              }}
-              onPress={onChangeCheckBoxFalse}
-            >
-              Снять выбор
-            </Button>
-          </ShareScreenButtonPanel>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.container}>
+      {SearchHeaderMemo}
+      <FlexContainer>
+        <ShareScreenButtonPanel>
+          <Button
+            style={{
+              backgroundColor: COLORS.white, borderRadius: 10, flex: 1, marginRight: 10
+            }}
+            _text={{
+              color: '#8424FF'
+            }}
+            isDisabled={!friends?.length}
+            onPress={onChangeCheckBoxTrue}
+          >
+            Выбрать всех
+          </Button>
+          <Button
+            isDisabled={isDisabled}
+            style={{ backgroundColor: COLORS.white, borderRadius: 10, flex: 1 }}
+            _text={{
+              color: !isDisabled ? '#8424FF' : '#C8CCE1'
+            }}
+            onPress={onChangeCheckBoxFalse}
+          >
+            Снять выбор
+          </Button>
+        </ShareScreenButtonPanel>
+        <ShareContext.Provider value={{ setSelectedFriends, selectedFriends }}>
           <ListFriendsCheck
-            selecteds={selectedFriends}
-            setSelected={setSelectedFriends}
             data={friends}
           />
-          {selectedFriends.length ? (
-            <AuthButton
-              onPress={handleSelectedFriends}
-              style={{ marginTop: 'auto', marginBottom: 20, height: 50 }}
-              higlightStyle={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center'
-              }}
-              active={!isDisabled}
-            >
-              <Box display="flex" height="53px" alignItems="center" flexDirection="row">
-                <Text marginRight="10px" fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>Сохранить выбор</Text>
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  size={22}
-                  color={COLORS.purple}
-                  borderRadius={11}
-                  backgroundColor={COLORS.white}
-                >
-                  <Text fontSize={13} fontFamily="NunitoBold" color={COLORS.purple}>{selectedFriends.length}</Text>
-                </Box>
+        </ShareContext.Provider>
+        {selectedFriends.length ? (
+          <AuthButton
+            onPress={handleSelectedFriends}
+            style={{ marginBottom: 20, height: 50 }}
+            higlightStyle={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
+            active={!isDisabled}
+          >
+            <Box display="flex" height="53px" alignItems="center" flexDirection="row">
+              <Text marginRight="10px" fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>Сохранить выбор</Text>
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                size={22}
+                color={COLORS.purple}
+                borderRadius={11}
+                backgroundColor={COLORS.white}
+              >
+                <Text fontSize={13} fontFamily="NunitoBold" color={COLORS.purple}>{selectedFriends.length}</Text>
               </Box>
-            </AuthButton>
-          ) : null}
-        </FlexContainer>
-      </ScrollView>
-    </>
+            </Box>
+          </AuthButton>
+        ) : null}
+      </FlexContainer>
+    </ScrollView>
   );
 }
 

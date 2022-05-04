@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Box, Heading,
+  Box,
   Input, Modal, Pressable, Spinner, Text, View
 } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,56 +19,26 @@ import {
 import { ModalContent, TextFieldCloseIcon } from '../../styles/shared';
 import { COLORS } from '../../functions/constants';
 import { searchPanelHandler } from '../../redux/actions/genericActions';
-import { declOfNum, goBack, toastConfig } from '../../functions/helpers';
+import { goBack, toastConfig } from '../../functions/helpers';
 import {
-  clearSearchData, getFriends, getIncoming, getOutgoing, onChangeSearch, sendRequest
+  clearSearchData, getFriends, onChangeSearch,
 } from '../../redux/actions/userActions';
 import { SET_SEARCH, SET_SEARCH_DATA } from '../../redux/constants/userConstants';
-import { ListFriends } from '../index';
 import useLoader from '../../hooks/useLoader';
-import ListFriendElement from '../Friends/Lists/ListFriendElement';
-import ListQueryElement from '../Friends/Lists/ListQueryElement';
-import ListRequestElement from '../Friends/Lists/ListRequestElement';
 import ListFriendsCheck from '../Friends/Lists/ListFriendsCheck';
 import { ShareContext } from '../../functions/context';
 
-function SearchHeader({
+function SearchHeaderShare({
   cancel = false, title, setSelectedFriends, selectedFriends
 }) {
   const { start, stop, loading } = useLoader(false);
-  const { openPanel } = useSelector((state) => state.generic);
+  const [openPanel, setOpenPanel] = React.useState(false);
   const {
-    users, typeSearch, incomingRequest, outgoingRequest, friends, friendsSearch,
-    incomingRequestSearch, outgoingRequestSearch
+    users, typeSearch, incomingRequest, outgoingRequest, friends, friendsSearch
   } = useSelector((state) => state.user);
   const [term, setTerm] = React.useState('');
   const dispatch = useDispatch();
   const [debouncedTerm, setDebouncedTerm] = React.useState(term);
-  const isTabFriend = React.useCallback(() => typeSearch === 'friend', [typeSearch]);
-  const isTabRequest = React.useCallback(() => typeSearch === 'request', [typeSearch]);
-  const isTabQuery = React.useCallback(() => typeSearch === 'query', [typeSearch]);
-  const isTabShare = React.useCallback(() => typeSearch === 'share', [typeSearch]);
-
-  const allIncoming = React.useCallback(() => {
-    return incomingRequestSearch
-      ?.reduce((total, amount) => {
-        // eslint-disable-next-line no-prototype-builtins
-        if (!amount.hasOwnProperty('status')) {
-          total += 1;
-        }
-        return total;
-      }, 0);
-  }, [incomingRequestSearch]);
-
-  const allOutcoming = React.useCallback(() => {
-    return outgoingRequestSearch
-      ?.reduce((total, amount) => {
-        if (!amount?.cancelRequest) {
-          total += 1;
-        }
-        return total;
-      }, 0);
-  }, [outgoingRequestSearch]);
 
   const whiteBg = () => {
     if (term) {
@@ -90,7 +60,7 @@ function SearchHeader({
     start();
     const timer = setTimeout(() => setTerm(debouncedTerm), 1000);
     return () => clearTimeout(timer);
-  }, [debouncedTerm]);
+  }, [debouncedTerm, start]);
 
   React.useEffect(() => {
     (async function Start() {
@@ -100,23 +70,12 @@ function SearchHeader({
         clearResults();
       }
     }());
-  }, [term]);
+  }, [clearResults, onSearchSubmit, term]);
 
   const onSearchSubmit = React.useCallback(async (value) => {
     try {
       const res = await onChangeSearch(value);
-      if (isTabFriend) {
-        await getFriends(value);
-      }
-      if (isTabShare) {
-        await getFriends(value);
-      }
-      if (isTabRequest) {
-        await getIncoming(value);
-      }
-      if (isTabQuery) {
-        await getOutgoing(value);
-      }
+      await getFriends(value);
       if (res) {
         dispatch({
           type: SET_SEARCH_DATA,
@@ -183,18 +142,6 @@ function SearchHeader({
     }
   }, [state]);
 
-  const handlePress = async ({ id }) => {
-    await sendRequest(id).then(() => {
-      Toast.show({
-        type: 'search',
-        text1: 'Запрос на дружбу отправлен',
-        position: 'bottom',
-        bottomOffset: 95
-      });
-    });
-
-  };
-
   const handleClose = async () => {
     await searchPanelHandler();
   };
@@ -204,7 +151,7 @@ function SearchHeader({
       <ShareScreenHeader>
         {cancel && <ShareScreenCancelText onPress={goBack}>Отмена</ShareScreenCancelText>}
         <ShareScreenTitle>{title}</ShareScreenTitle>
-        <ShareScreenPressable onPress={handleSearchPanel(true, true)}>
+        <ShareScreenPressable onPress={() => setOpenPanel(true)}>
           <ShareScreenImage source={require('../../assets/images/icons/profile/desires/search.png')} />
         </ShareScreenPressable>
       </ShareScreenHeader>
@@ -215,7 +162,7 @@ function SearchHeader({
           }}
           backgroundColor={COLORS.overlay}
           isOpen={openPanel}
-          onClose={searchPanelHandler}
+          onClose={() => setOpenPanel(false)}
           size="full"
         >
           <Box paddingLeft="5px" paddingRight="5px" backgroundColor={debouncedTerm ? COLORS.white2 : COLORS.transparent} height="100%" borderTopRadius={0} borderBottomRadius={0} marginTop={0} marginBottom="auto">
@@ -237,7 +184,7 @@ function SearchHeader({
                 fontSize={16}
                 placeholder="Введи ник"
               />
-              <ModalCancelText onPress={handleSearchPanel(false, true)}>Отмена</ModalCancelText>
+              <ModalCancelText onPress={() => setOpenPanel(false)}>Отмена</ModalCancelText>
             </ModalContent>
             {debouncedTerm ? (
               <View marginTop="20px" display="flex" flexDirection="column">
@@ -245,21 +192,7 @@ function SearchHeader({
               loading ? <Spinner color="indigo.500" size="lg" /> : users?.length
                 ? (
                   <>
-                    {isTabFriend() && friendsSearch?.length ? (
-                      <View maxHeight="40%">
-                        <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
-                          {`${friendsSearch?.length} ${declOfNum(friendsSearch?.length, ['друг', 'друга', 'друзей'])}`}
-                        </Heading>
-                        <ListFriendElement
-                          add={false}
-                          first
-                          handlePress={handlePress}
-                          handleSearchPanel={handleSearchPanel}
-                          data={friendsSearch}
-                        />
-                      </View>
-                    ) : null}
-                    {isTabShare() && friendsSearch?.length ? (
+                    {friendsSearch?.length ? (
                       <ShareContext.Provider value={{ setSelectedFriends, selectedFriends }}>
                         <ListFriendsCheck
                           padding
@@ -268,31 +201,6 @@ function SearchHeader({
                       </ShareContext.Provider>
 
                     ) : null}
-                    {isTabQuery() && outgoingRequestSearch?.length ? (
-                      <View maxHeight="40%">
-                        <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
-                          {`${allOutcoming()} ${declOfNum(allOutcoming(), ['запрос', 'запроса', 'запросов'])}`}
-                        </Heading>
-                        <ListQueryElement
-                          handleSearchPanel={handleSearchPanel}
-                          data={outgoingRequestSearch}
-                          first
-                        />
-                      </View>
-                    ) : null}
-                    {isTabRequest() && incomingRequestSearch?.length ? (
-                      <View maxHeight="40%">
-                        <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
-                          {`${allIncoming()} ${declOfNum(allIncoming(), ['запрос', 'запроса', 'запросов'])}`}
-                        </Heading>
-                        <ListRequestElement
-                          data={incomingRequestSearch}
-                          handleSearchPanel={handleSearchPanel}
-                          first
-                        />
-                      </View>
-                    ) : null}
-                    {!isTabShare() && <ListFriends handlePress={handlePress} handleSearchPanel={handleSearchPanel} add title="Глобальный поиск" data={users} />}
                   </>
                 ) : debouncedTerm ? (
                   <Text
@@ -327,13 +235,13 @@ function SearchHeader({
   );
 }
 
-SearchHeader.propTypes = {
+SearchHeaderShare.propTypes = {
   cancel: PropTypes.bool,
   title: PropTypes.string.isRequired,
 };
 
-SearchHeader.defaultProps = {
+SearchHeaderShare.defaultProps = {
   cancel: false,
 };
 
-export default SearchHeader;
+export default SearchHeaderShare;

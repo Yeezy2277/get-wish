@@ -33,6 +33,7 @@ function AddWishList({ navigation, ...props }) {
   const { start: start2, stop: stop2, loading: loading2 } = useLoader(false);
   const [active, setActive] = React.useState(1);
   const [name, setName] = React.useState('');
+  const [archive, setArchive] = React.useState(false);
   const [privateWishList, setPrivate] = React.useState(false);
   const { selectedFriends, themes } = useSelector((state) => state.wishList);
   const { addedWishId } = useSelector((state) => state.wish);
@@ -52,6 +53,7 @@ function AddWishList({ navigation, ...props }) {
           const { data } = await wishlistCRUD.get(id);
           setName(data?.name);
           setPrivate(data?.private);
+          setArchive(data?.is_archive);
           setActive(data?.theme?.id);
           if (data?.private) {
             dispatch({
@@ -89,7 +91,7 @@ function AddWishList({ navigation, ...props }) {
         await wishlistCRUD.edit(id, {
           name,
           theme: active,
-          is_archive: false,
+          is_archive: archive,
           private: privateWishList,
           friends: privateWishList ? selectedFriendsLocal?.map((el) => el.id) : []
         }).then(() => {
@@ -147,9 +149,12 @@ function AddWishList({ navigation, ...props }) {
           const friends = await getFriends();
           let result = [];
           friends?.data.forEach((v) => {
-            if (selectedFriends.includes(v.id)) {
-              result.push(v);
+            if (selectedFriends?.length) {
+              if (selectedFriends?.includes(v.id)) {
+                result.push(v);
+              }
             }
+
           });
           setSelectedFriendsLocal(result);
         } finally {

@@ -85,7 +85,9 @@ function InputText({
   };
 
   const handleChangeVisible = () => {
-    setVisibleActions(true);
+    if (!disabled) {
+      setVisibleActions(true);
+    }
   };
 
   if (select) {

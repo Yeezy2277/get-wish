@@ -4,13 +4,14 @@ import {
 } from 'native-base';
 import { useSelector } from 'react-redux';
 import { COLORS } from '../../../functions/constants';
+import { ShareContext } from '../../../functions/context';
 
 function CheckBoxElement({ selecteds, handleAddSelected, item }) {
   const [selected, setSelected] = React.useState(false);
   const { selectedFriends: selectedFriendsRedux } = useSelector((state) => state.wishList);
 
   React.useEffect(() => {
-    if (selecteds.includes(item.id)) {
+    if (selecteds?.includes(item.id)) {
       setSelected(true);
     } else {
       setSelected(false);
@@ -66,8 +67,13 @@ function CheckBoxElement({ selecteds, handleAddSelected, item }) {
 }
 
 function ListFriendCheckElement({
-  data, first = false, setSelected, selecteds
+  data, first = false
 }) {
+
+  const {
+    setSelectedFriends: setSelected,
+    selectedFriends: selecteds
+  } = React.useContext(ShareContext);
 
   const handleAddSelected = (e, id) => {
     if (selecteds?.find((el) => el === id)) {

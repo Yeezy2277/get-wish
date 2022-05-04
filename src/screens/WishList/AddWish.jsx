@@ -281,6 +281,7 @@ function AddWish({ navigation, ...props }) {
               </Text>
             </Box>
             <InputText
+              disabled={isEdit}
               active={wishlist}
               setActive={setWishList}
               data={myWishLists}
@@ -290,7 +291,7 @@ function AddWish({ navigation, ...props }) {
               marginTop="25px"
             />
             <Text alignSelf="flex-start" marginTop="10px" fontSize="13px" color={COLORS.gray}>
-              И, если хочешь, можешь поместить своё желание в другой вишлист
+              {isEdit ? 'При редактировании, увы, нельзя изменить виш лист' : 'И, если хочешь, можешь поместить своё желание в другой вишлист'}
             </Text>
             <Box marginTop="35px" width="100%" flexDirection="row" justifyContent="space-between" alignItems="center">
               <Text fontSize="15px">Фотографии (до 5 шт)</Text>

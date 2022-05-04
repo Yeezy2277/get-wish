@@ -5,9 +5,10 @@ import {
   Image,
   ScrollView, Text
 } from 'native-base';
-import { ImageBackground } from 'react-native';
+import { Alert, ImageBackground } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { NavigationActions, NavigationActions as CommonActions, StackActions } from 'react-navigation';
 import {
   HeaderArrow, HeaderAvatar, HeaderPressable, HeaderPressableAvatar
 } from '../../styles/shared';
@@ -115,7 +116,7 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
               onPress={goToAddWish}
               variant="small"
               bxShadow
-              text="Задать желания"
+              text="Задагать желание"
             />
           </FriendsContainerFirst>
         </ScrollView>
