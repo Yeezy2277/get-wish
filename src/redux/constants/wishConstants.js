@@ -1,0 +1,10 @@
+export const SET_MY_WISH_LIST = 'SET_MY_WISH_LIST';
+export const SET_ONE_WISH = 'SET_ONE_WISH';
+export const SET_WISH_ID = 'SET_WISH_ID';
+export const SET_WISH = 'SET_WISH';
+export const GO_BACK_ID = 'GO_BACK_ID';
+export const SET_WISH_ADDED = 'SET_WISH_ADDED';
+export const RESERVE_WISH = 'RESERVE_WISH';
+export const RESERVE_WISH_LIST = 'RESERVE_WISH_LIST';
+export const CANCEL_RESERVE_WISH = 'CANCEL_RESERVE_WISH';
+export const CANCEL_RESERVE_WISH_LIST = 'CANCEL_RESERVE_WISH_LIST';
