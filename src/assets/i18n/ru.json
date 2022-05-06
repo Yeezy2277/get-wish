@@ -68,6 +68,7 @@
     "profile_photoTakeAShot": "Сделать снимок",
     "profile_selectPhoto": "Выбор фото",
     "profile_deletePhoto": "Удалить фото",
+    "profile_changePhone": "Изменить номер",
     "profile_nicknameChanged": "Никнейм успешно изменен",
     "profile_phoneChanged": "Телефон успешно изменен",
     "profile_photoChange": "Изменить фото",
@@ -141,6 +142,6 @@
     "friends_delete_info_private": "Удалить аккаунт из друзей. Тебе придётся отправить запрос на дружбу, чтобы снова стать друзьями",
     "friends_delete_info_public": "Аккаунт этого пользователя приватный. Ты не сможешь просматривать его, если удалишь.",
 
-    "groups": "Группы",
+    "groups": "Группы"
   }
 }

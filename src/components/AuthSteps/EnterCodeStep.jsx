@@ -131,10 +131,10 @@ function EnterCodeStep({ isChangePhone }) {
             </CodeElement>
           ))}
         </Codes>
-        {error && <CodeTextError>Введён неверный код</CodeTextError>}
+        {error && <CodeTextError>{t('auth_errorInvalidCode')}</CodeTextError>}
         <EnterCodeStepBottom>
           <EnterCodeStepTimer />
-          <AuthButton onPress={onPressCodeStep} active={!disabledNext}>Подтвердить</AuthButton>
+          <AuthButton onPress={onPressCodeStep} active={!disabledNext}>{t('confirm')}</AuthButton>
         </EnterCodeStepBottom>
       </EnterCodeStepContainer>
     </AuthStep>

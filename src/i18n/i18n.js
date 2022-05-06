@@ -13,7 +13,6 @@ i18n.use(initReactI18next)
         defaultNS,
         resources: translations,
         fallbackLng: 'en',
-        lng: 'ru',
         debug: __DEV__,
         interpolation: {
             escapeValue: false,
