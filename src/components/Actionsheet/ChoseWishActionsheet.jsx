@@ -5,10 +5,13 @@ import {
 import { COLORS } from '../../functions/constants';
 import { goToAddWishList } from '../../functions/helpers';
 import { setWishId } from '../../redux/actions/wishActions';
+import {useI18n} from "../../i18n/i18n";
 
 function ChoseWishActionsheet({
   open, handleClose, active, setActive, data
 }) {
+
+  const t = useI18n()
 
   const handleChangeActive = (id) => {
     if (active !== id) {
@@ -31,7 +34,9 @@ function ChoseWishActionsheet({
     >
       <Actionsheet.Content style={{ elevation: 0 }} padding={0} backgroundColor="#fff">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between" width="100%" pl="20px" pr="20px">
-          <Text fontFamily="NunitoBold" color={COLORS.black} fontSize="18px">Выбери вишлист</Text>
+          <Text fontFamily="NunitoBold" color={COLORS.black} fontSize="18px">
+            {t('wishlists_select_wishlist')}
+          </Text>
           <Pressable
             onPress={handleAddWish}
             width="129px"
@@ -39,7 +44,9 @@ function ChoseWishActionsheet({
             flexDirection="row"
           >
             <Image size="12px" source={require('../../assets/images/icons/wishlist/wish_add.png')} />
-            <Text marginLeft="10px" fontFamily="NunitoBold" color={COLORS.purple} fontSize="15px">Создать новый</Text>
+            <Text marginLeft="10px" fontFamily="NunitoBold" color={COLORS.purple} fontSize="15px">
+              {t('wishlists_create_new')}
+            </Text>
           </Pressable>
         </Box>
         <ScrollView maxHeight="250px" marginTop="22px" pl="16.5px" pr="22px" width="100%">

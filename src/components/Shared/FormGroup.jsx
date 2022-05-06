@@ -17,6 +17,7 @@ import { navigateAction } from '../../functions/NavigationService';
 import { COLORS } from '../../functions/constants';
 import { userCRUD } from '../../http/CRUD';
 import { changeUserInfo } from '../../redux/actions/authActions';
+import {useI18n} from "../../i18n/i18n";
 
 function FormGroup({ forms, last = false }) {
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -31,6 +32,8 @@ function FormGroup({ forms, last = false }) {
       </FormGroupLine>
     );
   };
+
+  const t = useI18n()
 
   const handleChangeSwitch = async () => {
     setPrivateMode(!privateMode);
@@ -111,7 +114,7 @@ function FormGroup({ forms, last = false }) {
               />
               <Pressable onPress={showModal}>
                 <FormGroupButtonText color={!userInfo?.birthdate && COLORS.purple}>
-                  {userInfo?.birthdate ? moment(userInfo?.birthdate).format('YYYY-MM-DD') : 'Добавить'}
+                  {userInfo?.birthdate ? moment(userInfo?.birthdate).format('YYYY-MM-DD') : t('add')}
                 </FormGroupButtonText>
               </Pressable>
             </FormGroupElementDate>

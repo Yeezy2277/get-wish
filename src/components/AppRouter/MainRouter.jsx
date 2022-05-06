@@ -28,6 +28,7 @@ import { searchPanelHandler } from '../../redux/actions/genericActions';
 import { DELETE_ID_FROM_DATA } from '../../redux/constants/userConstants';
 import ArchiveWishList from '../../screens/WishList/ArchiveWishList';
 import ReservWishList from '../../screens/WishList/ReservWishList';
+import {useI18n} from "../../i18n/i18n";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -50,23 +51,29 @@ function FriendsStack() {
   const { oneUser, search } = useSelector((state) => state.user);
   const { showActionSheetWithOptions } = useActionSheet();
 
+  const t = useI18n()
   const dispatch = useDispatch();
 
   const showMore = async () => {
     const optionNameFunc = async () => {
       if (oneUser?.is_friend && !oneUser?.has_outgoing_friend_request) {
-        return 'Удалить из друзей';
+        return t('friends_delete_friend');
       }
       if (oneUser?.has_outgoing_friend_request && !oneUser?.is_friend) {
-        return 'Отменить запрос';
+        return t('friends_cancel');
       }
-      return 'Добавить в друзья';
+      return t('friends_add_friend');
     };
     const optionName = await optionNameFunc();
     showActionSheetWithOptions(
       {
-        options: ['Отмена', 'Поделиться', optionName, 'Заблокировать'],
-        title: 'Что ты хочешь сделать с этим аккаунтом?',
+        options: [
+            t('cancel'),
+            t('share'),
+            optionName,
+            t('ban'),
+        ],
+        title: t('profile_account_action'),
         cancelButtonIndex: 0,
         destructiveButtonIndex: 3,
         userInterfaceStyle: 'dark'
@@ -79,7 +86,7 @@ function FriendsStack() {
             await sendRequest(oneUser?.id, 'PROFILE').then(() => {
               Toast.show({
                 type: 'search',
-                text1: 'Запрос на дружбу отправлен',
+                text1: t('friends_request_was_sent'),
                 position: 'bottom',
                 bottomOffset: 95,
               });
@@ -90,10 +97,14 @@ function FriendsStack() {
           }
           if (oneUser?.is_friend && !oneUser?.has_outgoing_friend_request) {
             showActionSheetWithOptions({
-              options: ['Отмена', 'Удалить'],
-              title: 'Удалить аккаунт из друзей?',
-              message: !oneUser?.private ? 'Удалить аккаунт из друзей. Тебе придётся отправить запрос на дружбу, чтобы снова стать друзьями'
-                : 'Аккаунт этого пользователя приватный. Ты не сможешь просматривать его, если удалишь.',
+              options: [
+                  t('cancel'),
+                  t('delete'),
+              ],
+              title: t('friends_delete_friend'),
+              message: !oneUser?.private
+                  ? t('friends_delete_info_public')
+                  : t('friends_delete_info_private'),
               cancelButtonIndex: 0,
               destructiveButtonIndex: 1,
               userInterfaceStyle: 'dark'
@@ -106,10 +117,12 @@ function FriendsStack() {
 
         } else if (buttonIndex === 3) {
           showActionSheetWithOptions({
-            options: ['Отмена', 'Заблокировать'],
-            title: 'Заблокировать аккаунт?',
-            message: 'Этот пользователь больше не сможет находить твой аккаунт,'
-                  + ' смотреть твои посты и вишлисты и отправлять заявки на добавление в друзья',
+            options: [
+                t('cancel'),
+                t('ban'),
+            ],
+            title: t('profile_account_ban'),
+            message: t('profile_account_ban_info'),
             cancelButtonIndex: 0,
             destructiveButtonIndex: 1,
             userInterfaceStyle: 'dark'
@@ -134,7 +147,7 @@ function FriendsStack() {
     <Stack.Navigator initialRouteName="UserFriends">
       <Stack.Screen options={{ headerShown: false }} name="UserFriends" component={Friends} />
       <Stack.Screen options={{ header: (navigation) => <Header search={!!search} morePress={showMore} more title={oneUser?.username} navigation={navigation} /> }} name="UserProfile" component={UserProfile} />
-      <Stack.Screen options={{ header: (navigation) => <Header avatar title="Посты" navigation={navigation} /> }} name="UserPost" component={UserPost} />
+      <Stack.Screen options={{ header: (navigation) => <Header avatar title={t('profile_posts')} navigation={navigation} /> }} name="UserPost" component={UserPost} />
       <Stack.Screen options={{ headerShown: false }} name="UserWishList" component={UserWishList} />
       <Stack.Screen options={{ headerShown: false }} name="ShareScreen" component={ShareScreen} />
       <Stack.Screen options={{ headerShown: false }} name="Swiper" component={SwiperImage} />
@@ -143,16 +156,17 @@ function FriendsStack() {
 }
 
 function WishListStack() {
+  const t = useI18n()
   return (
     <Stack.Navigator initialRouteName="WishList">
       <Stack.Screen options={{ headerShown: false }} name="ImageView" component={ImageView} />
-      <Stack.Screen options={{ header: (navigation) => <Header archive cancel={false} title="Вишлисты" navigation={navigation} /> }} name="WishList" component={ProfileWishList} />
-      <Stack.Screen options={{ header: (navigation) => <Header title="Архив" navigation={navigation} /> }} name="ArchiveWishList" component={ArchiveWishList} />
+      <Stack.Screen options={{ header: (navigation) => <Header archive cancel={false} title={t('wishlists')} navigation={navigation} /> }} name="WishList" component={ProfileWishList} />
+      <Stack.Screen options={{ header: (navigation) => <Header title={t('wishlists_archived')} navigation={navigation} /> }} name="ArchiveWishList" component={ArchiveWishList} />
       <Stack.Screen
         options={{
           header: (navigation) => {
             const idEdit = navigation?.route?.params?.id;
-            return <Header cancelText cancel={false} title={idEdit ? 'Редактирование' : 'Новый вишлист'} navigation={navigation} />;
+            return <Header cancelText cancel={false} title={idEdit ? t('edit') : t('wishlists_create_new')} navigation={navigation} />;
           },
           tabBarStyle: { display: 'none' }
         }}
@@ -166,7 +180,7 @@ function WishListStack() {
         options={{
           header: (navigation) => {
             const idEdit = navigation?.route?.params?.id;
-            return <Header cancelText cancel={false} title={idEdit ? 'Редактирование' : 'Новое желание'} navigation={navigation} />;
+            return <Header cancelText cancel={false} title={idEdit ? t('edit') : t('wishlists_add_wish')} navigation={navigation} />;
           },
           tabBarStyle: { display: 'none' }
         }}
@@ -179,6 +193,7 @@ function WishListStack() {
 
 function TabStack() {
   const { userInfo, incomingRequest } = useSelector((state) => state.user);
+  const t = useI18n()
   const all = React.useCallback(() => {
     return incomingRequest
       ?.reduce((total, amount) => {
@@ -268,7 +283,7 @@ function TabStack() {
         options={() => {
           return {
             tabBarOptions: { showIcon: true },
-            tabBarLabel: 'Вишлисты',
+            tabBarLabel: t('wishlists'),
           };
         }}
       />
@@ -278,7 +293,7 @@ function TabStack() {
         options={() => {
           return {
             tabBarOptions: { showIcon: true },
-            tabBarLabel: 'Друзья',
+            tabBarLabel: t('friends'),
           };
         }}
       />
@@ -288,7 +303,7 @@ function TabStack() {
         options={() => {
           return {
             tabBarOptions: { showIcon: true },
-            tabBarLabel: 'Профиль',
+            tabBarLabel: t('profile'),
           };
         }}
       />

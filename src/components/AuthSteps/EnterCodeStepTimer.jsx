@@ -4,10 +4,12 @@ import {
 } from '../../styles/authSteps';
 import { sendCode } from '../../redux/actions/authActions';
 import { AuthContext } from '../../screens/Auth/AuthScreen';
+import {useI18n} from "../../i18n/i18n";
 
 function EnterCodeStepTimer() {
   const [seconds, setSeconds] = React.useState(60);
   const { data } = React.useContext(AuthContext);
+  const t = useI18n()
   React.useEffect(() => {
     const myInterval = setInterval(() => {
       if (seconds > 0) {
@@ -32,7 +34,7 @@ function EnterCodeStepTimer() {
     seconds !== 0
       ? (
         <TimerContainer>
-          <TimerTexts>Отправить повторно</TimerTexts>
+          <TimerTexts>{t('auth_resendCode')}</TimerTexts>
           <TimerNumber>
             0:
             {seconds}
@@ -41,7 +43,7 @@ function EnterCodeStepTimer() {
       )
       : (
         <TimerContainer>
-          <TimerTextSendAgain onPress={handleSendCodeAgain}>Отправить повторно</TimerTextSendAgain>
+          <TimerTextSendAgain onPress={handleSendCodeAgain}>{t('auth_resendCode')}</TimerTextSendAgain>
         </TimerContainer>
       )
   );

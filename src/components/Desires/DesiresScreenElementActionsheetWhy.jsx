@@ -11,11 +11,13 @@ import {
 import { COLORS } from '../../functions/constants';
 import AuthButton from '../Shared/AuthButton';
 import { reserveWish } from '../../redux/actions/wishListActions';
+import {useI18n} from "../../i18n/i18n";
 
 function DesiresScreenElementActionsheetWhy({
   open, setOpen
 }) {
 
+  const t = useI18n()
   const handleClose = () => {
     setOpen(false);
   };
@@ -33,15 +35,14 @@ function DesiresScreenElementActionsheetWhy({
           <Text textAlign="center" fontFamily="NunitoBold" fontSize={18} color={COLORS.black}>А вот почему!</Text>
           <Text fontSize={14} color={COLORS.gray} marginTop="10px" textAlign="center">Ты зарезервировал уже 3 желания этого друга.</Text>
           <Text alignSelf="center" maxWidth="335px" fontSize={14} color={COLORS.gray} marginTop="10px" textAlign="center">
-            Чтобы зарезервировать это, отмени резерв  любого
-            другого его желания... или попробуй осчастливить кого-нибудь ещё :)
+            {t('desires_youHaveReserve')}
           </Text>
           <AuthButton
             style={{ marginTop: 25, alignSelf: 'center' }}
             active
             onPress={() => setOpen(false)}
           >
-            Понятненько
+            {t('okay')}
           </AuthButton>
         </ActionDesires>
       </Actionsheet.Content>

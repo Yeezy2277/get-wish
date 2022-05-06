@@ -33,7 +33,6 @@ function Header({
     if (backHandler) {
       backHandler();
     } else {
-      console.log('test');
       await goBack();
     }
   };

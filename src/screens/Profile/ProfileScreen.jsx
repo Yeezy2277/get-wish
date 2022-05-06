@@ -12,6 +12,7 @@ import { userCRUD } from '../../http/CRUD';
 import { changeUserInfo } from '../../redux/actions/authActions';
 import { COLORS } from '../../functions/constants';
 import { getUserReservedList } from '../../redux/actions/wishListActions';
+import {useI18n} from "../../i18n/i18n";
 
 export const ProfileContext = React.createContext(undefined);
 
@@ -27,6 +28,8 @@ function ProfileScreen({ navigation }) {
     (key, value) => setData({ ...data, [key]: value }),
     [data]
   );
+
+  const t = useI18n()
   const { userInfo, reservedWishList } = useSelector((state) => state.user);
 
   React.useEffect(() => {
@@ -42,7 +45,7 @@ function ProfileScreen({ navigation }) {
 
   const handleShowShare = () => {
     showActionSheetWithOptions({
-      options: ['Отмена', 'Поделиться'],
+      options: [t('cancel'), t('share')],
       cancelButtonIndex: 0,
       userInterfaceStyle: 'dark'
     }, async (buttonIndex) => {
@@ -100,31 +103,31 @@ function ProfileScreen({ navigation }) {
           <ReservedDesires reservedWishList={reservedWishList} />
           <FormGroup forms={[
             {
-              type: 'input', name: 'Имя', value: firstname, handle: handleFirstName
+              type: 'input', name: t('firstName'), value: firstname, handle: handleFirstName
             },
             {
-              type: 'input', name: 'Фамилия', value: secondname, handle: handleSecondName
+              type: 'input', name: t('lastName'), value: secondname, handle: handleSecondName
             },
-            { type: 'date', name: 'Дата рождения' },
+            { type: 'date', name: t('birthday') },
           ]}
           />
           <FormGroup forms={[
             {
-              type: 'select', name: 'Телефон', value: userInfo?.phone, link: { name: 'ChangePhoneScreen' }
+              type: 'select', name: t('phoneNumber'), value: userInfo?.phone, link: { name: 'ChangePhoneScreen' }
             },
             {
-              type: 'select', name: 'Никнейм', value: `@${userInfo?.username}`, link: { name: 'ChangeNicknameStep' }
+              type: 'select', name: t('nickname'), value: `@${userInfo?.username}`, link: { name: 'ChangeNicknameStep' }
             },
           ]}
           />
           <FormGroup
             last
             forms={[
-              { type: 'switch', name: 'Приватный профиль' },
+              { type: 'switch', name: t('profile_privateProfile') },
             ]}
           />
           <ProfilePrivateText>
-            Включи, если хочешь, чтобы твои вишлисты, желания и посты могли видеть только друзья
+            {t('profile_wishlistOnlyFriends')}
           </ProfilePrivateText>
         </ProfileContext.Provider>
       </MainContainer>

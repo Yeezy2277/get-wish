@@ -13,6 +13,7 @@ import { AuthContext } from '../../screens/Auth/AuthScreen';
 import { logout } from '../../redux/actions/authActions';
 import { navigateAction } from '../../functions/NavigationService';
 import { COLORS } from '../../functions/constants';
+import {useI18n} from "../../i18n/i18n";
 
 function AuthStep({
   title, text, children, maxWidth, mt, back, exit, isChangePhone, isFirstStep
@@ -27,6 +28,8 @@ function AuthStep({
   const goToMain = () => {
     navigateAction('MainProfile');
   };
+
+  const t = useI18n()
 
   return (
     <KeyboardAwareScrollView
@@ -45,7 +48,9 @@ function AuthStep({
           {isChangePhone && isFirstStep && (
           <AuthStepHeader mb={58} jc="flex-start">
             <TouchableHighlight underlayColor="none" onPress={goToMain}>
-              <AuthStepCancelText>Отмена</AuthStepCancelText>
+              <AuthStepCancelText>
+                {t('cancel')}
+              </AuthStepCancelText>
             </TouchableHighlight>
           </AuthStepHeader>
           )}

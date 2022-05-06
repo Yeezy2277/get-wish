@@ -11,8 +11,10 @@ import { filterWishList } from '../../redux/actions/wishListActions';
 import ReservedDesiresUser from '../Profile/ReservedDesiresUser';
 import useLoader from '../../hooks/useLoader';
 import { Loader } from '../index';
+import {useI18n} from "../../i18n/i18n";
 
 function WishListPrivate({ empty = true }) {
+  const t = useI18n()
   const { start, stop, loading } = useLoader(false);
   const { reloadValue } = useSelector((state) => state.generic);
   const { privateWishLists } = useSelector((state) => state.wishList);
@@ -46,7 +48,7 @@ function WishListPrivate({ empty = true }) {
                 variant="small"
                 bxShadow
                 active
-                text="Создать вишлист"
+                text={t('wishlists_create_new')}
               />
             </>
           ) : (

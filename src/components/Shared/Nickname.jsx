@@ -5,6 +5,7 @@ import { NicknameError, NicknameInput, NicknameSuccess } from '../../styles/shar
 import { LoaderNickname } from '../index';
 import { delay } from '../../functions';
 import { checkAvailability } from '../../redux/actions/authActions';
+import {useI18n} from "../../i18n/i18n";
 
 function Nickname(props) {
   const {
@@ -26,6 +27,8 @@ function Nickname(props) {
     start: 0,
     end: 100
   };
+
+  const t = useI18n()
 
   const spinValue = new Animated.Value(0);
 
@@ -59,7 +62,7 @@ function Nickname(props) {
   };
 
   const animationError = async () => {
-    setErrors({ nickName: 'Допустимые символы: a-z, 0-9, . и _' });
+    setErrors({ nickName: t('auth_errorNicknameFormat') });
     setErrorAnimation(true);
     timeoutAnimation = setTimeout(async () => {
       setErrorAnimation(false);
@@ -102,9 +105,9 @@ function Nickname(props) {
         autoCorrect={false}
       />
       {!hasError && availability && isSubmitting && !preLoading && !loading
-      && <NicknameSuccess>Никнейм свободен</NicknameSuccess>}
+      && <NicknameSuccess>{t('auth_nicknameAvailable')}</NicknameSuccess>}
       {!hasError && !availability && isSubmitting && !preLoading && !loading
-      && <NicknameError>К сожалению, этот никнейм уже занят</NicknameError>}
+      && <NicknameError>{t('auth_nicknameNotAvailable')}</NicknameError>}
       {hasError && !preLoading && !loading && <NicknameError>{errors[name]}</NicknameError>}
       {loading
       && (

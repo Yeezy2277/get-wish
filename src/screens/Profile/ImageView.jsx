@@ -20,6 +20,7 @@ import {
 } from '../../styles/profile';
 import { COLORS } from '../../functions/constants';
 import { goBack } from '../../functions/helpers';
+import {useI18n} from "../../i18n/i18n";
 
 const { width } = Dimensions.get('window');
 
@@ -52,6 +53,8 @@ function ImageView({
     );
     setUrl(manipResult);
   };
+
+  const t = useI18n()
 
   React.useEffect(() => {
     const parent = navigation.getParent();
@@ -118,8 +121,8 @@ function ImageView({
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.container}>
       <ImageViewContainer>
         <ImageViewHeader>
-          <ImageViewCancel onPress={goBack}>Отмена</ImageViewCancel>
-          <ImageViewTitle>Фото профиля</ImageViewTitle>
+          <ImageViewCancel onPress={goBack}>{t('cancel')}</ImageViewCancel>
+          <ImageViewTitle>{t('profile_photo')}</ImageViewTitle>
         </ImageViewHeader>
         <ImageViewSourceContainer>
           <MaskedView
@@ -149,11 +152,11 @@ function ImageView({
         <ImageViewBottom>
           {(camera || cameraNavigation) ? (
             <ImageViewCancel onPress={handleChangeCamera}>
-              Переснять
+              {t('profile_takeNewPhoto')}
             </ImageViewCancel>
           )
-            : <ImageViewCancel onPress={handleChangeLibrary}>Выбрать другое</ImageViewCancel>}
-          <ImageViewCancel onPress={handleSubmit} bold>Использовать</ImageViewCancel>
+            : <ImageViewCancel onPress={handleChangeLibrary}>{t('profile_selectAnotherPhoto')}</ImageViewCancel>}
+          <ImageViewCancel onPress={handleSubmit} bold>{t('use')}</ImageViewCancel>
         </ImageViewBottom>
       </ImageViewContainer>
     </ScrollView>

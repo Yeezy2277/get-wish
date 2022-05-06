@@ -18,6 +18,7 @@ import { navigateAction } from '../../functions/NavigationService';
 import { userCRUD } from '../../http/CRUD';
 import useToasts from '../../hooks/useToast';
 import { changeUserInfo } from '../../redux/actions/authActions';
+import {useI18n} from "../../i18n/i18n";
 
 function ChangeNicknameStep({ navigation }) {
 
@@ -34,15 +35,17 @@ function ChangeNicknameStep({ navigation }) {
   const [username, setUserName] = React.useState(userInfo?.username);
   const [availability, setAvailability] = React.useState(false);
 
+  const t = useI18n()
+
   const { show } = useToasts(2000, 'Никнейм успешно изменен');
 
   const nicknameValidationSchema = yup.object().shape({
     nickName: yup
       .string()
-      .matches(/^(?=.*[a-z_.])[\w.]+$/, 'Допустимые символы: a-z, 0-9, . и _')
-      .min(3, 'Никнейм должен содержать минимум 3 символа')
-      .max(30, 'Никнейм должен содержать максимум 30 символов')
-      .required('Обязательное поле')
+      .matches(/^(?=.*[a-z_.])[\w.]+$/, t('auth_errorNicknameFormat'))
+      .min(3, t('auth_errorNicknameMinLength'))
+      .max(30, t('auth_errorNicknameMaxLength'))
+      .required(t('requiredField'))
   });
 
   const [canRegistration, setCanRegistration] = React.useState(false);
@@ -84,7 +87,7 @@ function ChangeNicknameStep({ navigation }) {
       >
         {({ errors, setFieldValue }) => {
           if (Object.keys(errors).length !== 0 || !availability) {
-            if (errors.nickName !== 'Допустимые символы: a-z, 0-9, . и _') setCanRegistration(false);
+            if (errors.nickName !== t('auth_errorNicknameFormat')) setCanRegistration(false);
           }
           return (
             <EnterNickNameStepContainer>
@@ -106,11 +109,10 @@ function ChangeNicknameStep({ navigation }) {
                 />
               </TextFieldTwoContainer>
               <ChangeNicknameP1>
-                Это твой публичный никнейм, по которому другие пользователи
-                могут тебя найти или упоминать в своих публикациях.
+                {t('profile_nicknameInfo')}
               </ChangeNicknameP1>
               <ChangeNicknameP2>
-                Ты можешь использовать символы
+                {t('auth_nicknameChars')}
                 <ChangeNicknamePurple>a-z</ChangeNicknamePurple>
                 ,
                 <ChangeNicknamePurple>0-9</ChangeNicknamePurple>
@@ -122,7 +124,7 @@ function ChangeNicknameStep({ navigation }) {
                 {' '}
                 .
               </ChangeNicknameP2>
-              <ChangeNicknameP2>Длина от 3 до 30 символов.</ChangeNicknameP2>
+              <ChangeNicknameP2>{t('auth_nicknameLength')}</ChangeNicknameP2>
             </EnterNickNameStepContainer>
           );
         }}

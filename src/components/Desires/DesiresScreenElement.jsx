@@ -24,22 +24,28 @@ import { navigateAction } from '../../functions/NavigationService';
 import { wishCRUD } from '../../http/CRUD';
 import { GO_BACK_ID, SET_ONE_WISH } from '../../redux/constants/wishConstants';
 import { ActionSheets } from '../../functions/ActionSheet';
+import {useI18n} from "../../i18n/i18n";
 
 function DesiresScreenElement({
   friend, setShowTutorial, showTutorial, el, isYourWishList, reserved
 }) {
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
+  const t = useI18n()
   const { showActionSheetWithOptions } = useActionSheet();
-  const state = new ActionSheets(showActionSheetWithOptions);
+  const state = new ActionSheets(t, showActionSheetWithOptions);
   const { goBackId } = useSelector((state) => state.wish);
+
 
   const handleClickImage = () => {
     if (isYourWishList) {
       return state.showShareActionInMyWish(el.id);
     }
     return showActionSheetWithOptions({
-      options: ['Отмена', 'Поделиться'],
+      options: [
+          t('cancel'),
+          t('share'),
+      ],
       cancelButtonIndex: 0,
       userInterfaceStyle: 'dark'
     }, async (buttonIndex) => {

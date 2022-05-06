@@ -9,10 +9,12 @@ import { searchPanelHandler } from '../../redux/actions/genericActions';
 import ListQuery from './Lists/ListQuery';
 import { getOutgoing } from '../../redux/actions/userActions';
 import { declOfNum } from '../../functions/helpers';
+import {useI18n} from "../../i18n/i18n";
 
 function FriendsQuery({ empty = false }) {
   const [refreshing, setRefreshing] = React.useState(false);
 
+  const t = useI18n()
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     await getOutgoing().then(() => setRefreshing(false));
@@ -54,8 +56,8 @@ function FriendsQuery({ empty = false }) {
         {!outgoingRequest?.length ? (
           <>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/friends/empty_query.png')} />
-            <Text color={COLORS.black} marginTop="14px" fontFamily="NunitoBold" fontWeight="bold" fontSize="18px" lineHeight="25px">Трудно сделать первый шаг?</Text>
-            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Решайся, это проще, чем кажется!</Text>
+            <Text color={COLORS.black} marginTop="14px" fontFamily="NunitoBold" fontWeight="bold" fontSize="18px" lineHeight="25px">{t('friends_search')}</Text>
+            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">{t('friends_searchInfo')}</Text>
             <AuthButton
               style={{
                 zIndex: 999, display: 'flex', width: 172, marginTop: 40
@@ -63,12 +65,12 @@ function FriendsQuery({ empty = false }) {
               onPress={openPanel}
               bxShadow
               variant="small"
-              text="Найти друзей"
+              text={t('friends_find')}
             />
           </>
         ) : (
           <ListQuery
-            title={`${all()} ${declOfNum(all(), ['запрос', 'запроса', 'запросов'])}`}
+            title={`${all()} ${declOfNum(all(), t('friends_requestPlurals', {returnObjects: true}))}`}
             data={outgoingRequest}
           />
         )}

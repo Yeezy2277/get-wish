@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Animated } from 'react-native';
 import { LoaderNicknameContainer, LoaderNicknameText } from '../../styles/loader';
+import {useI18n} from "../../i18n/i18n";
 
 function LoaderNickname({ spin, spinValue, animateState }) {
 
@@ -9,6 +10,8 @@ function LoaderNickname({ spin, spinValue, animateState }) {
     inputRange: [animateState.start, animateState.end],
     outputRange: ['0deg', '360deg']
   });
+
+  const t = useI18n()
 
   React.useEffect(() => {
     (async function () {
@@ -22,7 +25,7 @@ function LoaderNickname({ spin, spinValue, animateState }) {
         style={{ transform: [{ rotate: spinner }] }}
         source={require('../../assets/images/icons/spinner.png')}
       />
-      <LoaderNicknameText>Проверка никнейма...</LoaderNicknameText>
+      <LoaderNicknameText>{t('auth_nicknameChecking')}</LoaderNicknameText>
     </LoaderNicknameContainer>
   );
 }

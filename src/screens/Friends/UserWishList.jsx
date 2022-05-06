@@ -25,18 +25,20 @@ import { FriendsContainerFirst, FriendsImageEmpty } from '../../styles/friends';
 import AuthButton from '../../components/Shared/AuthButton';
 import useLoader from '../../hooks/useLoader';
 import { ActionSheets } from '../../functions/ActionSheet';
+import {useI18n} from "../../i18n/i18n";
 
 function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
   const { start, stop, loading } = useLoader(false);
   const [showTutorial, setShowTutorial] = React.useState(false);
   const [showHeader, setShowHeader] = React.useState(false);
   const dispatch = useDispatch();
+  const t = useI18n()
   const { oneWishList } = useSelector((state) => state.wishList);
   const { reloadValue } = useSelector((state) => state.generic);
   const { userInfo: { id: userId } } = useSelector((state) => state.user);
   const { oneUser } = useSelector((state) => state.user);
   const { showActionSheetWithOptions } = useActionSheet();
-  const state = new ActionSheets(showActionSheetWithOptions);
+  const state = new ActionSheets(t, showActionSheetWithOptions);
   const parent = navigation.getParent();
 
   const isYourWishList = React.useMemo(

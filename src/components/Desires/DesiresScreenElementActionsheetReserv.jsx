@@ -11,6 +11,7 @@ import {
 import { COLORS } from '../../functions/constants';
 import AuthButton from '../Shared/AuthButton';
 import { reserveWish } from '../../redux/actions/wishListActions';
+import {useI18n} from "../../i18n/i18n";
 
 function DesiresScreenElementActionsheetReserv({
   open, setOpen
@@ -18,6 +19,8 @@ function DesiresScreenElementActionsheetReserv({
   const { oneWish } = useSelector((state) => state.wish);
   const { userInfo } = useSelector((state) => state.user);
   const [value, setValue] = React.useState('public');
+
+  const t = useI18n()
 
   const handleClose = () => {
     setOpen(false);
@@ -28,7 +31,7 @@ function DesiresScreenElementActionsheetReserv({
     handleClose();
     Toast.show({
       type: 'search',
-      text1: 'Желание зарезервировано за тобой',
+      text1: t('desires_reservedByYourself'),
       position: 'bottom',
       bottomOffset: 95
     });
@@ -58,15 +61,14 @@ function DesiresScreenElementActionsheetReserv({
               <Box marginLeft="10px">
                 <Text fontSize={14} fontFamily="NunitoBold">Публично</Text>
                 <Text marginTop="4px" maxWidth="301px" fontSize={13}>
-                  Владелец желания и другие пользователи будут
-                  знать, что желание зарезервировал именно ты
+                  {t('desires_reserveInfo')}
                 </Text>
               </Box>
             </Radio>
             <Radio colorScheme="purple" value="anon" my={3}>
               <Box marginLeft="10px" marginTop="10px">
-                <Text fontSize={14} fontFamily="NunitoBold">Анонимно</Text>
-                <Text marginTop="4px" maxWidth="301px" fontSize={13}>Об этом никто не узнает</Text>
+                <Text fontSize={14} fontFamily="NunitoBold">{t('anonymously')}</Text>
+                <Text marginTop="4px" maxWidth="301px" fontSize={13}>{t('itIsASecret')}</Text>
               </Box>
             </Radio>
           </Radio.Group>
@@ -75,7 +77,7 @@ function DesiresScreenElementActionsheetReserv({
             onPress={handleReserve}
             active
           >
-            Зарезервировать
+            {t('desires_reserve')}
           </AuthButton>
         </ActionDesires>
       </Actionsheet.Content>

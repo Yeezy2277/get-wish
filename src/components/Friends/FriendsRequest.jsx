@@ -9,10 +9,12 @@ import { searchPanelHandler } from '../../redux/actions/genericActions';
 import ListRequest from './Lists/ListRequest';
 import { getIncoming } from '../../redux/actions/userActions';
 import { declOfNum } from '../../functions/helpers';
+import {useI18n} from "../../i18n/i18n";
 
 function FriendsRequest({ empty = false }) {
   const [refreshing, setRefreshing] = React.useState(false);
 
+  const t = useI18n()
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     getIncoming().then(() => setRefreshing(false));
@@ -56,8 +58,8 @@ function FriendsRequest({ empty = false }) {
         {!incomingRequest?.length ? (
           <>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/friends/empty_request.png')} />
-            <Text color={COLORS.black} marginTop="14px" fontFamily="NunitoBold" fontWeight="bold" fontSize="18px" lineHeight="25px">Тук-тук! Кто там?</Text>
-            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Показалось, тут никого нет...</Text>
+            <Text color={COLORS.black} marginTop="14px" fontFamily="NunitoBold" fontWeight="bold" fontSize="18px" lineHeight="25px">{t('friends_requests')}</Text>
+            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">{t('friends_requestsInfo')}</Text>
             <AuthButton
               style={{
                 zIndex: 999, display: 'flex', width: 172, marginTop: 40
@@ -65,12 +67,12 @@ function FriendsRequest({ empty = false }) {
               onPress={openPanel}
               bxShadow
               variant="small"
-              text="Позвать друзей"
+              text={t('friends_callFriends')}
             />
           </>
         ) : (
           <ListRequest
-            title={`${all()} ${declOfNum(all(), ['запрос', 'запроса', 'запросов'])}`}
+            title={`${all()} ${declOfNum(all(), t('friends_requestPlurals', {returnObjects: true}))}`}
             data={incomingRequest}
           />
         )}

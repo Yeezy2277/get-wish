@@ -17,6 +17,7 @@ import { HANDLE_SELECTED_FRIENDS } from '../../redux/constants/wishListConstants
 import { goBack } from '../../functions/helpers';
 import { ShareContext } from '../../functions/context';
 import SearchHeaderShare from '../../components/Header/SearchHeaderShare';
+import {useI18n} from "../../i18n/i18n";
 
 function ShareScreen({ navigation, ...params }) {
   const isChooseFriend = React.useMemo(() => params?.route?.params?.chooseFriend, [params?.route]);
@@ -32,6 +33,8 @@ function ShareScreen({ navigation, ...params }) {
       }
     };
   }, [isChooseFriend, navigation, params]);
+
+  const t = useI18n()
 
   React.useEffect(() => {
     const getData = async () => {
@@ -90,7 +93,7 @@ function ShareScreen({ navigation, ...params }) {
         cancel
         setSelectedFriends={setSelectedFriends}
         selectedFriends={selectedFriends}
-        title={isChooseFriend ? 'Выбери друзей' : 'Получатели'}
+        title={isChooseFriend ? t('share_friends') : t('share_recipients')}
       />
     );
   }, [setSelectedFriends, selectedFriends]);
@@ -140,7 +143,7 @@ function ShareScreen({ navigation, ...params }) {
             active={!isDisabled}
           >
             <Box display="flex" height="53px" alignItems="center" flexDirection="row">
-              <Text marginRight="10px" fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>Сохранить выбор</Text>
+              <Text marginRight="10px" fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>{t('share_saveChoice')}</Text>
               <Box
                 display="flex"
                 justifyContent="center"
