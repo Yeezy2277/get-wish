@@ -27,6 +27,7 @@ import { SET_SEARCH, SET_SEARCH_DATA } from '../../redux/constants/userConstants
 import useLoader from '../../hooks/useLoader';
 import ListFriendsCheck from '../Friends/Lists/ListFriendsCheck';
 import { ShareContext } from '../../functions/context';
+import {useI18n} from "../../i18n/i18n";
 
 function SearchHeaderShare({
   cancel = false, title, setSelectedFriends, selectedFriends
@@ -134,6 +135,8 @@ function SearchHeaderShare({
 
   const [state, setState] = React.useState({});
 
+  const t = useI18n()
+
   React.useEffect(() => {
     if (state !== null && Object?.keys(state)?.length !== 0) {
       InteractionManager.runAfterInteractions(() => {
@@ -182,7 +185,7 @@ function SearchHeaderShare({
                   base: '80%',
                 }}
                 fontSize={16}
-                placeholder="Введи ник"
+                placeholder={t('friends_searchPlaceholder')}
               />
               <ModalCancelText onPress={() => setOpenPanel(false)}>Отмена</ModalCancelText>
             </ModalContent>
@@ -209,7 +212,7 @@ function SearchHeaderShare({
                     fontSize="15px"
                     color={COLORS.gray}
                   >
-                    Ничего не найдено :(
+                    {t('notFound')}
                   </Text>
                 ) : null
             }

@@ -8,8 +8,10 @@ import { PrivateAccount } from '../index';
 import { filterWishList, getWishListUser } from '../../redux/actions/wishListActions';
 import useLoader from '../../hooks/useLoader';
 import { COLORS } from '../../functions/constants';
+import {useI18n} from "../../i18n/i18n";
 
 function DesiresUser() {
+  const t = useI18n()
   const { oneUser } = useSelector((state) => state.user);
   const { reloadValue } = useSelector((state) => state.generic);
   const { start, stop } = useLoader(false);
@@ -41,10 +43,9 @@ function DesiresUser() {
               );
             }) : (
               <Box marginTop="40%">
-                <Text textAlign="center" fontSize={18} color={COLORS.black}>Здесь пока пусто</Text>
+                <Text textAlign="center" fontSize={18} color={COLORS.black}>{t('nothingHere')}</Text>
                 <Text marginTop="11px" alignSelf="center" maxWidth="200px" textAlign="center" fontSize={14} color={COLORS.gray}>
-                  Пользователь ещё не сделал
-                  ни одной публикации
+                  {t('profile_noPosts')}
                 </Text>
               </Box>
             )}

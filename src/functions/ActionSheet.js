@@ -9,15 +9,20 @@ import { GO_BACK_ID } from '../redux/constants/wishConstants';
 import store from '../redux';
 
 export class ActionSheets {
-  constructor(showActionSheetWithOptions) {
+  constructor(t, showActionSheetWithOptions) {
+    this.t = t;
     this.showActionSheetWithOptions = showActionSheetWithOptions;
   }
 
   deleteWishList(id, el, close, goToWishListFunc) {
+    const { t } = this.props;
     this.showActionSheetWithOptions({
-      options: ['Отмена', 'Удалить'],
-      title: 'Удалить вишлист?',
-      message: 'Это действие нельзя будет отменить',
+      options: [
+          this.t('cancel'),
+        this.t('delete'),
+      ],
+      title: this.t('wishlists_delete'),
+      message: this.t('nonCancelable'),
       cancelButtonIndex: 0,
       destructiveButtonIndex: 1,
       userInterfaceStyle: 'dark'
@@ -32,7 +37,7 @@ export class ActionSheets {
         }
         Toast.show({
           type: 'search',
-          text1: 'Вишлист удален',
+          text1: this.t('wishlists_deleted'),
           position: 'bottom',
           bottomOffset: 95
         });
@@ -42,7 +47,7 @@ export class ActionSheets {
 
   showShareAction(close) {
     this.showActionSheetWithOptions({
-      options: ['Отмена', 'Поделиться'],
+      options: [this.t('cancel'), this.t('share')],
       cancelButtonIndex: 0,
       useModal: true,
       userInterfaceStyle: 'dark'
@@ -56,8 +61,13 @@ export class ActionSheets {
 
   showShareActionInMyWish(id, close, backEdit) {
     this.showActionSheetWithOptions({
-      options: ['Отмена', 'Изменить', 'Поделиться', 'Удалить'],
-      message: 'Что ты хочешь сделать с этим желанием?',
+      options: [
+          this.t('cancel'),
+        this.t('change'),
+        this.t('share'),
+        this.t('delete'),
+      ],
+      message: this.t('wishlists_actions'),
       cancelButtonIndex: 0,
       useModal: true,
       userInterfaceStyle: 'dark'
@@ -76,9 +86,9 @@ export class ActionSheets {
       }
       if (buttonIndex === 3) {
         this.showActionSheetWithOptions({
-          options: ['Отмена', 'Удалить'],
-          title: 'Удалить желание?',
-          message: 'Это действие нельзя будет отменить',
+          options: [this.t('cancel'), this.t('delete')],
+          title: this.t('desires_delete'),
+          message: this.t('nonCancelable'),
           cancelButtonIndex: 0,
           destructiveButtonIndex: 1,
           userInterfaceStyle: 'dark'
@@ -90,7 +100,7 @@ export class ActionSheets {
             }
             Toast.show({
               type: 'search',
-              text1: 'Желание удалено',
+              text1: this.t('desires_deleted'),
               position: 'bottom',
               bottomOffset: 95
             });
@@ -103,7 +113,11 @@ export class ActionSheets {
   showShareActionInMyWishList(id, el, privateMode, archiveMode, close, parent, goToWishListFunc) {
     if (archiveMode) {
       this.showActionSheetWithOptions({
-        options: ['Отмена', 'Изменить', 'Опубликовать', 'Удалить'],
+        options: [
+            this.t('cancel'),
+          this.t('change'),
+          this.t('publish'),
+          this.t('delete')],
         cancelButtonIndex: 0,
         userInterfaceStyle: 'dark'
       }, async (buttonIndex) => {
@@ -113,9 +127,12 @@ export class ActionSheets {
         }
         if (buttonIndex === 2) {
           this.showActionSheetWithOptions({
-            options: ['Отмена', 'Опубликовать'],
-            title: 'Опубликовать вишлист?',
-            message: 'Другие пользователи снова будут видеть этот вишлист у тебя в профиле',
+            options: [
+                this.t('cancel'),
+              this.t('publish')
+            ],
+            title: this.t('wishlists_publish'),
+            message: this.t('wishlists_publishInfo'),
             cancelButtonIndex: 0,
             userInterfaceStyle: 'dark'
           }, async (buttonIndexChild) => {
@@ -130,7 +147,12 @@ export class ActionSheets {
       });
     } else {
       this.showActionSheetWithOptions({
-        options: ['Отмена', 'Изменить', 'Поделиться', 'Архивировать', 'Удалить'],
+        options: [
+            this.t('cancel'),
+          this.t('change'),
+          this.t('share'),
+          this.t('archive'),
+          this.t('delete')],
         cancelButtonIndex: 0,
         userInterfaceStyle: 'dark'
       }, async (buttonIndex) => {
@@ -143,9 +165,9 @@ export class ActionSheets {
         }
         if (buttonIndex === 3) {
           this.showActionSheetWithOptions({
-            options: ['Отмена', 'Архивировать'],
-            title: 'Отправить вишлист в архив?',
-            message: 'Другие пользователи перестанут видеть этот вишлист у тебя в профиле',
+            options: [this.t('cancel'), this.t('archive')],
+            title: this.t('wishlists_archiveList'),
+            message: this.t('wishlists_archiveListInfo'),
             cancelButtonIndex: 0,
             userInterfaceStyle: 'dark'
           }, async (buttonIndexChild) => {

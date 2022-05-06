@@ -4,6 +4,7 @@ import {
 } from 'native-base';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { COLORS } from '../../../functions/constants';
+import {useI18n} from "../../../i18n/i18n";
 
 function SwipebleELement({ item, deleteFriendFromLocalHandler }) {
   const [swipeable, setSwipeable] = React.useState(false);
@@ -61,6 +62,7 @@ function RightElement({ item, deleteFriendFromLocalHandler }) {
   const handlePressDelete = () => {
     deleteFriendFromLocalHandler(item.id);
   };
+  const t = useI18n()
   return (
     <Pressable
       onPress={handlePressDelete}
@@ -70,7 +72,7 @@ function RightElement({ item, deleteFriendFromLocalHandler }) {
       backgroundColor={COLORS.red}
       height="48px"
     >
-      <Text fontSize="15px" fontFamily="NunitoBold" color={COLORS.white}>Удалить</Text>
+      <Text fontSize="15px" fontFamily="NunitoBold" color={COLORS.white}>{t('delete')}</Text>
     </Pressable>
   );
 }

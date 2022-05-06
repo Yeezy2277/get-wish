@@ -6,6 +6,7 @@ import { TextOffer, TextOfferPurple } from '../../styles/authSteps';
 import AuthButton from '../Shared/AuthButton';
 import { AuthContext } from '../../screens/Auth/AuthScreen';
 import { sendCode } from '../../redux/actions/authActions';
+import {useI18n} from "../../i18n/i18n";
 
 function EnterNumberStep({ isChangePhone }) {
   const { data, onNextStep } = useContext(AuthContext);
@@ -18,17 +19,19 @@ function EnterNumberStep({ isChangePhone }) {
     }
   };
 
+  const t = useI18n()
+
   const disabledNext = data.phoneNumber.split(' ').join('').length < 10;
+  const tosText = t('auth_tos', { returnObjects: true })
 
   return (
     <AuthStep isFirstStep isChangePhone={isChangePhone} mt={isChangePhone ? 44 : 136} maxWidth={266} text="На этот номер будет отправлено СМС с кодом подтверждения" title="Введи номер телефона">
       <PhoneNumber />
       {!isChangePhone && (
       <TextOffer>
-        Нажимая на кнопку, ты соглашаешься с
+          {tosText[0]}
         <TextOfferPurple>
-          политикой
-          конфиденциальности и условиями использованиями
+            {tosText[1]}
         </TextOfferPurple>
       </TextOffer>
       )}
@@ -37,7 +40,7 @@ function EnterNumberStep({ isChangePhone }) {
         onPress={onPressNumberStep}
         active={!disabledNext}
       >
-        Получить код
+          {t('auth_getCode')}
       </AuthButton>
     </AuthStep>
   );

@@ -18,12 +18,14 @@ import { navigateAction } from '../../functions/NavigationService';
 import useToasts from '../../hooks/useToast';
 import { updatePhone } from '../../redux/actions/userActions';
 import { COLORS } from '../../functions/constants';
+import {useI18n} from "../../i18n/i18n";
 
 function EnterCodeStep({ isChangePhone }) {
   const {
     data, handleChangeObject, onNextStep, step
   } = React.useContext(AuthContext);
-  const { show } = useToasts(2000, 'Телефон успешно изменен');
+  const t = useI18n()
+  const { show } = useToasts(2000, t('profile_phoneChanged'));
   const [codes, setCodes] = React.useState(['', '', '', '']);
   const handleChangeInput = (text, index) => {
     setCodes((prev) => {
@@ -102,7 +104,7 @@ function EnterCodeStep({ isChangePhone }) {
   };
 
   return (
-    <AuthStep back mt={44} maxWidth={276} text="На этот номер был отправлен код подтверждения. Введи его в поле ниже." title={`+7 ${data.phoneNumber}`}>
+    <AuthStep back mt={44} maxWidth={276} text={t('auth_codeWasSend')} title={`+7 ${data.phoneNumber}`}>
       <EnterCodeStepContainer>
         <Codes>
           {codes.map((code, index) => (

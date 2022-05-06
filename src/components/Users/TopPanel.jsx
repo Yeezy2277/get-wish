@@ -12,17 +12,22 @@ import {
 import { COLORS } from '../../functions/constants';
 import AuthButton from '../Shared/AuthButton';
 import { cancelRequest, deleteFriend, sendRequest } from '../../redux/actions/userActions';
+import {useI18n} from "../../i18n/i18n";
 
 function TopPanel() {
   const { oneUser } = useSelector((state) => state.user);
   const { showActionSheetWithOptions } = useActionSheet();
+  const t = useI18n()
 
   const deleteFriendHandler = () => {
     return showActionSheetWithOptions({
-      options: ['Отмена', 'Удалить из друзей'],
+      options: [
+          t('cancel'),
+        t('friends_delete_friend')
+      ],
       cancelButtonIndex: 0,
       destructiveButtonIndex: 1,
-      title: 'Вы друзья',
+      title: t('friends_youAreFriends'),
       userInterfaceStyle: 'dark'
     }, async (buttonIndex) => {
       if (buttonIndex === 1) {
@@ -33,10 +38,10 @@ function TopPanel() {
 
   const cancelSendRequest = () => {
     return showActionSheetWithOptions({
-      options: ['Отмена', 'Отменить запрос'],
+      options: [t('cancel'), t('friends_cancels')],
       cancelButtonIndex: 0,
       destructiveButtonIndex: 1,
-      title: 'Запрос отправлен',
+      title: t('friends_request_was_sent'),
       userInterfaceStyle: 'dark'
     }, async (buttonIndex) => {
       if (buttonIndex === 1) {
@@ -73,7 +78,7 @@ function TopPanel() {
         onPress={() => sendRequest(oneUser?.id, 'PROFILE').then(() => {
           Toast.show({
             type: 'search',
-            text1: 'Запрос на дружбу отправлен',
+            text1: t('friends_request_was_sent'),
             position: 'bottom',
             bottomOffset: 95,
           });
@@ -131,7 +136,7 @@ function TopPanel() {
               borderRadius: 10,
             }}
             variant="small"
-            text="Написать"
+            text={t('profile_sendMessage')}
           />
         </Box>
 

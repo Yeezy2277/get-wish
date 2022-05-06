@@ -12,12 +12,14 @@ import {
 import { declOfNum, goToUserWishLists } from '../../functions/helpers';
 import { ActionSheets } from '../../functions/ActionSheet';
 import { androidShadow } from '../../functions';
+import {useI18n} from "../../i18n/i18n";
 
 function ReservedDesiresUser({
   isInWishList, name, id, el, privateMode = false, archive
 }) {
   const { showActionSheetWithOptions } = useActionSheet();
-  const state = new ActionSheets(showActionSheetWithOptions);
+  const t = useI18n()
+  const state = new ActionSheets(t, showActionSheetWithOptions);
 
   function RenderImage(wish) {
     if (wish) {
@@ -70,7 +72,7 @@ function ReservedDesiresUser({
           {' '}
           {declOfNum(
             el?.wishes?.length,
-            ['желание', 'желания', 'желаний']
+            t('desires_desirePlurals', {returnObjects: true})
           )}
         </ReservedDesiresUserSubTitle>
         <HStack marginTop="15px" space={3} justifyContent="center">

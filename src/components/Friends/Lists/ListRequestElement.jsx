@@ -11,9 +11,11 @@ import { changeUserInfo } from '../../../redux/actions/authActions';
 import { goToUserProfile } from '../../../functions/helpers';
 import { userCRUD } from '../../../http/CRUD';
 import SharedButton from '../../Shared/SharedButton';
+import {useI18n} from "../../../i18n/i18n";
 
 function ListRequestElement({ data, first = false, handleSearchPanel }) {
   const { search } = useSelector((state) => state.user);
+  const t = useI18n()
   const handleGoToUser = async (item) => {
     const user = await userCRUD.get(item?.id);
     await changeUserInfo('oneUser', user?.data);
@@ -77,21 +79,21 @@ function ListRequestElement({ data, first = false, handleSearchPanel }) {
                         borderRadius: 10,
                       }}
                       variant="small"
-                      text="Принять"
+                      text={t('accept')}
                     />
                   </>
                 )}
                 {item.status === 'rejected' && (
                   <>
                     <Image width="9px" height="9px" source={require('../../../assets/images/icons/friends/cancel.png')} />
-                    <Text fontSize={12} fontWeight="600" color={COLORS.gray}>Заявка отклонена</Text>
+                    <Text fontSize={12} fontWeight="600" color={COLORS.gray}>{t('friends_requestCanceled')}</Text>
                   </>
                 )}
                 {item.status === 'sent' && (
                   <>
                     <Image width="11px" height="10px" source={require('../../../assets/images/icons/friends/check.png')} />
-                    <Text fontSize={12} fontWeight="600" color={COLORS.gray}>Заявка принята</Text>
-                    <Text marginLeft="14px" fontSize={12} fontWeight="700" color={COLORS.purple}>Написать сообщение</Text>
+                    <Text fontSize={12} fontWeight="600" color={COLORS.gray}>{t('friends_requestAccepted')}</Text>
+                    <Text marginLeft="14px" fontSize={12} fontWeight="700" color={COLORS.purple}>{t('sendMessage')}</Text>
                   </>
                 )}
               </HStack>

@@ -7,8 +7,10 @@ import {
 } from '../../styles/profile';
 import { DesiresElement } from '../index';
 import { goToReservWishList } from '../../functions/helpers';
+import {useI18n} from "../../i18n/i18n";
 
 function ReservedDesires({ reservedWishList }) {
+  const t = useI18n()
   const goToDesires = () => {
     if (reservedWishList?.length) {
       goToReservWishList();
@@ -29,12 +31,10 @@ function ReservedDesires({ reservedWishList }) {
   };
   return (
     <ReservedDesiresContainer onPress={goToDesires}>
-      <ReservedDesiresTitle>Зарезервированные желания</ReservedDesiresTitle>
+      <ReservedDesiresTitle>{t('desires_reservedDesires')}</ReservedDesiresTitle>
       {!reservedWishList?.length ? (
         <ReservedDesiresPlaceholder>
-          Загляни на странички своих друзей, чтобы выбрать желания, которые хочешь
-          исполнить.
-          Они появятся здесь.
+          {t('desires_reservedDesiresInfo')}
         </ReservedDesiresPlaceholder>
       ) : null}
       {reservedWishList?.length ? (

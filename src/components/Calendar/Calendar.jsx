@@ -7,11 +7,13 @@ import moment from 'moment';
 import useToasts from '../../hooks/useToast';
 import { userCRUD } from '../../http/CRUD';
 import { changeUserInfo } from '../../redux/actions/authActions';
+import {useI18n} from "../../i18n/i18n";
 
 function CalendarShared({
   show, setShow, date, setDate
 }) {
 
+  const t = useI18n()
   const { show: showToast } = useToasts();
   const { userInfo } = useSelector((state) => state.user);
 
@@ -38,8 +40,8 @@ function CalendarShared({
       mode="date"
       display={Platform.OS === 'ios' ? 'inline' : 'default'}
       onConfirm={handleConfirm}
-      cancelTextIOS="Отмена"
-      confirmTextIOS="Выбрать"
+      cancelTextIOS={t('cancel')}
+      confirmTextIOS={t('select')}
       onCancel={showOff}
     />
   );

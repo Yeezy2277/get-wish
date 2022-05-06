@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { EnterCodeStep, EnterNicknameStep, EnterNumberStep } from '../../components';
+import {useI18n} from "../../i18n/i18n";
 
 export const AuthContext = React.createContext(undefined);
 
@@ -43,6 +44,8 @@ function AuthScreen(props) {
     setStep(0);
   };
 
+  const t = useI18n()
+
   React.useEffect(() => {
     setLoading(true);
     if (nickname) {
@@ -57,7 +60,7 @@ function AuthScreen(props) {
 
   return (
     <AuthContext.Provider value={params}>
-      {loading ? <Text>загрузка</Text> : (
+      {loading ? <Text>{t('loading')}</Text> : (
         <Step />
       )}
     </AuthContext.Provider>

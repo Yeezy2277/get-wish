@@ -11,6 +11,7 @@ import { FriendTabBars } from '../../styles/shared';
 import { FriendsFirst } from '../index';
 import { COLORS } from '../../functions/constants';
 import { SET_TYPE_SEARCH } from '../../redux/constants/userConstants';
+import {useI18n} from "../../i18n/i18n";
 
 function Friends(props) {
   const renderScene = SceneMap({
@@ -47,24 +48,26 @@ function Friends(props) {
 
   const [index, setIndex] = React.useState(0);
 
+  const t = useI18n()
+
   const routes = React.useMemo(() => {
     return [
       {
         key: 'friend',
-        title: 'Друзья',
+        title: t('friends'),
         imageActive: require('../../assets/images/icons/tabs/first_active.png'),
         image: require('../../assets/images/icons/tabs/first.png')
       },
       {
         key: 'request',
-        title: 'Заявки',
+        title: t('friends_requestsTab'),
         notification: !!all(),
         imageActive: require('../../assets/images/icons/tabs/second_active.png'),
         image: require('../../assets/images/icons/tabs/second.png')
       },
       {
         key: 'query',
-        title: 'Запросы',
+        title: t('friends_queriesTab'),
         imageActive: require('../../assets/images/icons/tabs/third_active.png'),
         image: require('../../assets/images/icons/tabs/third.png')
       },
@@ -86,7 +89,7 @@ function Friends(props) {
 
   return (
     <FriendsContainer>
-      <SearchHeader navigation={navigation} title="Друзья" />
+      <SearchHeader navigation={navigation} title={t('friends')} />
       <View height="100%" width="100%">
         <TabView
           renderTabBar={({ navigationState, jumpTo }) => {

@@ -13,6 +13,7 @@ import { AuthContext } from '../../screens/Auth/AuthScreen';
 import { userCRUD } from '../../http/CRUD';
 import { SET_AUTH, SET_USER_INFO } from '../../redux/constants/userConstants';
 import { changeUserInfo } from '../../redux/actions/authActions';
+import {useI18n} from "../../i18n/i18n";
 
 function EnterNicknameStep() {
   const {
@@ -23,13 +24,15 @@ function EnterNicknameStep() {
   const [availability, setAvailability] = React.useState(false);
   const [state, setState] = React.useState({});
 
+  const t = useI18n()
+
   const nicknameValidationSchema = yup.object().shape({
     nickName: yup
       .string()
-      .matches(/^(?=.*[a-z_.])[\w.]+$/, 'Допустимые символы: a-z, 0-9, . и _')
-      .min(3, 'Никнейм должен содержать минимум 3 символа')
-      .max(30, 'Никнейм должен содержать максимум 30 символов')
-      .required('Обязательное поле')
+      .matches(/^(?=.*[a-z_.])[\w.]+$/, t('auth_errorNicknameFormat'))
+      .min(3, t('auth_errorNicknameMinLength'))
+      .max(30, t('auth_errorNicknameMaxLength'))
+      .required(t('requiredField'))
   });
 
   const [canRegistration, setCanRegistration] = React.useState(false);
@@ -83,11 +86,11 @@ function EnterNicknameStep() {
   }, [state]);
 
   if (loading) {
-    return <Text>Загрузка</Text>;
+    return <Text>{t('loading')}</Text>;
   }
 
   return (
-    <AuthStep exit mt={44} maxWidth={344} text="Придумай никнейм, по которому другие пользователи смогут тебя найти" title="Последний штрих!">
+    <AuthStep exit mt={44} maxWidth={344} text={t('auth_completeRegistrationSubtitle')} title={t('auth_completeRegistrationTitle')}>
       <Formik
         initialValues={{
           nickName: '',
@@ -101,12 +104,12 @@ function EnterNicknameStep() {
       >
         {({ errors }) => {
           if (Object.keys(errors).length !== 0 || !availability) {
-            if (errors.nickName !== 'Допустимые символы: a-z, 0-9, . и _') setCanRegistration(false);
+            if (errors.nickName !== t('auth_errorNicknameFormat')) setCanRegistration(false);
           }
           return (
             <EnterNickNameStepContainer>
               <NicknameContainer>
-                <NicknameLabel><NicknameLabelText>Никнейм</NicknameLabelText></NicknameLabel>
+                <NicknameLabel><NicknameLabelText>{t('nickname')}</NicknameLabelText></NicknameLabel>
                 <Field
                   setState={setState}
                   setCanRegistration={setCanRegistration}
@@ -118,7 +121,7 @@ function EnterNicknameStep() {
               </NicknameContainer>
               <NicknameBottom>
                 <EnterNickNameInfo>
-                  Ты можешь использовать символы
+                  {t('auth_nicknameChars')}
                   <TextOfferPurple>a-z</TextOfferPurple>
                   ,
                   <TextOfferPurple>0-9</TextOfferPurple>
@@ -129,10 +132,10 @@ function EnterNicknameStep() {
                   <TextOfferPurple>_</TextOfferPurple>
                   {' '}
                   .
-                  Длина от 3 до 30 символов.
+                  {t('auth_nicknameLength')}
                 </EnterNickNameInfo>
                 <AuthButton onPress={onHandleRegistration} active={canRegistration}>
-                  Зарегистрироваться
+                  {t('auth_register')}
                 </AuthButton>
               </NicknameBottom>
             </EnterNickNameStepContainer>

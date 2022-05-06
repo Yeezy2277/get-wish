@@ -10,9 +10,11 @@ import { cancelRequest, sendRequest } from '../../../redux/actions/userActions';
 import { userCRUD } from '../../../http/CRUD';
 import { changeUserInfo } from '../../../redux/actions/authActions';
 import { goToUserProfile } from '../../../functions/helpers';
+import {useI18n} from "../../../i18n/i18n";
 
 function ListQueryElement({ data, first = false, handleSearchPanel }) {
   const { search } = useSelector((state) => state.user);
+  const t = useI18n()
   const handleGoToUser = async (item) => {
     const user = await userCRUD.get(item?.id);
     await changeUserInfo('oneUser', user?.data);
@@ -58,8 +60,8 @@ function ListQueryElement({ data, first = false, handleSearchPanel }) {
                 {item.username}
               </Text>
             </Pressable>
-            {item?.cancelRequest ? <SharedButton onPress={() => sendRequest(item.id, first ? 'SEARCH' : 'QUERY')} style={{ width: 150, maxWidth: 150, marginLeft: 'auto' }}>Добавить в друзья</SharedButton>
-              : <SharedButton onPress={() => cancelRequest(item.id, first ? 'SEARCH_OUT' : 'QUERY')} lineHeight={19} style={{ width: 138, maxWidth: 138, marginLeft: 'auto' }}>Отменить запрос</SharedButton>}
+            {item?.cancelRequest ? <SharedButton onPress={() => sendRequest(item.id, first ? 'SEARCH' : 'QUERY')} style={{ width: 150, maxWidth: 150, marginLeft: 'auto' }}>{t('friends_add_friend')}</SharedButton>
+              : <SharedButton onPress={() => cancelRequest(item.id, first ? 'SEARCH_OUT' : 'QUERY')} lineHeight={19} style={{ width: 138, maxWidth: 138, marginLeft: 'auto' }}>{t('friends_cancel')}</SharedButton>}
           </HStack>
         </Box>
       )}

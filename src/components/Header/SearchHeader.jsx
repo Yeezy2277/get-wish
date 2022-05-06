@@ -31,6 +31,7 @@ import ListQueryElement from '../Friends/Lists/ListQueryElement';
 import ListRequestElement from '../Friends/Lists/ListRequestElement';
 import ListFriendsCheck from '../Friends/Lists/ListFriendsCheck';
 import { ShareContext } from '../../functions/context';
+import {useI18n} from "../../i18n/i18n";
 
 function SearchHeader({
   cancel = false, title, setSelectedFriends, selectedFriends
@@ -174,7 +175,7 @@ function SearchHeader({
   }, []);
 
   const [state, setState] = React.useState({});
-
+  const t = useI18n()
   React.useEffect(() => {
     if (state !== null && Object?.keys(state)?.length !== 0) {
       InteractionManager.runAfterInteractions(() => {
@@ -187,7 +188,7 @@ function SearchHeader({
     await sendRequest(id).then(() => {
       Toast.show({
         type: 'search',
-        text1: 'Запрос на дружбу отправлен',
+        text1: t('friends_request_was_sent'),
         position: 'bottom',
         bottomOffset: 95
       });
@@ -235,9 +236,9 @@ function SearchHeader({
                   base: '80%',
                 }}
                 fontSize={16}
-                placeholder="Введи ник"
+                placeholder={t('friends_searchPlaceholder')}
               />
-              <ModalCancelText onPress={handleSearchPanel(false, true)}>Отмена</ModalCancelText>
+              <ModalCancelText onPress={handleSearchPanel(false, true)}>{t('cancel')}</ModalCancelText>
             </ModalContent>
             {debouncedTerm ? (
               <View marginTop="20px" display="flex" flexDirection="column">
@@ -248,7 +249,7 @@ function SearchHeader({
                     {isTabFriend() && friendsSearch?.length ? (
                       <View maxHeight="40%">
                         <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
-                          {`${friendsSearch?.length} ${declOfNum(friendsSearch?.length, ['друг', 'друга', 'друзей'])}`}
+                          {`${friendsSearch?.length} ${declOfNum(friendsSearch?.length, t('friend_plurals', {returnObjects: true}))}`}
                         </Heading>
                         <ListFriendElement
                           add={false}
@@ -271,7 +272,7 @@ function SearchHeader({
                     {isTabQuery() && outgoingRequestSearch?.length ? (
                       <View maxHeight="40%">
                         <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
-                          {`${allOutcoming()} ${declOfNum(allOutcoming(), ['запрос', 'запроса', 'запросов'])}`}
+                          {`${allOutcoming()} ${declOfNum(allOutcoming(), t('friends_requestPlurals', {returnObjects: true}))}`}
                         </Heading>
                         <ListQueryElement
                           handleSearchPanel={handleSearchPanel}
@@ -283,7 +284,7 @@ function SearchHeader({
                     {isTabRequest() && incomingRequestSearch?.length ? (
                       <View maxHeight="40%">
                         <Heading fontSize="15px" pb="19px" pl="20px" color={COLORS.gray}>
-                          {`${allIncoming()} ${declOfNum(allIncoming(), ['запрос', 'запроса', 'запросов'])}`}
+                          {`${allIncoming()} ${declOfNum(allIncoming(), t('friends_requestPlurals', {returnObjects: true}))}`}
                         </Heading>
                         <ListRequestElement
                           data={incomingRequestSearch}
@@ -292,7 +293,7 @@ function SearchHeader({
                         />
                       </View>
                     ) : null}
-                    {!isTabShare() && <ListFriends handlePress={handlePress} handleSearchPanel={handleSearchPanel} add title="Глобальный поиск" data={users} />}
+                    {!isTabShare() && <ListFriends handlePress={handlePress} handleSearchPanel={handleSearchPanel} add title={t('friends_searchGlobal')} data={users} />}
                   </>
                 ) : debouncedTerm ? (
                   <Text
@@ -301,7 +302,7 @@ function SearchHeader({
                     fontSize="15px"
                     color={COLORS.gray}
                   >
-                    Ничего не найдено :(
+                    {t('notFound')}
                   </Text>
                 ) : null
             }

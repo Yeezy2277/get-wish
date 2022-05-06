@@ -11,10 +11,12 @@ import { searchPanelHandler } from '../../redux/actions/genericActions';
 import { ListFriends } from '../index';
 import { getFriends } from '../../redux/actions/userActions';
 import { declOfNum } from '../../functions/helpers';
+import {useI18n} from "../../i18n/i18n";
 
 function FriendsFirst({ empty = true }) {
   const [refreshing, setRefreshing] = React.useState(false);
 
+  const t = useI18n()
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     getFriends().then(() => setRefreshing(false));
@@ -48,8 +50,8 @@ function FriendsFirst({ empty = true }) {
         {!friends?.length ? (
           <>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/friends/empty_friends.png')} />
-            <Text color={COLORS.black} fontFamily="NunitoBold" marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">Куда все подевались?</Text>
-            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Кажется, ты ещё ни с кем не подружился</Text>
+            <Text color={COLORS.black} fontFamily="NunitoBold" marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">{t('friends_noFriends')}</Text>
+            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">{t('friends_noFriendsInfo')}</Text>
             <AuthButton
               style={{
                 zIndex: 999, display: 'flex', width: 172, marginTop: 40
@@ -57,10 +59,10 @@ function FriendsFirst({ empty = true }) {
               onPress={openPanel}
               variant="small"
               bxShadow
-              text="Найти друзей"
+              text={t('friends_find')}
             />
           </>
-        ) : <ListFriends title={`${friends?.length} ${declOfNum(friends?.length, ['друг', 'друга', 'друзей'])}`} data={friends} />}
+        ) : <ListFriends title={`${friends?.length} ${declOfNum(friends?.length, t('friend_plurals', { returnObjects: true }))}`} data={friends} />}
       </FriendsContainerFirst>
     </ScrollView>
   );

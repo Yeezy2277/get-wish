@@ -2,8 +2,10 @@ import React from 'react';
 import { Box, Image, Text } from 'native-base';
 import { COLORS } from '../../functions/constants';
 import AuthButton from '../../components/Shared/AuthButton';
+import {useI18n} from "../../i18n/i18n";
 
 function ButtonReserved({ onPress, countRes }) {
+ const t = useI18n()
   const RenderResImage = React.useCallback((count, cancel = false) => {
     if (count === 0) {
       return (
@@ -58,7 +60,7 @@ function ButtonReserved({ onPress, countRes }) {
     >
       <Box width="100%" height="53px" display="flex" alignItems="center" flexDirection="row">
         {RenderResImage(countRes)}
-        <Text fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>Зарезервировать желание</Text>
+        <Text fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>{t('desires_reserve')}</Text>
       </Box>
     </AuthButton>
   );

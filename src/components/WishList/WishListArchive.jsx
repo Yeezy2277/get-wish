@@ -9,8 +9,10 @@ import ReservedDesiresUser from '../Profile/ReservedDesiresUser';
 import { filterWishList } from '../../redux/actions/wishListActions';
 import useLoader from '../../hooks/useLoader';
 import { Loader } from '../index';
+import {useI18n} from "../../i18n/i18n";
 
 function WishListArchive() {
+  const t = useI18n()
   const { start, stop, loading } = useLoader(false);
   const { reloadValue } = useSelector((state) => state.generic);
   const { archiveWishLists } = useSelector((state) => state.wishList);
@@ -33,8 +35,8 @@ function WishListArchive() {
         {loading ? <Loader /> : !archiveWishLists?.length ? (
           <>
             <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/wishlist/archive_background.png')} />
-            <Text color={COLORS.black} fontFamily="NunitoBold" marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">Здесь пока пусто</Text>
-            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Хотя, возможно, там кот...</Text>
+            <Text color={COLORS.black} fontFamily="NunitoBold" marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">{t('nothingHere')}</Text>
+            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">{t('nothingHereInfo')}</Text>
           </>
         ) : (
           <ScrollView marginBottom="40px" width="100%" height="100%" _contentContainerStyle={{ flex: 1 }}>

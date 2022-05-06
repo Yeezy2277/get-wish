@@ -1,12 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Image, View } from 'native-base';
-import {
-  DesiresElementAvatar,
-  DesiresElementAvatarImage,
-  DesiresElementColumn,
-  DesiresElementImage
-} from '../../styles/profile';
 
 function DesiresElement({
   source, empty = false, shadow = null, avatar

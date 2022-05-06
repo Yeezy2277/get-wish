@@ -25,3 +25,10 @@ export const useI18n = () => {
     const { t } = useTranslation(defaultNS);
     return t;
 }
+
+export const withI18n = (Component) => {
+    return (props) => {
+        const t = useI18n()
+        return (<Component {...props} t={t}/>)
+    }
+}

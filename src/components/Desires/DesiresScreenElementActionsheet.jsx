@@ -38,11 +38,13 @@ import { deleteReserveWish, getCountInUser } from '../../redux/actions/wishListA
 import DesiresScreenElementActionsheetReserv from './DesiresScreenElementActionsheetReserv';
 import ButtonReserved from '../../sections/Buttons/ButtonReserved';
 import { reload } from '../../redux/actions/genericActions';
+import {useI18n} from "../../i18n/i18n";
 
 function DesiresScreenElementActionsheet({
   open, setOpen, friend,
   showTutorial, setShowTutorial, isYourWishList, reserved, reserverImage
 }) {
+  const t = useI18n()
   const { userInfo } = useSelector((state) => state.user);
   const { oneWish } = useSelector((state) => state.wish);
   const { countRes } = useSelector((state) => state.wishList);
@@ -51,7 +53,7 @@ function DesiresScreenElementActionsheet({
   const [openChildWhy, setOpenChildWhy] = React.useState(false);
   const [openChildReserv, setOpenChildReserv] = React.useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
-  const state = new ActionSheets(showActionSheetWithOptions);
+  const state = new ActionSheets(t, showActionSheetWithOptions);
 
   const goToAnotherList = () => {
     goToUserWishLists();
@@ -82,7 +84,7 @@ function DesiresScreenElementActionsheet({
     handleCloseChild();
     Toast.show({
       type: 'search',
-      text1: 'Резерв желания отменён',
+      text1: t('desires_reservedWishCanceled'),
       position: 'bottom',
       bottomOffset: 95
     });
@@ -174,7 +176,7 @@ function DesiresScreenElementActionsheet({
                 />
                 <ActionDesiresRowHeaderName>anastasia_efremova</ActionDesiresRowHeaderName>
                 <ActionDesiresActions onPress={goToAnotherList}>
-                  <ActionDesiresActionsText>В вишлист</ActionDesiresActionsText>
+                  <ActionDesiresActionsText>{t('desires_toWishList')}</ActionDesiresActionsText>
                   <ActionDesiresActionsIcon source={require('../../assets/images/icons/arrow.png')} />
                 </ActionDesiresActions>
               </ActionDesiresRowHeader>
@@ -290,7 +292,7 @@ function DesiresScreenElementActionsheet({
                   >
                     <Box alignItems="center" flexDirection="row" width="100%" height="53px">
                       {RenderResImage(countRes, true)}
-                      <Text fontSize={15} fontFamily="NunitoBold" color={COLORS.purple}>Отменить резервирование</Text>
+                      <Text fontSize={15} fontFamily="NunitoBold" color={COLORS.purple}>{t('desires_cancelReservedWish')}</Text>
                     </Box>
                   </Button>
                 ) : (
@@ -317,8 +319,7 @@ function DesiresScreenElementActionsheet({
                     <Box marginLeft="10px">
                       <Text fontSize={14} color={COLORS.black}>{oneWish?.user ? oneWish?.user?.username : 'Таинственный незнакомец'}</Text>
                       <Text fontSize={14} color={COLORS.gray}>
-                        {oneWish?.user ? 'зарезервировал(-а) это желание'
-                          : 'зарезервировал это желание'}
+                        {t('desires_reserved')}
                       </Text>
                     </Box>
                   </Box>
@@ -347,8 +348,7 @@ function DesiresScreenElementActionsheet({
                   <Box marginLeft="10px">
                     <Text fontSize={14} color={COLORS.black}>{oneWish?.user ? oneWish?.user?.username : 'Таинственный незнакомец'}</Text>
                     <Text fontSize={14} color={COLORS.gray}>
-                      {oneWish?.user ? 'зарезервировал(-а) это желание'
-                        : 'зарезервировал это желание'}
+                      {t('desires_reserved')}
                     </Text>
                   </Box>
                 </Box>
@@ -362,11 +362,10 @@ function DesiresScreenElementActionsheet({
         <Actionsheet.Content zIndex={999} style={{ elevation: 1 }} backgroundColor="#fff" padding={0}>
           <ActionElementChild>
             <ActionDesiresChildName>
-              Ты передумал исполнять
-              это желание?
+              {t('desires_confirmCancelReservedWishTitle')}
             </ActionDesiresChildName>
             <ActionDesiresChildDescription>
-              Или просто случайно сюда нажал?
+              {t('desires_confirmCancelReservedWishSubtitle')}
             </ActionDesiresChildDescription>
             <ActionDesiresChildButton>
               <Button
@@ -382,9 +381,9 @@ function DesiresScreenElementActionsheet({
                 }}
                 onPress={handleCancelReserve}
               >
-                Да, я передумал
+                {t('desires_confirmCancelReservedWishYes')}
               </Button>
-              <AuthButton variant="small" onPress={handleCloseChild} text="Упс, закрыть" />
+              <AuthButton variant="small" onPress={handleCloseChild} text={t('desires_confirmCancelReservedWishNo')}/>
             </ActionDesiresChildButton>
           </ActionElementChild>
         </Actionsheet.Content>
