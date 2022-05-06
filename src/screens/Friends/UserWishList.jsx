@@ -69,7 +69,8 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
         oneWishList?.private,
         oneWishList?.is_archive,
         null,
-        parent
+        parent,
+        true
       );
     }
   };

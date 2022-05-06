@@ -26,7 +26,7 @@ import { GO_BACK_ID, SET_ONE_WISH } from '../../redux/constants/wishConstants';
 import { ActionSheets } from '../../functions/ActionSheet';
 
 function DesiresScreenElement({
-  friend, setShowTutorial, showTutorial, el, isYourWishList
+  friend, setShowTutorial, showTutorial, el, isYourWishList, reserved
 }) {
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
@@ -118,7 +118,12 @@ function DesiresScreenElement({
                 source={require('../../assets/images/icons/wishlist/bron.png')}
               />
               )}
-              {!friend && <DesiresScreenElementContentBottomAvatar resizeMode="cover" source={require('../../assets/images/icons/profile/desires/avatar1.png')} />}
+              {reserved && (
+              <DesiresScreenElementContentBottomAvatar
+                resizeMode="cover"
+                source={el?.user?.avatar ? { uri: el?.user?.avatar } : require('../../assets/images/icons/profile/avatar.png')}
+              />
+              )}
             </DesiresScreenElementContentBottom>
           </DesiresScreenElementContent>
         </DesiresScreenElementContainer>
@@ -130,6 +135,8 @@ function DesiresScreenElement({
         open={open}
         isYourWishList={isYourWishList}
         setOpen={setOpen}
+        reserved={reserved}
+        reserverImage={el?.user?.avatar}
       />
     </>
   );

@@ -52,6 +52,10 @@ export function goToAddWish(props) {
   navigateAction('AddWish', props);
 }
 
+export function goToReservWishList(props) {
+  navigateAction('ReservWishList', props);
+}
+
 export function goBack() {
   navigationRef.current.goBack();
 }

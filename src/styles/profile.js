@@ -163,6 +163,7 @@ export const DesiresScreenElementContentBottomIcon = styled.Image`
 export const DesiresScreenElementContentBottomAvatar = styled.Image`
   width: 26px;
   height: 26px;
+  margin-left: auto;
   border-radius: 13px;
 `;
 
@@ -209,7 +210,7 @@ export const DesiresElementAvatarImage = styled.Image`
   border-radius: 13px;
 `;
 
-export const DesiresElementAvatar = styled.TouchableHighlight`
+export const DesiresElementAvatar = styled.View`
   height: 28px;
   position: absolute;
   background: #FFFFFF;
@@ -443,6 +444,8 @@ export const ActionDesiresRow = styled.View`
 export const ActionDesiresRowHeader = styled.View`
   display: flex;
   padding-bottom: 15px;
+  border-bottom-width: 1px;
+  border-bottom-color: #00000012;
   flex-direction: row;
   width: 100%;
   align-items: center;

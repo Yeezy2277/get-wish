@@ -14,6 +14,7 @@ import {
   RESERVE_WISH,
   RESERVE_WISH_LIST
 } from '../constants/wishConstants';
+import { SET_RESERVED_WISH_LIST } from '../constants/userConstants';
 
 export const getCountInUser = async (userId) => {
   return new Promise((resolve, reject) => {
@@ -50,17 +51,19 @@ export const reserveWish = async (wishId, anon, user) => {
   });
 };
 
-export const deleteReserveWish = async (wishId) => {
+export const deleteReserveWish = async (wishId, reserved) => {
   return new Promise((resolve, reject) => {
     $authHost.delete(`/api/v1/wish/${wishId}/reserve`).then(async ({ data }) => {
-      store?.dispatch({ type: DICREMENT_COUNT });
-      store?.dispatch({
-        type: CANCEL_RESERVE_WISH,
-      });
-      store?.dispatch({
-        type: CANCEL_RESERVE_WISH_LIST,
-        payload: wishId
-      });
+      if (!reserved) {
+        store?.dispatch({ type: DICREMENT_COUNT });
+        store?.dispatch({
+          type: CANCEL_RESERVE_WISH,
+        });
+        store?.dispatch({
+          type: CANCEL_RESERVE_WISH_LIST,
+          payload: wishId
+        });
+      }
       resolve(data?.data);
     }).catch((error) => {
       reject(parseError(error));
@@ -118,6 +121,21 @@ export const getWishListUser = async ({
         payload: newWishList
       });
       resolve(data?.data);
+    }).catch((error) => {
+      reject(parseError(error));
+    });
+  });
+};
+
+export const getUserReservedList = async (skip = 0, limit = 20) => {
+  return new Promise((resolve, reject) => {
+    $authHost.get(`/api/v1/user/wishes/reserved?skip=${skip}&take=${limit}`).then(async ({ data }) => {
+      const wishes = data?.data;
+      store?.dispatch({
+        type: SET_RESERVED_WISH_LIST,
+        payload: wishes
+      });
+      resolve(wishes);
     }).catch((error) => {
       reject(parseError(error));
     });

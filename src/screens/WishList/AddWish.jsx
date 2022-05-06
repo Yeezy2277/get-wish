@@ -281,7 +281,6 @@ function AddWish({ navigation, ...props }) {
               </Text>
             </Box>
             <InputText
-              disabled={isEdit}
               active={wishlist}
               setActive={setWishList}
               data={myWishLists}

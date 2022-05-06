@@ -15,7 +15,6 @@ import { reserveWish } from '../../redux/actions/wishListActions';
 function DesiresScreenElementActionsheetWhy({
   open, setOpen
 }) {
-  const [value, setValue] = React.useState('public');
 
   const handleClose = () => {
     setOpen(false);

@@ -15,17 +15,19 @@ import {
   ChangePhoneScreen,
   DesiresScreen, Friends,
   ImageView,
-  MainScreen, ProfileScreen, ProfileWishList, ShareScreen, SwiperImage, UserPost, UserProfile, UserWishList,
+  MainScreen, ProfileScreen,
+  ProfileWishList, ShareScreen, SwiperImage, UserPost, UserProfile, UserWishList,
 } from '../../screens';
 import { navigationRef } from '../../functions/NavigationService';
 import Header from '../Header/Header';
 import {
   ban, cancelRequest, deleteFriend, sendRequest
 } from '../../redux/actions/userActions';
-import { goBack, goToShareScreen, toastConfig } from '../../functions/helpers';
+import { goBack, goToShareScreen } from '../../functions/helpers';
 import { searchPanelHandler } from '../../redux/actions/genericActions';
 import { DELETE_ID_FROM_DATA } from '../../redux/constants/userConstants';
 import ArchiveWishList from '../../screens/WishList/ArchiveWishList';
+import ReservWishList from '../../screens/WishList/ReservWishList';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -38,7 +40,8 @@ function MyStack() {
       <Stack.Screen options={{ headerShown: false }} name="ShareScreen" component={ShareScreen} />
       <Stack.Screen options={{ headerShown: false }} name="ChangePhoneScreen" component={ChangePhoneScreen} />
       <Stack.Screen options={{ headerShown: false }} name="ChangeNicknameStep" component={ChangeNicknameStep} />
-      <Stack.Screen options={{ header: (navigation) => <Header title="Зарезервированные желания" navigation={navigation} /> }} name="DesiresScreen" component={DesiresScreen} />
+      <Stack.Screen options={{ headerShown: false }} name="ReservWishList" component={ReservWishList} />
+      <Stack.Screen options={{ headerShown: false }} name="Swiper" component={SwiperImage} />
     </Stack.Navigator>
   );
 }
@@ -170,7 +173,6 @@ function WishListStack() {
         name="AddWish"
         component={AddWish}
       />
-
     </Stack.Navigator>
   );
 }

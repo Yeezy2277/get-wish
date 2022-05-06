@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Actionsheet, Avatar, Box, Button, Divider, Image, Link, Pressable, Text
+  Actionsheet, Box, Button, Divider,
+  Image, Link, Pressable, Text
 } from 'native-base';
 import { Platform } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
 import {
   ActionDesires,
@@ -26,19 +27,21 @@ import {
   ActionDesiresRowLinks,
   ActionDesiresRowLinksIcon,
   ActionDesiresRowLinksMenu,
-  ActionDesiresRowLinksText, ActionDesiresRowName, ActionElementChild
+  ActionDesiresRowName, ActionElementChild
 } from '../../styles/profile';
 import AuthButton from '../Shared/AuthButton';
 import { COLORS } from '../../functions/constants';
 import { DesiresScreenElementActionsheetWhy, TutorialFriendWishList } from '../index';
-import { goToSwiper } from '../../functions/helpers';
+import { goToSwiper, goToUserWishLists } from '../../functions/helpers';
 import { ActionSheets } from '../../functions/ActionSheet';
 import { deleteReserveWish, getCountInUser } from '../../redux/actions/wishListActions';
 import DesiresScreenElementActionsheetReserv from './DesiresScreenElementActionsheetReserv';
 import ButtonReserved from '../../sections/Buttons/ButtonReserved';
+import { reload } from '../../redux/actions/genericActions';
 
 function DesiresScreenElementActionsheet({
-  open, setOpen, friend, showTutorial, setShowTutorial, isYourWishList
+  open, setOpen, friend,
+  showTutorial, setShowTutorial, isYourWishList, reserved, reserverImage
 }) {
   const { userInfo } = useSelector((state) => state.user);
   const { oneWish } = useSelector((state) => state.wish);
@@ -49,6 +52,10 @@ function DesiresScreenElementActionsheet({
   const [openChildReserv, setOpenChildReserv] = React.useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
   const state = new ActionSheets(showActionSheetWithOptions);
+
+  const goToAnotherList = () => {
+    goToUserWishLists();
+  };
 
   const close = () => {
     setOpen(false);
@@ -64,8 +71,14 @@ function DesiresScreenElementActionsheet({
   };
 
   const handleCancelReserve = async () => {
-    await deleteReserveWish(oneWish?.id);
+    await deleteReserveWish(oneWish?.id, reserved);
     // handleClose();
+    if (reserved) {
+      setOpen(false);
+      setOpenChild(false);
+      setOpenChildWhy(false);
+      await reload();
+    }
     handleCloseChild();
     Toast.show({
       type: 'search',
@@ -154,11 +167,13 @@ function DesiresScreenElementActionsheet({
               </ActionDesiresCount>
             </ActionDesiresImageContainer>
             <ActionDesiresRow>
-              {!friend && (
+              {reserved && (
               <ActionDesiresRowHeader>
-                <ActionDesiresRowHeaderAvatar source={require('../../assets/images/icons/profile/desires/avatar1.png')} />
+                <ActionDesiresRowHeaderAvatar source={reserverImage ? { uri: reserverImage }
+                  : require('../../assets/images/icons/profile/avatar.png')}
+                />
                 <ActionDesiresRowHeaderName>anastasia_efremova</ActionDesiresRowHeaderName>
-                <ActionDesiresActions>
+                <ActionDesiresActions onPress={goToAnotherList}>
                   <ActionDesiresActionsText>В вишлист</ActionDesiresActionsText>
                   <ActionDesiresActionsIcon source={require('../../assets/images/icons/arrow.png')} />
                 </ActionDesiresActions>

@@ -5,7 +5,7 @@ import {
   LOGOUT, SEND_REQUEST,
   SET_AUTH,
   SET_DATA, SET_FRIENDS, SET_INCOMING,
-  SET_NICKNAME, SET_OUTGOING,
+  SET_NICKNAME, SET_OUTGOING, SET_RESERVED_WISH_LIST,
   SET_SEARCH,
   SET_SEARCH_DATA, SET_SEARCH_FRIENDS, SET_SEARCH_INCOMING, SET_SEARCH_OUTGOING,
   SET_SEARCH_START,
@@ -29,6 +29,7 @@ const initialState = {
   incomingRequestSearch: [],
   outgoingRequest: [],
   outgoingRequestSearch: [],
+  reservedWishList: []
 };
 
 // eslint-disable-next-line default-param-last
@@ -43,6 +44,11 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         typeSearch: action.payload
+      };
+    case SET_RESERVED_WISH_LIST:
+      return {
+        ...state,
+        reservedWishList: action.payload
       };
     case SET_SEARCH_START:
       return {

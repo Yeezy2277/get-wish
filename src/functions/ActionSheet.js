@@ -1,6 +1,8 @@
 import Toast from 'react-native-toast-message';
 import { navigateAction } from './NavigationService';
-import { goToAddWish, goToAddWishList, goToShareScreen } from './helpers';
+import {
+  goToAddWish, goToAddWishList, goToShareScreen, goToWishList
+} from './helpers';
 import { archiveWishList, deleteWish, deleteWishList } from '../redux/actions/wishListActions';
 import { deleteFriend } from '../redux/actions/userActions';
 import { GO_BACK_ID } from '../redux/constants/wishConstants';
@@ -11,7 +13,7 @@ export class ActionSheets {
     this.showActionSheetWithOptions = showActionSheetWithOptions;
   }
 
-  deleteWishList(id, el, close) {
+  deleteWishList(id, el, close, goToWishListFunc) {
     this.showActionSheetWithOptions({
       options: ['Отмена', 'Удалить'],
       title: 'Удалить вишлист?',
@@ -24,6 +26,9 @@ export class ActionSheets {
         await deleteWishList(id, el?.private);
         if (close) {
           close();
+        }
+        if (goToWishListFunc) {
+          goToWishList();
         }
         Toast.show({
           type: 'search',
@@ -95,7 +100,7 @@ export class ActionSheets {
     });
   }
 
-  showShareActionInMyWishList(id, el, privateMode, archiveMode, close, parent) {
+  showShareActionInMyWishList(id, el, privateMode, archiveMode, close, parent, goToWishListFunc) {
     if (archiveMode) {
       this.showActionSheetWithOptions({
         options: ['Отмена', 'Изменить', 'Опубликовать', 'Удалить'],
@@ -120,7 +125,7 @@ export class ActionSheets {
           });
         }
         if (buttonIndex === 3) {
-          this.deleteWishList(id, el, close);
+          this.deleteWishList(id, el, close, goToWishListFunc);
         }
       });
     } else {
@@ -150,7 +155,7 @@ export class ActionSheets {
           });
         }
         if (buttonIndex === 4) {
-          this.deleteWishList(id, el, close);
+          this.deleteWishList(id, el, close, goToWishListFunc);
         }
       });
     }

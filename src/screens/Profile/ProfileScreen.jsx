@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, RefreshControl } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { MainContainer } from '../../styles/main';
@@ -11,17 +11,29 @@ import { navigateAction } from '../../functions/NavigationService';
 import { userCRUD } from '../../http/CRUD';
 import { changeUserInfo } from '../../redux/actions/authActions';
 import { COLORS } from '../../functions/constants';
+import { getUserReservedList } from '../../redux/actions/wishListActions';
 
 export const ProfileContext = React.createContext(undefined);
 
 function ProfileScreen({ navigation }) {
+  const [refreshing, setRefreshing] = React.useState(false);
   const [data, setData] = React.useState({});
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await getUserReservedList().then(() => setRefreshing(false));
+  }, []);
   const { showActionSheetWithOptions } = useActionSheet();
   const handleChangeObject = useCallback(
     (key, value) => setData({ ...data, [key]: value }),
     [data]
   );
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo, reservedWishList } = useSelector((state) => state.user);
+
+  React.useEffect(() => {
+    (async function () {
+      await getUserReservedList();
+    }());
+  }, [navigation]);
 
   React.useEffect(() => {
     const parent = navigation.getParent();
@@ -69,7 +81,15 @@ function ProfileScreen({ navigation }) {
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      refreshControl={(
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+    )}
+      style={styles.container}
+    >
       <MainContainer>
         <ProfileContext.Provider value={params}>
           <ProfileHeader>
@@ -77,7 +97,7 @@ function ProfileScreen({ navigation }) {
             <ProfileAvatar style={{ height: 100, width: 100, borderRadius: 50 }} />
             <Icon style={{ height: 24, width: 24 }} source={require('../../assets/images/icons/profile/settings.png')} />
           </ProfileHeader>
-          <ReservedDesires />
+          <ReservedDesires reservedWishList={reservedWishList} />
           <FormGroup forms={[
             {
               type: 'input', name: 'Имя', value: firstname, handle: handleFirstName
