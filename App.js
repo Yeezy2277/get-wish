@@ -9,6 +9,7 @@ import Toast from 'react-native-toast-message';
 import { AppRouter } from './src/components';
 import store from './src/redux';
 import { toastConfig, toastConfigWithoutNativeBase } from './src/functions/helpers';
+import './src/i18n/i18n';
 
 TextInput.defaultProps.selectionColor = '#8424FF';
 

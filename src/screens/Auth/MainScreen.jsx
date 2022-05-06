@@ -3,11 +3,13 @@ import { Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container } from '../../styles/main';
 import { deleteUser, logout } from '../../redux/actions/authActions';
+import {useI18n} from "../../i18n/i18n";
 
 function MainScreen(props) {
   const { navigation } = props;
   const { userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const t = useI18n();
 
   const logoutHandler = async () => {
     await dispatch(logout());
@@ -19,8 +21,8 @@ function MainScreen(props) {
   };
   return (
     <Container>
-      <Button title="Выйти из аккаунта" onPress={logoutHandler} />
-      <Button title="Удалить аккаунт" onPress={deleteHandler} />
+      <Button title={t('logout')} onPress={logoutHandler} />
+      <Button title={t('deleteAccount')} onPress={deleteHandler} />
     </Container>
   );
 }
