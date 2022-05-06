@@ -25,7 +25,9 @@ function EnterNumberStep({ isChangePhone }) {
   const tosText = t('auth_tos', { returnObjects: true })
 
   return (
-    <AuthStep isFirstStep isChangePhone={isChangePhone} mt={isChangePhone ? 44 : 136} maxWidth={266} text="На этот номер будет отправлено СМС с кодом подтверждения" title="Введи номер телефона">
+    <AuthStep isFirstStep isChangePhone={isChangePhone} mt={isChangePhone ? 44 : 136} maxWidth={266}
+              text={t('auth_codeWillBeSent')}
+              title={t('auth_enterPhoneTitle')}>
       <PhoneNumber />
       {!isChangePhone && (
       <TextOffer>
