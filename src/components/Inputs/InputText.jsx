@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Box, Image, Input, Pressable, Text
 } from 'native-base';
@@ -16,6 +16,7 @@ function InputText({
   let _animatedIsFocused = new Animated.Value(value === '' ? 0 : 1);
   let style = {
     left: 18,
+    zIndex: 10,
     position: 'absolute',
     top: _animatedIsFocused.interpolate({
       inputRange: [0, 1],
@@ -67,6 +68,8 @@ function InputText({
     return null;
   }, [value]);
 
+  const ref = useRef();
+
   React.useEffect(() => {
     Animated.timing(_animatedIsFocused, {
       toValue: (focused || value !== '') ? 1 : 0,
@@ -102,6 +105,7 @@ function InputText({
             backgroundColor={COLORS.extralightGray}
             borderRadius="12px"
             position="relative"
+            zIndex={11}
             height="56px"
             display="flex"
             flexDirection="row"
@@ -174,6 +178,7 @@ function InputText({
         borderRadius="12px"
         position="relative"
         height={!description ? '56px' : 'auto'}
+        ref={ref}
         maxHeight="150px"
         multiline={description}
         type="text"
@@ -184,11 +189,11 @@ function InputText({
         paddingRight="18px"
         width="100%"
       />
-      <Animated.Text style={style}>
+      <Animated.Text style={style} onPress={() => ref.current.focus()}>
         {label}
       </Animated.Text>
     </Box>
   );
 }
 
-export default InputText;
+export default React.memo(InputText);

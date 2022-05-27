@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'native-base';
+import { Animated } from 'react-native';
 import {
   HeaderArchive,
   HeaderArrow,
@@ -37,8 +38,23 @@ function Header({
     }
   };
 
+  const [fadeAnim] = React.useState(new Animated.Value(0.7));
+
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+    }).start();
+  }, []);
+
   return (
-    <HeaderRow>
+    <HeaderRow
+      style={{
+        opacity: fadeAnim,
+      }}
+      animation="fadeIn"
+      as={Animated.View}
+    >
       {cancel && (
       <HeaderPressable onPress={handlePressable}>
         <HeaderArrow source={require('../../assets/images/icons/arrow.png')} />
