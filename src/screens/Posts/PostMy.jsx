@@ -1,34 +1,34 @@
 import React from 'react';
 import {
-  FlatList,
-  HStack, Image, Pressable, ScrollView, Text, View
+  Fab,
+  Image, Pressable, ScrollView, Text, View
 } from 'native-base';
 import { useSelector } from 'react-redux';
-import { goToMyPost, goToUserPost, goToUserPostOther } from '../../functions/helpers';
-import { PrivateAccount } from '../index';
-import { getUserPosts } from '../../redux/actions/postsActions';
+import { FlatList } from 'react-native';
 import { COLORS } from '../../functions/constants';
+import EmptyPost from '../../components/Posts/EmptyPost';
+import { getMyWishLists } from '../../redux/actions/postsActions';
+import { goToAddPost, goToMyPost } from '../../functions/helpers';
 
-function UserPosts() {
-  const { oneUser } = useSelector((state) => state.user);
-  const { otherUserPosts } = useSelector((state) => state.posts);
-
+function PostMy() {
+  const { userPosts } = useSelector((state) => state.posts);
   React.useEffect(() => {
     (async function () {
-      await getUserPosts(oneUser?.id);
+      await getMyWishLists();
     }());
-  }, [oneUser?.id]);
-
+  }, []);
   return (
-    <View height="100%" width="100%" flex={1}>
-      {(oneUser?.private && !oneUser?.is_friend) ? (
-        <ScrollView height="100%" width="100%" flex={1}>
-          <PrivateAccount />
-        </ScrollView>
-      ) : (
-        otherUserPosts?.length ? (
+    <>
+      <ScrollView
+        width="100%"
+        height="100%"
+        backgroundColor={COLORS.white2}
+        display="flex"
+        flex={1}
+      >
+        {userPosts?.length ? (
           <FlatList
-            data={otherUserPosts}
+            data={userPosts}
             numColumns={4}
             columnWrapperStyle={{ display: 'flex', flexDirection: 'row' }}
             key="_"
@@ -37,7 +37,7 @@ function UserPosts() {
               return (
                 <Pressable
                   key={el.id}
-                  onPress={() => goToUserPostOther({ id: el.id })}
+                  onPress={() => goToMyPost({ id: el.id })}
                   height="125px"
                   width="33.2%"
                   borderWidth={1}
@@ -64,15 +64,27 @@ function UserPosts() {
               );
             }}
           />
-        ) : (
-          <View paddingTop="200px" height="100%" width="100%" flex={1} alignItems="center">
-            <Text>У пользователя пока нет постов</Text>
-          </View>
-        )
-      )}
-    </View>
+        ) : <EmptyPost variant={2} />}
+      </ScrollView>
+      {userPosts?.length ? (
+        <Fab
+          onPress={goToAddPost}
+          renderInPortal={false}
+          shadow={2}
+          size="50px"
+          mb="100px"
+          backgroundColor={COLORS.purple}
+          icon={(
+            <Image
+              size="20px"
+              source={require('../../assets/images/icons/wishlist/plus.png')}
+            />
+                )}
+        />
+      ) : null}
 
+    </>
   );
 }
 
-export default UserPosts;
+export default PostMy;

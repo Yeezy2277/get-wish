@@ -18,7 +18,8 @@ import { goToArchive } from '../../functions/helpers';
 import { COLORS } from '../../functions/constants';
 
 function Header({
-  navigation, title, more, morePress, avatar, search, archive, cancel = true, cancelText, backHandler
+  navigation, title, more, morePress, avatar, nextHandler,
+  search, archive, cancel = true, cancelText, backHandler
 }) {
   const { route } = navigation;
   const goBack = async () => {
@@ -88,6 +89,19 @@ function Header({
       <HeaderPressableArchive onPress={goToArchive}>
         <HeaderArchive source={require('../../assets/images/icons/wishlist/archive.png')} />
       </HeaderPressableArchive>
+      )}
+      {nextHandler && (
+      <Text
+        color={COLORS.purple}
+        right="20px"
+        top="56px"
+        position="absolute"
+        onPress={nextHandler}
+        fontSize={16}
+        fontWeight={600}
+      >
+        Далее
+      </Text>
       )}
     </HeaderRow>
   );

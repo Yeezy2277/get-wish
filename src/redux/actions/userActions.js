@@ -127,17 +127,19 @@ export const deleteFriend = async (userId) => {
   });
 };
 
-export const getFriends = async (username) => {
+export const getFriends = async (username, patch = true) => {
   return new Promise((resolve, reject) => {
     $authHost.post('/api/v1/friend/query', {
       username,
       take: 1000,
       skip: 0
     }).then(async ({ data }) => {
-      store?.dispatch({
-        type: username ? SET_SEARCH_FRIENDS : SET_FRIENDS,
-        payload: data?.data
-      });
+      if (patch) {
+        store?.dispatch({
+          type: username ? SET_SEARCH_FRIENDS : SET_FRIENDS,
+          payload: data?.data
+        });
+      }
       resolve(data);
     }).catch((error) => {
       reject(parseError(error));
@@ -183,6 +185,16 @@ export const updatePhone = async (phone, code) => {
       code
     }).then(async ({ data }) => {
       await changeUserInfo('userInfo', data?.data);
+      resolve(data);
+    }).catch((error) => {
+      reject(parseError(error));
+    });
+  });
+};
+
+export const getOneUser = async (id) => {
+  return new Promise((resolve, reject) => {
+    $authHost.get(`/api/v1/user/${id}`).then(async ({ data }) => {
       resolve(data);
     }).catch((error) => {
       reject(parseError(error));

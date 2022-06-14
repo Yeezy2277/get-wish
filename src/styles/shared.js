@@ -382,7 +382,7 @@ export const WishListTabBarContainer = styled.Pressable`
     display: flex;
     flex-direction: row;
     border-bottom-width: 2px;
-    border-bottom-color: ${(props) => (props.active ? '#8424FF' : '#fff')};
+    border-bottom-color: ${(props) => (props.active ? '#8424FF' : '#EBEFFF')};
     justify-content: center;
     align-items: center;
 `;

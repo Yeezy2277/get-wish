@@ -7,6 +7,7 @@ import { archiveWishList, deleteWish, deleteWishList } from '../redux/actions/wi
 import { deleteFriend } from '../redux/actions/userActions';
 import { GO_BACK_ID } from '../redux/constants/wishConstants';
 import store from '../redux';
+import { deleteComment, deletePost } from '../redux/actions/postsActions';
 
 export class ActionSheets {
   constructor(t, showActionSheetWithOptions) {
@@ -18,7 +19,7 @@ export class ActionSheets {
     const { t } = this.props;
     this.showActionSheetWithOptions({
       options: [
-          this.t('cancel'),
+        this.t('cancel'),
         this.t('delete'),
       ],
       title: this.t('wishlists_delete'),
@@ -59,10 +60,29 @@ export class ActionSheets {
     });
   }
 
+  showActionComment(id) {
+    this.showActionSheetWithOptions({
+      options: [this.t('cancel'), this.t('delete')],
+      cancelButtonIndex: 0,
+      destructiveButtonIndex: 1,
+      userInterfaceStyle: 'dark'
+    }, async (buttonIndexChild) => {
+      if (buttonIndexChild === 1) {
+        await deleteComment(id);
+        Toast.show({
+          type: 'search',
+          text1: 'Комментарий удалён',
+          position: 'bottom',
+          bottomOffset: 95
+        });
+      }
+    });
+  }
+
   showShareActionInMyWish(id, close, backEdit) {
     this.showActionSheetWithOptions({
       options: [
-          this.t('cancel'),
+        this.t('cancel'),
         this.t('change'),
         this.t('share'),
         this.t('delete'),
@@ -114,7 +134,7 @@ export class ActionSheets {
     if (archiveMode) {
       this.showActionSheetWithOptions({
         options: [
-            this.t('cancel'),
+          this.t('cancel'),
           this.t('change'),
           this.t('publish'),
           this.t('delete')],
@@ -128,7 +148,7 @@ export class ActionSheets {
         if (buttonIndex === 2) {
           this.showActionSheetWithOptions({
             options: [
-                this.t('cancel'),
+              this.t('cancel'),
               this.t('publish')
             ],
             title: this.t('wishlists_publish'),
@@ -148,7 +168,7 @@ export class ActionSheets {
     } else {
       this.showActionSheetWithOptions({
         options: [
-            this.t('cancel'),
+          this.t('cancel'),
           this.t('change'),
           this.t('share'),
           this.t('archive'),
@@ -178,6 +198,55 @@ export class ActionSheets {
         }
         if (buttonIndex === 4) {
           this.deleteWishList(id, el, close, goToWishListFunc);
+        }
+      });
+    }
+  }
+
+  showPostAction(id, my) {
+    if (my) {
+      this.showActionSheetWithOptions({
+        options: [
+          this.t('cancel'),
+          this.t('change'),
+          this.t('share'),
+          this.t('delete')],
+        cancelButtonIndex: 0,
+        userInterfaceStyle: 'dark'
+      }, async (buttonIndex) => {
+        if (buttonIndex === 1) {
+
+        }
+        if (buttonIndex === 2) {
+          goToShareScreen();
+        }
+        if (buttonIndex === 3) {
+          this.showActionSheetWithOptions({
+            options: [
+              this.t('cancel'),
+              'Удалить'
+            ],
+            title: 'Удалить пост?',
+            message: 'Это действие нельзя будет отменить',
+            cancelButtonIndex: 0,
+            userInterfaceStyle: 'dark'
+          }, async (buttonIndexChild) => {
+            if (buttonIndexChild === 1) {
+              await deletePost(id);
+            }
+          });
+        }
+      });
+    } else {
+      this.showActionSheetWithOptions({
+        options: [
+          this.t('cancel'),
+          this.t('share')],
+        cancelButtonIndex: 0,
+        userInterfaceStyle: 'dark'
+      }, async (buttonIndex) => {
+        if (buttonIndex === 1) {
+          goToShareScreen();
         }
       });
     }

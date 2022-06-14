@@ -15,7 +15,7 @@ import {
   ChangePhoneScreen,
   DesiresScreen, Friends,
   ImageView,
-  MainScreen, ProfileScreen,
+  MainScreen, Posts, ProfileScreen,
   ProfileWishList, ShareScreen, SwiperImage, UserPost, UserProfile, UserWishList,
 } from '../../screens';
 import { navigationRef } from '../../functions/NavigationService';
@@ -28,7 +28,12 @@ import { searchPanelHandler } from '../../redux/actions/genericActions';
 import { DELETE_ID_FROM_DATA } from '../../redux/constants/userConstants';
 import ArchiveWishList from '../../screens/WishList/ArchiveWishList';
 import ReservWishList from '../../screens/WishList/ReservWishList';
-import {useI18n} from "../../i18n/i18n";
+import { useI18n } from '../../i18n/i18n';
+import AddPost from '../../screens/Posts/AddPost';
+import MyPost from '../../screens/Posts/MyPost';
+import Comments from '../Posts/Comments';
+import Likes from '../../screens/Posts/Likes';
+import PostUserOthere from '../../screens/Posts/PostUserOthere';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -47,11 +52,11 @@ function MyStack() {
   );
 }
 
-function FriendsStack() {
+function PostsStack() {
   const { oneUser, search } = useSelector((state) => state.user);
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const t = useI18n()
+  const t = useI18n();
   const dispatch = useDispatch();
 
   const showMore = async () => {
@@ -68,10 +73,10 @@ function FriendsStack() {
     showActionSheetWithOptions(
       {
         options: [
-            t('cancel'),
-            t('share'),
-            optionName,
-            t('ban'),
+          t('cancel'),
+          t('share'),
+          optionName,
+          t('ban'),
         ],
         title: t('profile_account_action'),
         cancelButtonIndex: 0,
@@ -98,13 +103,13 @@ function FriendsStack() {
           if (oneUser?.is_friend && !oneUser?.has_outgoing_friend_request) {
             showActionSheetWithOptions({
               options: [
-                  t('cancel'),
-                  t('delete'),
+                t('cancel'),
+                t('delete'),
               ],
               title: t('friends_delete_friend'),
               message: !oneUser?.private
-                  ? t('friends_delete_info_public')
-                  : t('friends_delete_info_private'),
+                ? t('friends_delete_info_public')
+                : t('friends_delete_info_private'),
               cancelButtonIndex: 0,
               destructiveButtonIndex: 1,
               userInterfaceStyle: 'dark'
@@ -118,8 +123,122 @@ function FriendsStack() {
         } else if (buttonIndex === 3) {
           showActionSheetWithOptions({
             options: [
+              t('cancel'),
+              t('ban'),
+            ],
+            title: t('profile_account_ban'),
+            message: t('profile_account_ban_info'),
+            cancelButtonIndex: 0,
+            destructiveButtonIndex: 1,
+            userInterfaceStyle: 'dark'
+          }, async (buttonIndex) => {
+            if (buttonIndex === 1) {
+              await ban(oneUser?.id).then(async () => {
+                dispatch({
+                  type: DELETE_ID_FROM_DATA,
+                  payload: oneUser?.id
+                });
+                await searchPanelHandler();
+                await goBack();
+              });
+            }
+          });
+        }
+      }
+    );
+  };
+
+  return (
+    <Stack.Navigator initialRouteName="PostsUser">
+      <Stack.Screen options={{ headerShown: false }} name="PostsUser" component={Posts} />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddPost"
+        component={AddPost}
+      />
+      <Stack.Screen options={{ header: (navigation) => <Header search={!!search} morePress={showMore} more title={oneUser?.username} navigation={navigation} /> }} name="UserProfile" component={UserProfile} />
+      <Stack.Screen options={{ headerShown: false }} name="Swiper" component={SwiperImage} />
+      <Stack.Screen options={{ header: (navigation) => <Header title="Мои посты" navigation={navigation} /> }} name="MyPost" component={MyPost} />
+      <Stack.Screen options={{ header: (navigation) => <Header title="Комментарии" navigation={navigation} /> }} name="Comments" component={Comments} />
+      <Stack.Screen options={{ header: (navigation) => <Header title="Нравится" navigation={navigation} /> }} name="Likes" component={Likes} />
+      <Stack.Screen options={{ headerShown: false }} name="ShareScreen" component={ShareScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function FriendsStack() {
+  const { oneUser, search } = useSelector((state) => state.user);
+  const { showActionSheetWithOptions } = useActionSheet();
+
+  const t = useI18n();
+  const dispatch = useDispatch();
+
+  const showMore = async () => {
+    const optionNameFunc = async () => {
+      if (oneUser?.is_friend && !oneUser?.has_outgoing_friend_request) {
+        return t('friends_delete_friend');
+      }
+      if (oneUser?.has_outgoing_friend_request && !oneUser?.is_friend) {
+        return t('friends_cancel');
+      }
+      return t('friends_add_friend');
+    };
+    const optionName = await optionNameFunc();
+    showActionSheetWithOptions(
+      {
+        options: [
+          t('cancel'),
+          t('share'),
+          optionName,
+          t('ban'),
+        ],
+        title: t('profile_account_action'),
+        cancelButtonIndex: 0,
+        destructiveButtonIndex: 3,
+        userInterfaceStyle: 'dark'
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 1) {
+          goToShareScreen();
+        } else if (buttonIndex === 2) {
+          if (!oneUser?.is_friend && !oneUser?.has_outgoing_friend_request) {
+            await sendRequest(oneUser?.id, 'PROFILE').then(() => {
+              Toast.show({
+                type: 'search',
+                text1: t('friends_request_was_sent'),
+                position: 'bottom',
+                bottomOffset: 95,
+              });
+            });
+          }
+          if (oneUser?.has_outgoing_friend_request && !oneUser?.is_friend) {
+            await cancelRequest(oneUser?.id, 'PROFILE');
+          }
+          if (oneUser?.is_friend && !oneUser?.has_outgoing_friend_request) {
+            showActionSheetWithOptions({
+              options: [
                 t('cancel'),
-                t('ban'),
+                t('delete'),
+              ],
+              title: t('friends_delete_friend'),
+              message: !oneUser?.private
+                ? t('friends_delete_info_public')
+                : t('friends_delete_info_private'),
+              cancelButtonIndex: 0,
+              destructiveButtonIndex: 1,
+              userInterfaceStyle: 'dark'
+            }, async (buttonIndex) => {
+              if (buttonIndex === 1) {
+                await deleteFriend(oneUser?.id);
+              }
+            });
+          }
+
+        } else if (buttonIndex === 3) {
+          showActionSheetWithOptions({
+            options: [
+              t('cancel'),
+              t('ban'),
             ],
             title: t('profile_account_ban'),
             message: t('profile_account_ban_info'),
@@ -151,12 +270,16 @@ function FriendsStack() {
       <Stack.Screen options={{ headerShown: false }} name="UserWishList" component={UserWishList} />
       <Stack.Screen options={{ headerShown: false }} name="ShareScreen" component={ShareScreen} />
       <Stack.Screen options={{ headerShown: false }} name="Swiper" component={SwiperImage} />
+      <Stack.Screen options={{ header: (navigation) => <Header title="Посты" navigation={navigation} /> }} name="UserPostOther" component={PostUserOthere} />
+      <Stack.Screen options={{ header: (navigation) => <Header title="Комментарии" navigation={navigation} /> }} name="Comments" component={Comments} />
+      <Stack.Screen options={{ header: (navigation) => <Header title="Нравится" navigation={navigation} /> }} name="Likes" component={Likes} />
+
     </Stack.Navigator>
   );
 }
 
 function WishListStack() {
-  const t = useI18n()
+  const t = useI18n();
   return (
     <Stack.Navigator initialRouteName="WishList">
       <Stack.Screen options={{ headerShown: false }} name="ImageView" component={ImageView} />
@@ -193,7 +316,7 @@ function WishListStack() {
 
 function TabStack() {
   const { userInfo, incomingRequest } = useSelector((state) => state.user);
-  const t = useI18n()
+  const t = useI18n();
   const all = React.useCallback(() => {
     return incomingRequest
       ?.reduce((total, amount) => {
@@ -225,7 +348,7 @@ function TabStack() {
                   />
                   {all() ? (
                     <Box
-                      right={7}
+                      right={4}
                       top="10%"
                       size={18}
                       justifyContent="center"
@@ -267,6 +390,17 @@ function TabStack() {
               );
             }
 
+            if (route.name === 'Posts') {
+              return (
+                <Image
+                  resizeMode="cover"
+                  style={{ width: 22, height: 22, position: 'relative' }}
+                  source={focused ? require('../../assets/images/icons/bottom/posts_active.png')
+                    : require('../../assets/images/icons/bottom/posts.png')}
+                />
+              );
+            }
+
             return <Image resizeMode="cover" style={{ width: 24, height: 20, position: 'relative' }} source={require('../../assets/images/icons/bottom/friends.png')} />;
 
           }
@@ -276,6 +410,16 @@ function TabStack() {
       <Tab.Screen
         name="Main"
         component={MainScreen}
+      />
+      <Tab.Screen
+        name="Posts"
+        component={PostsStack}
+        options={() => {
+          return {
+            tabBarOptions: { showIcon: true },
+            tabBarLabel: 'Посты',
+          };
+        }}
       />
       <Tab.Screen
         name="WishLists"

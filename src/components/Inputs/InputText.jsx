@@ -8,7 +8,8 @@ import ChoseWishActionsheet from '../Actionsheet/ChoseWishActionsheet';
 
 function InputText({
   value, onChange, marginTop = '0px', marginBottom = '0px', label = 'Название', link = false,
-  description = false, select = false, active, setActive, data, disabled, setDisabled
+  description = false, select = false, active, setActive, data, disabled, setDisabled, maxHeight = '150px',
+  height, maxLength = 150
 }) {
 
   const [focused, setFocused] = React.useState(false);
@@ -57,11 +58,12 @@ function InputText({
           top="11px"
           position="absolute"
           fontSize="10px"
-          color={value?.length >= 150 ? COLORS.red
+          color={value?.length >= maxLength ? COLORS.red
             : COLORS.gray2}
         >
           {value?.length}
-          /150
+          /
+          {maxLength}
         </Text>
       );
     }
@@ -79,7 +81,7 @@ function InputText({
 
   const handleKeyPress = ({ nativeEvent: { key: keyValue } }) => {
     if (description) {
-      if (value.length >= 150 && keyValue !== 'Backspace') {
+      if (value.length >= maxLength && keyValue !== 'Backspace') {
         setDisabled(true);
       } else {
         setDisabled(false);
@@ -177,9 +179,9 @@ function InputText({
         backgroundColor={COLORS.extralightGray}
         borderRadius="12px"
         position="relative"
-        height={!description ? '56px' : 'auto'}
+        height={height || (!description ? '56px' : 'auto')}
         ref={ref}
-        maxHeight="150px"
+        maxHeight={maxHeight}
         multiline={description}
         type="text"
         fontSize="15px"

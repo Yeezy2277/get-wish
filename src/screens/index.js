@@ -15,3 +15,6 @@ export { default as ProfileWishList } from './WishList/ProfileWishList';
 export { default as AddWishList } from './WishList/AddWishList';
 export { default as AddWish } from './WishList/AddWish';
 export { default as SwiperImage } from './SwiperImage';
+export { default as Posts } from './Posts/Posts';
+export { default as PostLenta } from './Posts/PostLenta';
+export { default as PostMy } from './Posts/PostMy';

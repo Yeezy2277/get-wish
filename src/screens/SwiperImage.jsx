@@ -4,29 +4,69 @@ import {
   Modal, Platform, TouchableOpacity
 } from 'react-native';
 import {
-  Box, Image, Text
+  Box, Image, Pressable, Text
 } from 'native-base';
+import { Video, AVPlaybackStatus } from 'expo-av';
+import * as MediaLibrary from 'expo-media-library';
 import { COLORS } from '../functions/constants';
-import { goBack } from '../functions/helpers';
+import { findVideoFromStore, goBack } from '../functions/helpers';
 import { Loader } from '../components';
 
-function SwiperImage({ navigation, route: { params: { images } } }) {
+function RenderImage({ currentPage, images }) {
+  let video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
+  const [link, setLink] = React.useState('');
+  const isVideo = images.find((el) => el.uri === currentPage.source.uri)?.duration;
+
+  React.useEffect(() => {
+    (async function startPlayer() {
+      if (isVideo) {
+        const response = await findVideoFromStore(images, currentPage.source.uri);
+        setLink(response);
+        await video.current.playAsync();
+      }
+    }());
+  }, [isVideo]);
+
+  if (isVideo) {
+    return (
+      <Pressable
+        width="100%"
+        height="100%"
+        justifyContent="center"
+        alignItems="center"
+        onPress={() => (status.isPlaying ? video.current.pauseAsync() : video.current.playAsync())}
+      >
+        <Video
+          ref={video}
+          source={{
+            uri: link,
+          }}
+          style={{ width: '100%', height: 250 }}
+          useNativeControls
+          resizeMode="cover"
+          isLooping
+          onPlaybackStatusUpdate={(statusLocal) => setStatus(() => statusLocal)}
+        />
+      </Pressable>
+    );
+  }
+  return (
+    <Box width="100%" height="100%" justifyContent="center" alignItems="center">
+      <Image alt={currentPage.source.uri} resizeMode="cover" width="100%" height="250px" source={{ uri: currentPage.source.uri }} />
+    </Box>
+  );
+}
+
+function SwiperImage({ navigation, route: { params: { images, hidePanel } } }) {
 
   React.useEffect(() => {
     const parent = navigation.getParent();
     parent.setOptions({ tabBarStyle: { display: 'none' } });
     return () => {
-      parent.setOptions({ tabBarStyle: { display: 'flex' } });
+      if (!hidePanel) parent.setOptions({ tabBarStyle: { display: 'flex' } });
     };
   }, []);
-
-  const renderImage = (currentPage) => {
-    return (
-      <Box width="100%" height="100%" justifyContent="center" alignItems="center">
-        <Image resizeMode="cover" width="100%" height="250px" source={{ uri: currentPage.source.uri }} />
-      </Box>
-    );
-  };
 
   const renderHeader = (currentPage) => {
     return (
@@ -61,7 +101,7 @@ function SwiperImage({ navigation, route: { params: { images } } }) {
   return (
     <Modal visible transparent>
       <ImageViewer
-        renderImage={renderImage}
+        renderImage={(cur) => <RenderImage images={images} currentPage={cur} />}
         useNativeDriver
         loadingRender={() => <Loader />}
         renderIndicator={() => null}

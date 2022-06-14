@@ -2,11 +2,18 @@ import {
   HStack, Image, Text, View
 } from 'native-base';
 import React from 'react';
-import { View as ViewOriginal, Image as ImageOriginal, Text as TextOriginal } from 'react-native';
+import {
+  View as ViewOriginal, Image as ImageOriginal, Text as TextOriginal, Platform
+} from 'react-native';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import * as MediaLibrary from 'expo-media-library';
+import { Asset } from 'expo';
 import NavigationService, { navigateAction, navigationRef } from './NavigationService';
 import { COLORS } from './constants';
-import { generateBoxShadowStyle } from './index';
+import MyPost from '../screens/Posts/MyPost';
+import { getOneUser } from '../redux/actions/userActions';
+import { userCRUD } from '../http/CRUD';
+import { changeUserInfo } from '../redux/actions/authActions';
 
 export function goToStart() {
   NavigationService.navigate('Start');
@@ -28,6 +35,10 @@ export function goToUserPost() {
   navigateAction('UserPost');
 }
 
+export function goToPostsUser() {
+  navigateAction('PostsUser');
+}
+
 export function goToShareScreen(props) {
   navigateAction('ShareScreen', props);
 }
@@ -40,12 +51,28 @@ export function goToWishList(props) {
   navigateAction('WishList', props);
 }
 
+export function goToAddPost(props) {
+  navigateAction('AddPost', props);
+}
+
 export function goToAddWishList(props) {
   navigateAction('AddWishList', props);
 }
 
+export function goToMyPost(props) {
+  navigateAction('MyPost', props);
+}
+
+export function goToUserPostOther(props) {
+  navigateAction('UserPostOther', props);
+}
+
 export function goToSwiper(props) {
   navigateAction('Swiper', props);
+}
+
+export function goToComments(props) {
+  navigateAction('Comments', props);
 }
 
 export function goToAddWish(props) {
@@ -54,6 +81,10 @@ export function goToAddWish(props) {
 
 export function goToReservWishList(props) {
   navigateAction('ReservWishList', props);
+}
+
+export function goToLikes(props) {
+  navigateAction('Likes', props);
 }
 
 export function goBack() {
@@ -137,4 +168,91 @@ export const manipulateImage = async (image) => {
     { compress: 0.5, format: SaveFormat.JPEG }
   );
   return manipResult;
+};
+
+export const filterImages = (checkedItems, setCheckedItems, id, uri, duration) => {
+  if (checkedItems.find((el) => el.id === id)) {
+    if (checkedItems.length === 1) {
+      setCheckedItems([]);
+    } else {
+      let array = [...checkedItems];
+      let index = array.findIndex((find) => find.id === id);
+      let beforeElements = array.slice(0, index);
+      let afterElements = array.slice(index + 1, array.length);
+      if (afterElements.length) {
+        afterElements = afterElements.map((after) => ({ ...after, idx: after.idx - 1 }));
+      }
+      setCheckedItems([...beforeElements, ...afterElements]);
+    }
+  } else {
+    if (checkedItems.length > 4) return;
+    let idx;
+    if (checkedItems.length === 0) {
+      idx = 1;
+    } else {
+      let lastIdx = checkedItems[checkedItems.length - 1].idx;
+      idx = lastIdx + 1;
+    }
+    setCheckedItems(((prevState) => [...prevState, {
+      id, uri, idx, duration
+    }]));
+  }
+};
+
+export const findVideoFromStore = async (images, id) => {
+  const res = await MediaLibrary.getAssetInfoAsync(images.find((el) => el.uri === id).id);
+  if (Platform.OS === 'ios') {
+    return res.localUri;
+  }
+  return res.uri;
+};
+
+export const findVideoOrImageByStore = async (id) => {
+  const res = await MediaLibrary.getAssetInfoAsync(id);
+  return res;
+};
+
+export const covertToBlob = async (uri) => {
+  return new Promise(((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      resolve(xhr.response);
+    };
+    xhr.onerror = function () {
+      reject(new TypeError('Network error'));
+    };
+    xhr.responseType = 'blob';
+    xhr.open('GET', uri, true);
+    xhr.send(null);
+  }));
+};
+
+export const parsingUserTag = async (description) => {
+  let newDesc = description;
+  const tags = newDesc?.match(/<(.*?)>/gm);
+  let users = [];
+  let usersUnique = [];
+  if (tags?.length) {
+    for await (const tag of tags) {
+      let id = tag.split('@')[1].split('>')[0];
+      let { data: dataTag } = await getOneUser(id);
+      users.push({ username: dataTag.username, id: dataTag.id });
+    }
+    users.filter((item) => {
+      if (!usersUnique.some((element) => element.id === item.id)) {
+        usersUnique.push(item);
+      }
+    });
+    tags.forEach((el) => {
+      let object = usersUnique.find((unique) => unique.id === +el.split('@')[1].split('>')[0]);
+      newDesc = newDesc.replace(el, `@${object.username}`);
+    });
+  }
+  return { description: newDesc, users: usersUnique };
+};
+
+export const handleGoToUser = async (id) => {
+  const user = await userCRUD.get(id);
+  await changeUserInfo('oneUser', user?.data);
+  await goToUserProfile({ noSearch: true });
 };

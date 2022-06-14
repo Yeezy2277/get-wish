@@ -11,7 +11,7 @@ import { FriendTabBars } from '../../styles/shared';
 import { FriendsFirst } from '../index';
 import { COLORS } from '../../functions/constants';
 import { SET_TYPE_SEARCH } from '../../redux/constants/userConstants';
-import {useI18n} from "../../i18n/i18n";
+import { useI18n } from '../../i18n/i18n';
 
 function Friends(props) {
   const renderScene = SceneMap({
@@ -48,7 +48,7 @@ function Friends(props) {
 
   const [index, setIndex] = React.useState(0);
 
-  const t = useI18n()
+  const t = useI18n();
 
   const routes = React.useMemo(() => {
     return [
