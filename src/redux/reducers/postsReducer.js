@@ -5,12 +5,13 @@ import {
 } from '../constants/wishConstants';
 import {
   DELETE_COMMENT,
-  LIKE, REMOVE_POST, SET_COMMENTS, SET_POSTS_USER, SET_POSTS_USER_OTHER, UNLIKE
+  LIKE, REMOVE_POST, SET_COMMENTS, SET_POSTS_FOR_LENTA, SET_POSTS_USER, SET_POSTS_USER_OTHER, UNLIKE
 } from '../constants/postsConstants';
 import store from '../index';
 
 const initialState = {
   userPosts: [],
+  lentaPosts: [],
   comments: [],
   otherUserPosts: [],
 };
@@ -28,25 +29,30 @@ export const postsReducer = (state = initialState, action) => {
         ...state,
         comments: action.payload
       };
+    case SET_POSTS_FOR_LENTA:
+      return {
+        ...state,
+        lentaPosts: action.payload
+      };
     case SET_POSTS_USER_OTHER:
       return {
         ...state,
         otherUserPosts: action.payload
       };
     case LIKE:
-      let targetLike = action.payload?.my ? 'userPosts' : 'otherUserPosts';
+      let targetLike = action.payload?.lenta ? 'lentaPosts' : action.payload?.my ? 'userPosts' : 'otherUserPosts';
       let array = [...state[targetLike]];
       let idx = array.findIndex((el) => el.id === action.payload.id);
       let countLike = array[idx]?.likes?.count ? array[idx]?.likes?.count : 0;
-      let prev = array[idx]?.likes?.friends?.length ? array[idx]?.likes?.friends : [];
+      let friends = array[idx]?.likes?.friends?.length ? array[idx]?.likes?.friends : [];
       array[idx] = {
         ...array[idx],
         likes: {
+          friends: action.payload?.lenta || !action.payload?.my
+            ? [...friends, { user: action.payload.user }]
+            : [...friends],
           count: countLike + 1,
-          friends: [
-            ...prev,
-            { user: action.payload.user }
-          ]
+          liked: true
         }
       };
       return {
@@ -66,21 +72,22 @@ export const postsReducer = (state = initialState, action) => {
         comments: removedComment
       };
     case UNLIKE:
-      let targetUnlike = action.payload?.my ? 'userPosts' : 'otherUserPosts';
+      let targetUnlike = action.payload?.lenta ? 'lentaPosts' : action.payload?.my ? 'userPosts' : 'otherUserPosts';
       let arrayUnlike = [...state[targetUnlike]];
       let idxUnlike = arrayUnlike.findIndex((el) => el.id === action.payload.id);
       let countUnlike = arrayUnlike[idxUnlike]?.likes?.count;
-      let userId = action.payload.user.id;
-      let prevUnlike = arrayUnlike[idxUnlike]?.likes?.friends?.length
-        ? arrayUnlike[idxUnlike]?.likes
-          ?.friends?.filter((unlike) => unlike.user.id !== userId) : [];
+      let friendsUnlike = arrayUnlike[idxUnlike]
+        ?.likes?.friends?.length ? arrayUnlike[idxUnlike]?.likes?.friends : [];
+      let find = friendsUnlike
+        ?.find((likeFr) => likeFr.user.id === action.payload?.user?.id);
       arrayUnlike[idxUnlike] = {
         ...arrayUnlike[idxUnlike],
         likes: {
+          friends: action.payload?.lenta || !action.payload?.my
+            ? [...friendsUnlike.filter((likeFilter) => likeFilter?.user.id !== find?.user?.id)]
+            : friendsUnlike,
           count: countUnlike - 1,
-          friends: [
-            ...prevUnlike,
-          ]
+          liked: false
         }
       };
       return {

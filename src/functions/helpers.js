@@ -256,3 +256,13 @@ export const handleGoToUser = async (id) => {
   await changeUserInfo('oneUser', user?.data);
   await goToUserProfile({ noSearch: true });
 };
+
+export const isVideo = (uri) => {
+  if (typeof uri === 'string') {
+    if (uri.toLowerCase()?.includes('.mp4')
+        || uri.toLowerCase()?.includes('.mov') || uri.toLowerCase()?.includes('.avi')) {
+      return true;
+    }
+  }
+  return false;
+};

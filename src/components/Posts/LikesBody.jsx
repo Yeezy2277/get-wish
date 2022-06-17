@@ -13,7 +13,9 @@ const assets = {
   unlike: require('../../assets/images/icons/users/post/like.png')
 };
 
-function LikesBody({ postId, el }) {
+function LikesBody({
+  postId, el, lenta, my
+}) {
   const [source, setSource] = React.useState(assets.unlike);
   const dispatch = useDispatch();
 
@@ -28,13 +30,13 @@ function LikesBody({ postId, el }) {
   }, []);
 
   const likeHandler = async () => {
-    await like(postId, HasYourLike);
+    await like(postId, my, lenta);
     setSource(assets.unlike);
     reload();
   };
 
   const unlikeHandler = async () => {
-    await unLike(postId, HasYourLike);
+    await unLike(postId, my, lenta);
     setSource(assets.like);
     reload();
   };

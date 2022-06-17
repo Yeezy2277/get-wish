@@ -1,6 +1,7 @@
 import Toast from 'react-native-toast-message';
 import { navigateAction } from './NavigationService';
 import {
+  goToAddPost,
   goToAddWish, goToAddWishList, goToShareScreen, goToWishList
 } from './helpers';
 import { archiveWishList, deleteWish, deleteWishList } from '../redux/actions/wishListActions';
@@ -16,7 +17,6 @@ export class ActionSheets {
   }
 
   deleteWishList(id, el, close, goToWishListFunc) {
-    const { t } = this.props;
     this.showActionSheetWithOptions({
       options: [
         this.t('cancel'),
@@ -215,7 +215,7 @@ export class ActionSheets {
         userInterfaceStyle: 'dark'
       }, async (buttonIndex) => {
         if (buttonIndex === 1) {
-
+          goToAddPost({ id });
         }
         if (buttonIndex === 2) {
           goToShareScreen();

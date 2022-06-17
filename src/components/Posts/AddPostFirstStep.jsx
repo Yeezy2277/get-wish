@@ -91,6 +91,22 @@ function AddPostFirstStep() {
   }, [checkedItems]);
 
   const onNextStepHandler = () => {
+    let maybeNext = true;
+    checkedItems.forEach((check) => {
+      if (check?.duration) {
+        if (check?.duration[0] !== '0' && check?.duration[1] !== '0') {
+          maybeNext = false;
+        }
+      }
+    });
+    if (!maybeNext) {
+      return Toast.show({
+        type: 'error',
+        text1: 'Нельзя загружать ролики длиной более минуты',
+        position: 'bottom',
+        bottomOffset: 95
+      });
+    }
     if (!checkedItems.length) {
       return Toast.show({
         type: 'error',

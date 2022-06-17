@@ -5,12 +5,13 @@ import AddPostSecondStep from '../../components/Posts/AddPostSecondStep';
 
 export const AddPostContext = React.createContext(undefined);
 
-function AddPost({ navigation }) {
+function AddPost({ navigation, ...props }) {
+  const id = React.useMemo(() => props?.route?.params?.id, [props?.route?.params?.id]);
   const StepsComponents = {
     0: AddPostFirstStep,
     1: AddPostSecondStep,
   };
-  const [step, setStep] = React.useState(0);
+  const [step, setStep] = React.useState(id ? 1 : 0);
   const Step = StepsComponents[step];
   const parent = navigation.getParent();
   const [open, setOpen] = React.useState(false);
@@ -33,7 +34,7 @@ function AddPost({ navigation }) {
 
   return (
     <AddPostContext.Provider value={{
-      checkedItems, setCheckedItems, navigation, onNextStep, onPrevStep, step
+      checkedItems, setCheckedItems, navigation, onNextStep, onPrevStep, step, id
     }}
     >
       <Step />

@@ -8,12 +8,11 @@ import {
 import { Alert, ImageBackground } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { NavigationActions, NavigationActions as CommonActions, StackActions } from 'react-navigation';
 import {
   HeaderArrow, HeaderAvatar, HeaderPressable, HeaderPressableAvatar
 } from '../../styles/shared';
 import {
-  declOfNum, goBack, goToAddWish, goToUserWishLists, goToWishList
+  declOfNum, goBack, goToAddWish, goToWishList
 } from '../../functions/helpers';
 import { COLORS } from '../../functions/constants';
 import { DesiresScreenRow } from '../../styles/profile';

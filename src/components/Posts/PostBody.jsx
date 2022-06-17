@@ -8,11 +8,12 @@ import { useSelector } from 'react-redux';
 import FastImage from 'expo-fast-image';
 import FadeInOut from 'react-native-fade-in-out';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { Video } from 'expo-av';
 import { COLORS } from '../../functions/constants';
 import { like, unLike } from '../../redux/actions/postsActions';
 import useReload from '../../hooks/useReload';
 import { delay } from '../../functions';
-import { goToComments, goToLikes } from '../../functions/helpers';
+import { goToComments, goToLikes, isVideo } from '../../functions/helpers';
 import { convertComment } from '../../functions/dates2';
 import { TextParser } from '../index';
 import { ActionSheets } from '../../functions/ActionSheet';
@@ -23,16 +24,37 @@ const assets = {
   unlike: require('../../assets/images/icons/users/post/like.png')
 };
 
+function RenderVideo({ item }) {
+  let video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
+  return (
+    <Pressable height="375px" width="100%" onPress={() => (status.isPlaying ? video.current.pauseAsync() : video.current.playAsync())}>
+      <Video
+        source={{
+          uri: item,
+        }}
+        ref={video}
+        style={{ width: '100%', height: 375, zIndex: 5 }}
+        useNativeControls
+        resizeMode="cover"
+        isLooping
+        onPlaybackStatusUpdate={(statusLocal) => setStatus(() => statusLocal)}
+      />
+    </Pressable>
+  );
+}
+
 function PostBody({
-  more, el, my, key
+  more, el, my, key, lenta
 }) {
   const t = useI18n();
   const [index, setIndex] = React.useState(0);
   const [lastPress, setLastPress] = React.useState(0);
   const { width } = Dimensions.get('screen');
+  const { oneUser } = useSelector((state) => state.user);
   const { reloadValue, reload } = useReload();
   const { userInfo } = useSelector((state) => state.user);
-  const { userPosts, otherUserPosts } = useSelector((state) => state.posts);
+  const { userPosts, otherUserPosts, lentaPosts } = useSelector((state) => state.posts);
   const [source, setSource] = React.useState(HasYourLike ? assets.unlike : assets.like);
   const { reloadValue: reloadValueGlobal } = useSelector((state) => state.generic);
   const { showActionSheetWithOptions } = useActionSheet();
@@ -46,9 +68,12 @@ function PostBody({
   function RenderItem({ item, index }) {
     return (
       <Pressable onPress={handleDoublePress} position="relative">
-        <View height="375px" width="100%">
-          <Image alt="image" zIndex={5} height="375px" width="100%" source={{ uri: item }} />
-        </View>
+
+        {isVideo(item) ? (
+          <RenderVideo item={item} />
+        )
+          : <View height="375px" width="100%"><Image alt="image" zIndex={5} height="375px" width="100%" source={{ uri: item }} /></View>}
+
         <FadeInOut style={{ bottom: '30%' }} useNativeDriver visible={visible} duration={350}>
           <Image
             onPress={handleDoublePress}
@@ -95,14 +120,14 @@ function PostBody({
   }
 
   const likeHandler = async () => {
-    await like(el.id, my);
+    await like(el.id, my, lenta);
     setSource(assets.unlike);
     reload();
   };
 
   const likeHandlerDouble = async () => {
     toggleVisible();
-    await like(el.id, my);
+    await like(el.id, my, lenta);
     setSource(assets.unlike);
     reload();
     delay(1500).then(
@@ -111,32 +136,25 @@ function PostBody({
   };
 
   const unlikeHandlerDouble = async () => {
-    await unLike(el.id, my);
+    await unLike(el.id, my, lenta);
     setSource(assets.like);
     reload();
   };
 
   const unlikeHandler = async () => {
-    await unLike(el.id, my);
+    await unLike(el.id, my, lenta);
     setSource(assets.like);
     reload();
   };
 
   const HasYourLike = React.useMemo(() => {
     let has = false;
-    if (el?.likes?.friends?.length) {
-      el?.likes?.friends?.forEach((prev) => {
-        if (userInfo.id === prev?.user?.id) {
-          has = true;
-          setSource(assets.unlike);
-        } else {
-          setSource(assets.like);
-        }
-      });
+    if (el?.likes?.liked) {
+      has = true;
     }
     return has;
 
-  }, [el?.likes?.friends?.length, userPosts, otherUserPosts, reloadValue, reloadValueGlobal, el]);
+  }, [el?.likes?.liked, lentaPosts, userPosts, otherUserPosts, reloadValue, reloadValueGlobal, el]);
 
   const handleDoublePress = () => {
     let delta = new Date().getTime() - lastPress;
@@ -151,10 +169,6 @@ function PostBody({
     setLastPress(new Date().getTime());
 
   };
-
-  React.useMemo(() => {
-
-  });
 
   const firstLikeUser = el?.likes?.friends[0]?.user?.username;
 
@@ -209,7 +223,11 @@ function PostBody({
           </Pressable>
           <Pressable onPress={() => goToComments(
             {
-              description: el.text, postId: el?.id, descriptionAuthor: userInfo, date: el.created_at
+              description: el.text,
+              postId: el?.id,
+              descriptionAuthor: lenta ? el?.user : my
+                ? userInfo : oneUser,
+              date: el.created_at
             }
           )}
           >
@@ -232,15 +250,44 @@ function PostBody({
         {el?.likes?.friends?.length ? (
           <>
             <HStack>
-              <Avatar zIndex={3} borderWidth={2} borderColor={COLORS.white2} size="24px" source={require('../../assets/images/icons/profile/desires/avatar1.png')} />
-              <Avatar zIndex={2} marginLeft="-8px" borderWidth={2} borderColor={COLORS.white2} size="24px" source={require('../../assets/images/icons/profile/desires/avatar1.png')} />
-              <Avatar zIndex={1} marginLeft="-8px" borderWidth={2} borderColor={COLORS.white2} size="24px" source={require('../../assets/images/icons/profile/desires/avatar1.png')} />
+              {el?.likes?.friends?.map((el, idx) => {
+                return (
+                  <Avatar
+                    zIndex={idx === 0 ? 3 : idx === 1 ? 2 : 1}
+                    borderWidth={2}
+                    borderColor={COLORS.white2}
+                    size="24px"
+                    source={{ uri: el?.user?.avatar }}
+                  />
+                );
+              })}
             </HStack>
-            <VStack>
-              <Text onPress={() => goToLikes({ likes: el?.likes?.friends, postId: el.id })} maxWidth="283px" fontSize="14px">
-                Нравится to.kova и ещё 14
-              </Text>
-            </VStack>
+            {my || lenta ? (
+              <VStack>
+                {el?.likes?.friends?.length ? (
+                  <Text
+                    onPress={() => goToLikes({
+                      likes: el?.likes?.friends, postId: el.id, my, lenta
+                    })}
+                    maxWidth="283px"
+                    fontSize="14px"
+                  >
+                    Нравится
+                    {' '}
+                    <Text fontFamily="NunitoBold">{firstLikeUser}</Text>
+                    {' '}
+                    {el?.likes?.count > 1
+                      ? `и ещё ${el?.likes?.count}` : null}
+                  </Text>
+                ) : el?.likes?.count ? (
+                  <Text>
+                    Нравится:
+                    {el?.likes?.count}
+                  </Text>
+                ) : null}
+
+              </VStack>
+            ) : null}
           </>
         ) : null}
       </HStack>
@@ -248,11 +295,53 @@ function PostBody({
         <Text fontFamily="NunitoBold">{el?.user?.username}</Text>
         {' '}
         <TextParser
-          post={{ description: el?.text, descriptionAuthor: userInfo, date: el?.created_at }}
+          post={{
+            description: el?.text,
+            descriptionAuthor: my ? userInfo : oneUser,
+            date: el?.created_at
+          }}
           maxLenght
           description={el?.text}
         />
       </Text>
+      {el?.comments?.friends?.map((com) => {
+        return (
+          <Text fontSize="14px" paddingLeft="15px" paddingRight="15px" width="100%" marginTop="10px">
+            <Text fontFamily="NunitoBold">{com?.user?.username}</Text>
+            {' '}
+            <TextParser
+              post={{
+                description: com?.text,
+                descriptionAuthor: my ? userInfo : oneUser,
+                date: com?.created_at
+              }}
+              maxLenght
+              description={com?.text}
+            />
+          </Text>
+        );
+      })}
+      {el?.comments?.count ? (
+        <Text
+          onPress={() => goToComments(
+            {
+              description: el.text,
+              postId: el?.id,
+              descriptionAuthor: my ? userInfo : oneUser,
+              date: el.created_at
+            }
+          )}
+          paddingLeft="15px"
+          marginTop="10px"
+          color={COLORS.gray}
+          fontSize="12px"
+          fontWeight="400"
+        >
+          Смотреть все комментарии (
+          {el?.comments?.count}
+          )
+        </Text>
+      ) : null}
       <Text
         paddingLeft="15px"
         marginTop="10px"

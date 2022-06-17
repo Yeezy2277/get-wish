@@ -2,7 +2,7 @@ import { $authHost } from '../../http';
 import store from '../index';
 import {
   DELETE_COMMENT,
-  LIKE, REMOVE_POST, SET_COMMENTS, SET_POSTS_USER, SET_POSTS_USER_OTHER, UNLIKE
+  LIKE, REMOVE_POST, SET_COMMENTS, SET_POSTS_FOR_LENTA, SET_POSTS_USER, SET_POSTS_USER_OTHER, UNLIKE
 } from '../constants/postsConstants';
 
 export const addNewPost = async (file, id) => {
@@ -41,17 +41,41 @@ export const getMyWishLists = async () => {
   });
 };
 
+export const getPostsForLenta = async () => {
+  return new Promise((resolve) => {
+    const res = $authHost.get('/api/v1/post/list').then((reponse) => {
+      store?.dispatch({ type: SET_POSTS_FOR_LENTA, payload: reponse?.data?.data });
+    });
+    resolve(res?.data);
+  });
+};
+
+export const getOnePost = async (id) => {
+  return new Promise((resolve) => {
+    const res = $authHost.get(`/api/v1/post/${id}`);
+    resolve(res);
+  });
+};
+
+export const updatePost = async (id, text) => {
+  return new Promise((resolve) => {
+    const res = $authHost.put(`/api/v1/post/${id}`, {
+      text
+    });
+    resolve(res);
+  });
+};
+
 export const getUserPosts = async (id) => {
   return new Promise((resolve) => {
     const res = $authHost.get(`/api/v1/user/${id}/posts`).then((reponse) => {
-      console.log(reponse?.data?.data);
       store?.dispatch({ type: SET_POSTS_USER_OTHER, payload: reponse?.data?.data });
     });
     resolve(res?.data);
   });
 };
 
-export const like = async (id, my) => {
+export const like = async (id, my, lenta) => {
   const { user: { userInfo } } = store.getState();
   return new Promise((resolve, reject) => {
     $authHost.post(`/api/v1/post/${id}/like`, {
@@ -59,14 +83,16 @@ export const like = async (id, my) => {
     }).then((response) => {
       store?.dispatch({
         type: LIKE,
-        payload: { id, user: userInfo, my }
+        payload: {
+          id, user: userInfo, my, lenta
+        }
       });
       resolve(response.data);
     }).catch(((error) => reject(error)));
   });
 };
 
-export const unLike = async (id, my) => {
+export const unLike = async (id, my, lenta) => {
   const { user: { userInfo } } = store.getState();
   return new Promise((resolve, reject) => {
     $authHost.post(`/api/v1/post/${id}/unlike`, {
@@ -74,7 +100,9 @@ export const unLike = async (id, my) => {
     }).then((response) => {
       store?.dispatch({
         type: UNLIKE,
-        payload: { id, user: userInfo, my }
+        payload: {
+          id, user: userInfo, my, lenta
+        }
       });
       resolve(response.data);
     }).catch(((error) => reject(error)));

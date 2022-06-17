@@ -12,23 +12,35 @@ import { COLORS } from '../../functions/constants';
 import InputText from '../Inputs/InputText';
 import AuthButton from '../Shared/AuthButton';
 import {
-  covertToBlob, findVideoOrImageByStore, goToPostsUser, goToSwiper, goToUserPost
+  covertToBlob, findVideoOrImageByStore, goBack, goToPostsUser, goToSwiper, goToUserPost, isVideo
 } from '../../functions/helpers';
 import PostListFriendElement from './PostListFriendElement';
 import { getFriends } from '../../redux/actions/userActions';
 import useLoader from '../../hooks/useLoader';
-import { addNewPost, editPost, getMyWishLists } from '../../redux/actions/postsActions';
+import {
+  addNewPost, editPost, getMyWishLists, getOnePost, updatePost
+} from '../../redux/actions/postsActions';
 import { Loader } from '../index';
+import { reload } from '../../redux/actions/genericActions';
 
 function AddPostSecondStep() {
   const {
-    navigation, checkedItems, step, setCheckedItems, onNextStep, onPrevStep
+    navigation, checkedItems, step, id, onPrevStep
   } = React.useContext(AddPostContext);
   const [disabled, setDisabled] = React.useState(false);
   const [description, setDescription] = React.useState('');
 
   const [elements, setElements] = React
     .useState([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]);
+
+  React.useEffect(() => {
+    (async function () {
+      if (id) {
+        const { data } = await getOnePost(id);
+        setDescription(data?.data?.text);
+      }
+    }());
+  }, [id]);
 
   React.useEffect(() => {
     if (checkedItems.length) {
@@ -54,16 +66,30 @@ function AddPostSecondStep() {
   const RenderElements = React.useCallback(() => {
     return elements?.length ? elements.map((el) => {
       return (
-        <Pressable onPress={handleGoToSwiper} key={el.id} size="66px" position="relative">
-          <Image
-            zIndex={1}
-            borderRadius="10px"
-            borderWidth={el?.uri ? '2px' : '0'}
-            borderColor="#D4DAEC"
-            size="68px"
-            source={el?.uri ? { uri: el.uri } : require('../../assets/images/icons/posts/placeholder.png')}
-          />
-        </Pressable>
+        <View key={el.id} size="66px" position="relative">
+
+          <Pressable onPress={handleGoToSwiper} key={el.id} size="66px">
+            <Image
+              zIndex={1}
+              borderRadius="10px"
+              borderWidth={el?.uri ? '2px' : '0'}
+              borderColor="#D4DAEC"
+              size="68px"
+              source={el?.uri ? { uri: el.uri } : require('../../assets/images/icons/posts/placeholder.png')}
+            />
+          </Pressable>
+          {el?.duration ? (
+            <Image
+              source={require('../../assets/images/icons/posts/video.png')}
+              height="12px"
+              position="absolute"
+              top="10px"
+              right="10px"
+              width="10px"
+            />
+          ) : null}
+        </View>
+
       );
     }) : null;
 
@@ -137,7 +163,15 @@ function AddPostSecondStep() {
   };
 
   const publicHandlerPost = async () => {
-    if (description) {
+    if (id) {
+      start();
+      await updatePost(id, description).then(async () => {
+        await getMyWishLists();
+        reload();
+        await goToPostsUser();
+      });
+      stop();
+    } else if (description) {
       start();
       try {
         let links = [];
@@ -217,6 +251,7 @@ function AddPostSecondStep() {
         bottomOffset: 95
       });
     }
+
   };
 
   return (
@@ -226,8 +261,8 @@ function AddPostSecondStep() {
     >
       <Header
         cancel
-        backHandler={onPrevStep}
-        title="Новый пост"
+        backHandler={id ? goBack : onPrevStep}
+        title={id ? 'Редактирование поста' : 'Новый пост'}
         navigation={navigation}
       />
       {loading ? <Loader /> : (
@@ -242,20 +277,24 @@ function AddPostSecondStep() {
                 setData={setFriends}
               />
               )}
-              <Text fontSize="15px" fontWeight="600">Фото и видео</Text>
-              <ScrollView minHeight="68px" maxHeight="68px" marginTop="20px" horizontal>
-                <HStack space={3}>
-                  {RenderElements()}
-                </HStack>
-              </ScrollView>
-              <Text
-                maxWidth="310px"
-                marginTop="15px"
-                fontSize="13px"
-                color={COLORS.gray}
-              >
-                Ты можешь вернуться назад, чтобы выбрать другие фото или видео
-              </Text>
+              {!id && (
+              <>
+                <Text fontSize="15px" fontWeight="600">Фото и видео</Text>
+                <ScrollView minHeight="68px" maxHeight="68px" marginTop="20px" horizontal>
+                  <HStack space={3}>
+                    {RenderElements()}
+                  </HStack>
+                </ScrollView>
+                <Text
+                  maxWidth="310px"
+                  marginTop="15px"
+                  fontSize="13px"
+                  color={COLORS.gray}
+                >
+                  Ты можешь вернуться назад, чтобы выбрать другие фото или видео
+                </Text>
+              </>
+              )}
               <InputText
                 disabled={disabled}
                 setDisabled={setDisabled}
@@ -265,7 +304,7 @@ function AddPostSecondStep() {
                 maxLength={300}
                 maxHeight="200px"
                 onChange={handleDescription}
-                marginTop="30px"
+                marginTop={id ? '200px' : '30px'}
                 label="Текст поста"
               />
               <Text
@@ -284,7 +323,7 @@ function AddPostSecondStep() {
           </ScrollView>
           <Box alignItems="center" height="15%" pt="20px" width="100%" backgroundColor={COLORS.white2}>
             <AuthButton onPress={publicHandlerPost} active>
-              Опубликовать
+              {id ? 'Сохранить' : 'Опубликовать'}
             </AuthButton>
           </Box>
         </>

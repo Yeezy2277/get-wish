@@ -1,17 +1,15 @@
 import React from 'react';
 import {
-  Avatar, FlatList, HStack, Pressable, Text, View, VStack
+  FlatList, Text, View
 } from 'native-base';
-import FastImage from 'expo-fast-image';
-import { useSelector } from 'react-redux';
 import { COLORS } from '../../functions/constants';
-import useReload from '../../hooks/useReload';
-import { getLikes, like, unLike } from '../../redux/actions/postsActions';
+import { getLikes } from '../../redux/actions/postsActions';
 import LikesBody from '../../components/Posts/LikesBody';
 
-function Likes({ navigation, route: { params: { likes, postId } } }) {
+function Likes({ navigation, route: { params: { lenta, my, postId } } }) {
   const parent = navigation.getParent();
   const [data, setData] = React.useState([]);
+  console.log(lenta, my);
 
   React.useEffect(() => {
     (async function () {
@@ -42,7 +40,7 @@ function Likes({ navigation, route: { params: { likes, postId } } }) {
           width="100%"
           renderItem={({ item: el }) => {
             return (
-              <LikesBody el={el} postId={postId} />
+              <LikesBody lenta my el={el} postId={postId} />
             );
           }}
         />
