@@ -21,25 +21,36 @@ function PostLenta({ empty = true }) {
   }, []);
   return (
     <>
+      <ScrollView
+          width="100%"
+          height="100%"
+          backgroundColor={COLORS.white2}
+          display="flex"
+          flex={1}
+          refreshControl={(
+              <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+              />
+          )}
+      >
       {lentaPosts?.length ? (
         <FlatList
-          refreshControl={(
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-            )}
           data={lentaPosts}
           keyExtractor={(item) => item.id}
           width="100%"
           backgroundColor={COLORS.white2}
           display="flex"
+          style={{
+              marginBottom: 130
+          }}
           flex={1}
           renderItem={({ item: el }) => {
             return <PostBody lenta key={el.id} my={false} el={el} more />;
           }}
         />
       ) : <EmptyPost variant={1} />}
+      </ScrollView>
     </>
   );
 }

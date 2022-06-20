@@ -266,3 +266,4 @@ export const isVideo = (uri) => {
   }
   return false;
 };
+

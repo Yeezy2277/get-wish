@@ -10,6 +10,7 @@ import { AddPostContext } from '../../screens/Posts/AddPost';
 import { WishListContainer } from '../../styles/wishlist';
 import { COLORS } from '../../functions/constants';
 import InputText from '../Inputs/InputText';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AuthButton from '../Shared/AuthButton';
 import {
   covertToBlob, findVideoOrImageByStore, goBack, goToPostsUser, goToSwiper, goToUserPost, isVideo
@@ -27,6 +28,7 @@ function AddPostSecondStep() {
   const {
     navigation, checkedItems, step, id, onPrevStep
   } = React.useContext(AddPostContext);
+  const [onFocus, setOnFocus] = React.useState(false)
   const [disabled, setDisabled] = React.useState(false);
   const [description, setDescription] = React.useState('');
 
@@ -148,6 +150,8 @@ function AddPostSecondStep() {
 
   const clearResults = React.useCallback(() => setTerm(''), []);
 
+  console.log('id', id)
+
   const handleChooseUser = (username) => {
     if (description.split('@').length === 1) {
       const text = description.split('@')[0];
@@ -181,21 +185,24 @@ function AddPostSecondStep() {
         let users = desc.match(/\@[a-zA-Z]*/gm);
         if (users?.length) {
           for await (let user of users) {
-            const { data: dataFriendsTag } = await getFriends(user.split('@')[1], false);
-            dataFriendsTag.forEach((friend) => {
-              if (friend.username === user.split('@')[1]) {
-                friends.push({ name: friend.username, id: friend.id });
-              }
-            });
+            if (user?.split('@')?.length > 1) {
+              const { data: dataFriendsTag } = await getFriends(user?.split('@')[1], false);
+              dataFriendsTag?.forEach((friend) => {
+                if (friend.username === user.split('@')[1]) {
+                  friends.push({ name: friend.username, id: friend.id });
+                }
+              });
+            }
           }
-          friends.filter((item) => {
+          friends?.filter((item) => {
             if (!friendsUnique.some((element) => element.id === item.id)) {
               friendsUnique.push(item);
             }
           });
-          users.forEach((el) => {
+          users?.forEach((el) => {
             let object = friendsUnique.find((unique) => unique.name === el.split('@')[1]);
-            desc = desc.replace(el, `<@${object.id}>`);
+            if (object?.id)
+            desc = desc?.replace(el, `<@${object?.id}>`);
           });
         }
         if (checkedItems?.length) {
@@ -209,23 +216,17 @@ function AddPostSecondStep() {
               nameType = 'video';
             }
             let type = match ? `${nameType}/${match[1].toLowerCase()}` : nameType;
-            links.push({ filename: id.filename, uri: Platform.OS === 'ios' ? id.localUri : id.uri, type });
+            links.push({ name: id.filename, uri: Platform.OS === 'ios' ? id.localUri
+                  : id.uri, type });
           }
         }
         if (links?.length) {
           let otherElements = [...links];
           let first = otherElements.shift();
-          let blob;
-          if (Platform.OS === 'ios') blob = await covertToBlob(first.uri);
-          else {
-            const link = first.uri.replace('file:///', 'file:/');
-            await Blob.build(first.uri);
-          }
-          const idFirst = await addNewPost(blob);
+          const idFirst = await addNewPost(first);
           if (otherElements?.length) {
             for await (let otherElement of otherElements) {
-              let blobOther = await covertToBlob(otherElement.uri);
-              await addNewPost(blobOther, idFirst);
+              await addNewPost(otherElement, idFirst);
             }
           }
           await editPost(idFirst, desc).then(async () => {
@@ -255,10 +256,11 @@ function AddPostSecondStep() {
   };
 
   return (
-    <View style={{
-      Height: 'auto', maxHeight: screenHeight, flex: 1, position: 'relative'
-    }}
-    >
+      <KeyboardAwareScrollView
+          style={{ backgroundColor: COLORS.white, flex: 1 }}
+          contentContainerStyle={{
+            Height: 'auto', maxHeight: screenHeight, flex: 1, position: 'relative'
+          }}>
       <Header
         cancel
         backHandler={id ? goBack : onPrevStep}
@@ -271,6 +273,7 @@ function AddPostSecondStep() {
             <WishListContainer style={{ paddingTop: 20 }}>
               {showFriends && (
               <PostListFriendElement
+                  top={Platform.OS === 'ios' && onFocus ? '5%' : '0px'}
                 handleChooseUser={handleChooseUser}
                 debouncedTerm={debouncedTerm}
                 data={friends}
@@ -296,6 +299,7 @@ function AddPostSecondStep() {
               </>
               )}
               <InputText
+                  onFocus={setOnFocus}
                 disabled={disabled}
                 setDisabled={setDisabled}
                 description
@@ -328,7 +332,7 @@ function AddPostSecondStep() {
           </Box>
         </>
       )}
-    </View>
+      </KeyboardAwareScrollView>
   );
 }
 

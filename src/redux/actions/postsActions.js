@@ -4,21 +4,36 @@ import {
   DELETE_COMMENT,
   LIKE, REMOVE_POST, SET_COMMENTS, SET_POSTS_FOR_LENTA, SET_POSTS_USER, SET_POSTS_USER_OTHER, UNLIKE
 } from '../constants/postsConstants';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from 'expo-file-system';
+import {dataURItoBlob} from "../../functions/helpers";
+import {FileSystemSessionType} from "expo-file-system";
 
 export const addNewPost = async (file, id) => {
-  return new Promise((resolve, reject) => {
-    const data = new FormData();
-    data.append('file', file);
-    id && data.append('id', id);
-    $authHost.post('/api/v1/post/attachment/upload', data, {
+  let token = `Bearer ${await AsyncStorage.getItem('token')}`;
+  return new Promise((resolve) => {
+    FileSystem.uploadAsync(`https://wish.dev39.ru/api/v1/post/attachment/upload`, file?.uri, {
       headers: {
+        "Content-Type": "multipart/form-data",
         Accept: 'application/json',
-        'content-type': 'multipart/form-data',
-      }
+        Authorization: token
+      },
+      httpMethod: 'POST',
+      fieldName: 'file',
+      mimeType: file?.type,
+      parameters: {
+        ...(id && { id })
+      },
+      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+      sessionType: FileSystemSessionType.BACKGROUND,
     }).then((response) => {
-      resolve(response.data.data.id);
-    }).catch(((error) => reject(error)));
-  });
+      const answer = JSON.parse(response.body);
+      resolve(answer.data.id)
+    })
+        .catch((error) => {
+          console.log("Upload error " + error);
+        });
+  })
 };
 
 export const editPost = async (id, text) => {
@@ -34,7 +49,7 @@ export const editPost = async (id, text) => {
 export const getMyWishLists = async () => {
   const { user: { userInfo: { id } } } = store.getState();
   return new Promise((resolve) => {
-    const res = $authHost.get(`/api/v1/user/${id}/posts`).then((reponse) => {
+    const res = $authHost.get(`/api/v1/user/${id}/posts?take=100`).then((reponse) => {
       store?.dispatch({ type: SET_POSTS_USER, payload: reponse?.data?.data });
     });
     resolve(res?.data);

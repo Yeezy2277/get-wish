@@ -13,6 +13,7 @@ import { COLORS } from '../../functions/constants';
 import AuthButton from '../Shared/AuthButton';
 import { cancelRequest, deleteFriend, sendRequest } from '../../redux/actions/userActions';
 import {useI18n} from "../../i18n/i18n";
+import {declOfNum} from "../../functions/helpers";
 
 function TopPanel() {
   const { oneUser } = useSelector((state) => state.user);
@@ -61,11 +62,11 @@ function TopPanel() {
         <HStack alignItems="center">
           <Box paddingRight="22.5px" paddingLeft="22.5px">
             <Text fontSize={15} fontWeight="bold" textAlign="center">{oneUser?.friends}</Text>
-            <Text fontSize={13} textAlign="center">друзей</Text>
+            <Text fontSize={13} textAlign="center">{declOfNum(oneUser?.friends, ['друг', 'друга', 'друзей'])}</Text>
           </Box>
           <Box paddingRight="22.5px" paddingLeft="22.5px">
-            <Text fontSize={15} fontWeight="bold" textAlign="center">0</Text>
-            <Text fontSize={13} textAlign="center">постов</Text>
+            <Text fontSize={15} fontWeight="bold" textAlign="center">{oneUser?.posts}</Text>
+            <Text fontSize={13} textAlign="center">{declOfNum(oneUser?.posts, ['пост', 'поста', 'постов'])}</Text>
           </Box>
           <Box paddingRight="22.5px" paddingLeft="22.5px">
             <Text fontSize={15} fontWeight="bold" textAlign="center">0</Text>

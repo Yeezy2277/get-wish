@@ -147,6 +147,7 @@ function PostBody({
     reload();
   };
 
+
   const HasYourLike = React.useMemo(() => {
     let has = false;
     if (el?.likes?.liked) {
@@ -154,9 +155,9 @@ function PostBody({
     }
     return has;
 
-  }, [el?.likes?.liked, lentaPosts, userPosts, otherUserPosts, reloadValue, reloadValueGlobal, el]);
+  }, [el?.likes?.friends, el?.likes?.liked, lentaPosts, userPosts, otherUserPosts, reloadValue, reloadValueGlobal, el]);
 
-  const handleDoublePress = () => {
+    const handleDoublePress = () => {
     let delta = new Date().getTime() - lastPress;
     if (delta < 200) {
       if (HasYourLike) {

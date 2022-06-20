@@ -37,7 +37,15 @@ function TutorialPosts({ setShowTutorial }) {
             />
           </Pressable>
           <Image marginTop={smallSmart ? '20%' : '25%'} alignSelf="center" width="350px" height="541px" source={require('../../assets/images/icons/posts/tutorial_top.png')} />
-          <Image marginTop="60px" alignSelf="center" width="100%" maxWidth="335px" height="50px" source={require('../../assets/images/icons/posts/tutorial_bottom.png')} />
+            <Pressable onPress={async () => {
+                await AsyncStorage.setItem(
+                    'showTutorialPosts',
+                    'true'
+                );
+                setShowTutorial(false);
+            }}>
+                <Image marginTop="60px" alignSelf="center" width="100%" maxWidth="335px" height="50px" source={require('../../assets/images/icons/posts/tutorial_bottom.png')} />
+            </Pressable>
         </VStack>
       </ScrollView>
     </Box>

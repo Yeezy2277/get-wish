@@ -122,6 +122,7 @@ function AddPostFirstStep() {
 
   };
 
+
   const RenderZoomElement = React.useCallback((init) => {
     return selectedImage?.uri
       ? (

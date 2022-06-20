@@ -16,7 +16,7 @@ function Posts({ navigation }) {
     public: PostLenta,
     private: PostMy,
   });
-  const [showTutorial, setShowTutorial] = React.useState(false);
+  const [showTutorial, setShowTutorial] = React.useState(true);
   const parent = navigation.getParent();
 
   React.useEffect(() => {

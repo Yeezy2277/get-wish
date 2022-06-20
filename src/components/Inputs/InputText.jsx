@@ -8,7 +8,7 @@ import ChoseWishActionsheet from '../Actionsheet/ChoseWishActionsheet';
 
 function InputText({
   value, onChange, marginTop = '0px', marginBottom = '0px', label = 'Название', link = false,
-  description = false, select = false, active, setActive, data, disabled, setDisabled, maxHeight = '150px',
+  description = false, onFocus, select = false, active, setActive, data, disabled, setDisabled, maxHeight = '150px',
   height, maxLength = 150
 }) {
 
@@ -31,9 +31,15 @@ function InputText({
   };
   const handleBlur = () => {
     setFocused(false);
+    if (onFocus) {
+      onFocus(true)
+    }
   };
   const handleFocus = () => {
     setFocused(true);
+    if (onFocus) {
+      onFocus(true)
+    }
   };
 
   const Right = React.useCallback(() => {

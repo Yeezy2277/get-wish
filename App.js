@@ -10,8 +10,8 @@ import { AppRouter } from './src/components';
 import store from './src/redux';
 import { toastConfig, toastConfigWithoutNativeBase } from './src/functions/helpers';
 import './src/i18n/i18n';
+import { registerRootComponent } from 'expo';
 
-TextInput.defaultProps.selectionColor = '#8424FF';
 
 const customFonts = {
   Nunito: require('./src/assets/fonts/NunitoRegular.ttf'),
@@ -63,3 +63,5 @@ export default function App() {
     </Provider>
   );
 }
+
+registerRootComponent(App);

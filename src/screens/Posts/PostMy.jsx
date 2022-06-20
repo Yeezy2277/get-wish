@@ -41,7 +41,9 @@ function PostMy() {
         {userPosts?.length ? (
           <FlatList
             data={userPosts}
-            numColumns={3}
+            numColumns={3} style={{
+              marginBottom: 130
+          }}
             columnWrapperStyle={{ display: 'flex', flexDirection: 'row' }}
             key="_"
             keyExtractor={(item) => `_${item.id}`}

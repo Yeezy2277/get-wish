@@ -14,7 +14,7 @@ function AddPost({ navigation, ...props }) {
   const [step, setStep] = React.useState(id ? 1 : 0);
   const Step = StepsComponents[step];
   const parent = navigation.getParent();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   React.useEffect(() => {
     parent.setOptions({ tabBarStyle: { display: 'none' } });
     return () => {
@@ -22,6 +22,7 @@ function AddPost({ navigation, ...props }) {
     };
   }, [navigation]);
 
+  console.log('id', id)
   const onNextStep = () => {
     setStep((prev) => prev + 1);
   };
