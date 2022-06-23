@@ -19,7 +19,7 @@ import { COLORS } from '../../functions/constants';
 
 function Header({
   navigation, title, more, morePress, avatar, nextHandler,
-  search, archive, cancel = true, cancelText, backHandler
+  search, archive, cancel = true, cancelText, backHandler, nextDisabled
 }) {
   const { route } = navigation;
   const goBack = async () => {
@@ -92,7 +92,7 @@ function Header({
       )}
       {nextHandler && (
       <Text
-        color={COLORS.purple}
+        color={nextDisabled ? COLORS.extralightGray4 : COLORS.purple}
         right="20px"
         top="56px"
         position="absolute"

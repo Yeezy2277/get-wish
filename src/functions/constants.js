@@ -10,6 +10,8 @@ export const COLORS = {
   gray: '#7C82A5',
   gray2: '#C8CCE1',
   extralightGray: '#F7F7F7',
+  extralightGray3: '#e7e7e7',
+  extralightGray4: '#D4DAEC',
   extralightGray2: 'rgba(245,245,245,0.69)',
   purple: '#8424FF',
   transparent: 'transparent',

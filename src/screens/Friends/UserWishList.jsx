@@ -3,7 +3,7 @@ import {
   Box,
   Fab,
   Image,
-  ScrollView, Text
+  ScrollView, Text, View
 } from 'native-base';
 import { Alert, ImageBackground } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -149,7 +149,7 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
             />
           )
             : (
-              <>
+              <View height="88px">
                 <HeaderPressable onPress={() => {
                   if (backToWish) {
                     goToWishList();
@@ -167,7 +167,7 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
                       : (oneUser?.avatar ? { uri: oneUser.avatar } : require('../../assets/images/icons/profile/avatar.png'))}
                   />
                 </HeaderPressableAvatar>
-              </>
+              </View>
             )}
           <ScrollView
             display="flex"
@@ -175,7 +175,7 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
             onScroll={handleScroll}
             width="100%"
             height="100%"
-            paddingTop={showHeader ? '0' : '78px'}
+            paddingTop={'0'}
           >
             <Text
               fontFamily="NunitoBold"

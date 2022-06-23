@@ -162,6 +162,7 @@ function PostsStack() {
       <Stack.Screen options={{ header: (navigation) => <Header title="Комментарии" navigation={navigation} /> }} name="Comments" component={Comments} />
       <Stack.Screen options={{ header: (navigation) => <Header title="Нравится" navigation={navigation} /> }} name="Likes" component={Likes} />
       <Stack.Screen options={{ headerShown: false }} name="ShareScreen" component={ShareScreen} />
+        <Stack.Screen options={{ header: (navigation) => <Header title="Посты" navigation={navigation} /> }} name="UserPostOther" component={PostUserOthere} />
     </Stack.Navigator>
   );
 }

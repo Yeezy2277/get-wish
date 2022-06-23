@@ -21,6 +21,9 @@ function CommentsBody({ el }) {
       setIsYourComment(true);
     }
   }, [el?.user.id, userInfo.id]);
+
+  console.log(el?.text)
+
   return (
     <View
       key={el.id}

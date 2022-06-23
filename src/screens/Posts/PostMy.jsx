@@ -47,11 +47,11 @@ function PostMy() {
             columnWrapperStyle={{ display: 'flex', flexDirection: 'row' }}
             key="_"
             keyExtractor={(item) => `_${item.id}`}
-            renderItem={({ item: el }) => {
+            renderItem={({ item: el, index }) => {
               return (
                 <Pressable
                   key={el.id}
-                  onPress={() => goToMyPost({ id: el.id })}
+                  onPress={() => goToMyPost({ id: el.id, index })}
                   height="125px"
                   width="33.2%"
                   borderWidth={1}

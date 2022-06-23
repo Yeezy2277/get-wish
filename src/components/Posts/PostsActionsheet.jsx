@@ -51,7 +51,7 @@ function PostsActionsheet({
             active
             onPress={() => setOpen(false)}
           >
-            {t('okay')}
+            Понятненько!
           </AuthButton>
         </ActionDesires>
       </Actionsheet.Content>

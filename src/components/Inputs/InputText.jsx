@@ -18,6 +18,7 @@ function InputText({
   let style = {
     left: 18,
     zIndex: 10,
+    height: '100%',
     position: 'absolute',
     top: _animatedIsFocused.interpolate({
       inputRange: [0, 1],
@@ -110,9 +111,10 @@ function InputText({
             onPress={handleChangeVisible}
             paddingLeft="16.5px"
             borderWidth={0}
-            backgroundColor={COLORS.extralightGray}
+            backgroundColor={disabled ? COLORS.extralightGray3 : COLORS.extralightGray}
             borderRadius="12px"
             position="relative"
+            _disabled={disabled}
             zIndex={11}
             height="56px"
             display="flex"
@@ -191,7 +193,7 @@ function InputText({
         multiline={description}
         type="text"
         fontSize="15px"
-        onFocus={handleFocus}
+        onFocus={handleFocus} style={{textAlignVertical: 'top'}}
         onBlur={handleBlur}
         rightElement={link ? <Right /> : description ? <TextInfo /> : null}
         paddingRight="18px"

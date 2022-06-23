@@ -11,7 +11,7 @@ import { Asset } from 'expo';
 import NavigationService, { navigateAction, navigationRef } from './NavigationService';
 import { COLORS } from './constants';
 import MyPost from '../screens/Posts/MyPost';
-import { getOneUser } from '../redux/actions/userActions';
+import {getFriends, getOneUser} from '../redux/actions/userActions';
 import { userCRUD } from '../http/CRUD';
 import { changeUserInfo } from '../redux/actions/authActions';
 
@@ -267,3 +267,32 @@ export const isVideo = (uri) => {
   return false;
 };
 
+export const parseTags = async (text) => {
+  let friends = [];
+  let friendsUnique = [];
+  let desc = text;
+  let users = desc.match(/\@[a-zA-Z]*/gm);
+  if (users?.length) {
+    for await (let user of users) {
+      if (user?.split('@')?.length > 1) {
+        const { data: dataFriendsTag } = await getFriends(user?.split('@')[1], false);
+        dataFriendsTag?.forEach((friend) => {
+          if (friend.username === user.split('@')[1]) {
+            friends.push({ name: friend.username, id: friend.id });
+          }
+        });
+      }
+    }
+    friends?.filter((item) => {
+      if (!friendsUnique.some((element) => element.id === item.id)) {
+        friendsUnique.push(item);
+      }
+    });
+    users?.forEach((el) => {
+      let object = friendsUnique.find((unique) => unique.name === el.split('@')[1]);
+      if (object?.id)
+        desc = desc?.replace(el, `<@${object?.id}>`);
+    });
+  }
+  return desc
+}

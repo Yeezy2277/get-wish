@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import {Dimensions, Platform} from 'react-native';
 import {
   Avatar, Box, HStack, Image, Input, Pressable, Text, View, VStack, FlatList
 } from 'native-base';
@@ -12,7 +12,7 @@ import PostListFriendElement from './PostListFriendElement';
 import TextParser from '../Shared/TextParser';
 import { getComments, sendComment } from '../../redux/actions/postsActions';
 import CommentsBody from './CommentsBody';
-import { SET_COMMENTS } from '../../redux/constants/postsConstants';
+import {parseTags} from "../../functions/helpers";
 
 function Comments({
   navigation, route: {
@@ -42,7 +42,8 @@ function Comments({
   }, [dispatch, postId]);
 
   const handleSendComment = async () => {
-    await sendComment(postId, comment);
+    const commentParse = await parseTags(comment)
+    await sendComment(postId, commentParse);
     setComment('');
   };
 
@@ -111,7 +112,16 @@ function Comments({
 
   }, []);
 
+  const [onFocus, setFocused] = React.useState(false);
+
   const clearResults = React.useCallback(() => setTerm(''), []);
+
+  const handleBlur = () => {
+    setFocused(false);
+  };
+  const handleFocus = () => {
+    setFocused(true);
+  };
 
   const handleChooseUser = (username) => {
     if (comment.split('@').length === 1) {
@@ -142,6 +152,7 @@ function Comments({
         {showFriends && (
         <PostListFriendElement
           full
+          top={Platform.OS === 'ios' && onFocus ? '5%' : '0px'}
           handleChooseUser={handleChooseUser}
           debouncedTerm={debouncedTerm}
           data={friends}
@@ -222,6 +233,8 @@ function Comments({
             borderRadius="18px"
             InputRightElement={<RightIcon />}
             fontSize="15px"
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             borderWidth={0}
             backgroundColor="#F7F7F7"
             placeholder="Твой комментарий"

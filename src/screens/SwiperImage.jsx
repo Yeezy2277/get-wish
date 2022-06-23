@@ -6,8 +6,7 @@ import {
 import {
   Box, Image, Pressable, Text
 } from 'native-base';
-import { Video, AVPlaybackStatus } from 'expo-av';
-import * as MediaLibrary from 'expo-media-library';
+import { Video } from 'expo-av';
 import { COLORS } from '../functions/constants';
 import { findVideoFromStore, goBack } from '../functions/helpers';
 import { Loader } from '../components';
@@ -21,7 +20,12 @@ function RenderImage({ currentPage, images }) {
   React.useEffect(() => {
     (async function startPlayer() {
       if (isVideo) {
-        const response = await findVideoFromStore(images, currentPage.source.uri);
+        let response;
+        if (typeof isVideo === 'string')
+          response = await findVideoFromStore(images, currentPage.source.uri);
+        else if (typeof isVideo === 'boolean') {
+          response = currentPage.source.uri;
+        }
         setLink(response);
         await video.current.playAsync();
       }
@@ -45,7 +49,7 @@ function RenderImage({ currentPage, images }) {
           style={{ width: '100%', height: 250 }}
           useNativeControls
           resizeMode="cover"
-          isLooping
+          isLooping={false}
           onPlaybackStatusUpdate={(statusLocal) => setStatus(() => statusLocal)}
         />
       </Pressable>

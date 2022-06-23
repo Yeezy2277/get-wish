@@ -27,16 +27,23 @@ const assets = {
 function RenderVideo({ item }) {
   let video = React.useRef(null);
   const [status, setStatus] = React.useState({});
-  return (
+
+
+    const onFullscreenUpdate = ({fullscreenUpdate, status}) => {
+        video.current.dismissFullscreenPlayer()
+    }
+
+    return (
     <Pressable height="375px" width="100%" onPress={() => (status.isPlaying ? video.current.pauseAsync() : video.current.playAsync())}>
       <Video
         source={{
           uri: item,
         }}
+        onFullscreenUpdate={onFullscreenUpdate}
         ref={video}
         style={{ width: '100%', height: 375, zIndex: 5 }}
         useNativeControls
-        resizeMode="cover"
+        resizeMode="contain"
         isLooping
         onPlaybackStatusUpdate={(statusLocal) => setStatus(() => statusLocal)}
       />
@@ -74,7 +81,7 @@ function PostBody({
         )
           : <View height="375px" width="100%"><Image alt="image" zIndex={5} height="375px" width="100%" source={{ uri: item }} /></View>}
 
-        <FadeInOut style={{ bottom: '30%' }} useNativeDriver visible={visible} duration={350}>
+          {!isVideo(item) ? <FadeInOut style={{ bottom: '30%' }} useNativeDriver visible={visible} duration={350}>
           <Image
             onPress={handleDoublePress}
             alt="like_big"
@@ -88,7 +95,7 @@ function PostBody({
               zIndex: 9999,
             }}
           />
-        </FadeInOut>
+        </FadeInOut> : null}
         {el.attachments?.length > 1 ? (
           <View
             position="absolute"
@@ -172,6 +179,14 @@ function PostBody({
   };
 
   const firstLikeUser = el?.likes?.friends[0]?.user?.username;
+
+  const count = React.useMemo(() => {
+      if (el?.likes?.friends?.find(friend => friend.user.id === userInfo.id)) {
+          return el?.likes?.count - 1;
+      } else {
+          return el?.likes?.friends;
+      }
+  }, [])
 
   return (
     <View key={key} paddingBottom="15px" borderBottomWidth={1} borderBottomColor="#EBEFFF">
@@ -278,7 +293,7 @@ function PostBody({
                     <Text fontFamily="NunitoBold">{firstLikeUser}</Text>
                     {' '}
                     {el?.likes?.count > 1
-                      ? `и ещё ${el?.likes?.count}` : null}
+                      ? `и ещё ${count}` : null}
                   </Text>
                 ) : el?.likes?.count ? (
                   <Text>

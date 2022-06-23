@@ -186,6 +186,7 @@ function AddPostFirstStep() {
       <Header
         cancel={false}
         cancelText
+        nextDisabled={!checkedItems?.length}
         nextHandler={onNextStepHandler}
         title="Новый пост"
         navigation={navigation}

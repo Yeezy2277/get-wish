@@ -285,6 +285,7 @@ function AddWish({ navigation, ...props }) {
               setActive={setWishList}
               data={myWishLists}
               select
+              disabled={id}
               value={description}
               onChange={setDescription}
               marginTop="25px"

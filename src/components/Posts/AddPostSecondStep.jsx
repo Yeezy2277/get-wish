@@ -13,7 +13,7 @@ import InputText from '../Inputs/InputText';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AuthButton from '../Shared/AuthButton';
 import {
-  covertToBlob, findVideoOrImageByStore, goBack, goToPostsUser, goToSwiper, goToUserPost, isVideo
+  findVideoOrImageByStore, goBack, goToPostsUser, goToSwiper, goToUserPost, isVideo, parsingUserTag
 } from '../../functions/helpers';
 import PostListFriendElement from './PostListFriendElement';
 import { getFriends } from '../../redux/actions/userActions';
@@ -23,6 +23,7 @@ import {
 } from '../../redux/actions/postsActions';
 import { Loader } from '../index';
 import { reload } from '../../redux/actions/genericActions';
+import {Video} from "expo-av";
 
 function AddPostSecondStep() {
   const {
@@ -39,7 +40,16 @@ function AddPostSecondStep() {
     (async function () {
       if (id) {
         const { data } = await getOnePost(id);
-        setDescription(data?.data?.text);
+        const desc = await parsingUserTag(data?.data?.text);
+        const localElements = elements.map((el, idx) => {
+          if (data?.data?.attachments[idx]) {
+            const video = isVideo(data?.data?.attachments[idx])
+            return { uri: data?.data.attachments[idx], duration: video ? true : null };
+          }
+          return { ...el };
+        });
+        setElements(localElements);
+        setDescription(desc?.description);
       }
     }());
   }, [id]);
@@ -58,7 +68,12 @@ function AddPostSecondStep() {
 
   const handleGoToSwiper = () => {
     goToSwiper({
-      images: checkedItems.map((el) => {
+      images: id ? elements.filter(fil => fil.uri).map((el) => {
+        if (isVideo(el.uri)) {
+          return { url: el.uri, width: Dimensions.get('screen').width, height: 390, ...el };
+        }
+        return { url: el.uri, ...el };
+      }) :  checkedItems.map((el) => {
         return { url: el.uri, ...el };
       }),
       hidePanel: true
@@ -71,16 +86,24 @@ function AddPostSecondStep() {
         <View key={el.id} size="66px" position="relative">
 
           <Pressable onPress={handleGoToSwiper} key={el.id} size="66px">
-            <Image
-              zIndex={1}
-              borderRadius="10px"
-              borderWidth={el?.uri ? '2px' : '0'}
-              borderColor="#D4DAEC"
-              size="68px"
-              source={el?.uri ? { uri: el.uri } : require('../../assets/images/icons/posts/placeholder.png')}
-            />
+            {id && isVideo(el.uri) ? <Video
+                source={{
+                  uri: el.uri,
+                }}
+                style={{ borderWidth: el?.uri ? '2px' : '0', borderColor: '#D4DAEC', borderRadius:
+                      10, width: 68, height: 68 }}
+                resizeMode="cover"
+                isLooping={false}
+            /> : <Image
+                zIndex={1}
+                borderRadius="10px"
+                borderWidth={el?.uri ? '2px' : '0'}
+                borderColor="#D4DAEC"
+                size="68px"
+                source={el?.uri ? { uri: el.uri } : require('../../assets/images/icons/posts/placeholder.png')}
+            />}
           </Pressable>
-          {el?.duration ? (
+          {el?.duration || isVideo(el?.uri) ? (
             <Image
               source={require('../../assets/images/icons/posts/video.png')}
               height="12px"
@@ -132,6 +155,7 @@ function AddPostSecondStep() {
     }());
   }, [term]);
 
+
   const onSearchSubmit = React.useCallback(async (value) => {
     try {
       const { data } = await getFriends(value, false);
@@ -149,8 +173,6 @@ function AddPostSecondStep() {
   }, []);
 
   const clearResults = React.useCallback(() => setTerm(''), []);
-
-  console.log('id', id)
 
   const handleChooseUser = (username) => {
     if (description.split('@').length === 1) {
@@ -280,8 +302,6 @@ function AddPostSecondStep() {
                 setData={setFriends}
               />
               )}
-              {!id && (
-              <>
                 <Text fontSize="15px" fontWeight="600">Фото и видео</Text>
                 <ScrollView minHeight="68px" maxHeight="68px" marginTop="20px" horizontal>
                   <HStack space={3}>
@@ -293,11 +313,9 @@ function AddPostSecondStep() {
                   marginTop="15px"
                   fontSize="13px"
                   color={COLORS.gray}
-                >
-                  Ты можешь вернуться назад, чтобы выбрать другие фото или видео
-                </Text>
-              </>
-              )}
+                >{id ? 'При редактировании менять фото нельзя' :
+                    'Ты можешь вернуться назад, чтобы выбрать другие фото или видео'
+                }</Text>
               <InputText
                   onFocus={setOnFocus}
                 disabled={disabled}
@@ -308,13 +326,13 @@ function AddPostSecondStep() {
                 maxLength={300}
                 maxHeight="200px"
                 onChange={handleDescription}
-                marginTop={id ? '200px' : '30px'}
+                marginTop="30px"
                 label="Текст поста"
               />
               <Text
                 fontSize="13px"
                 color={COLORS.gray}
-                maxWidth="306px"
+                maxWidth="100%"
                 marginTop="15px"
               >
                 А ты знал, что можно ввести символ
