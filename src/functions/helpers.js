@@ -236,11 +236,12 @@ export const parsingUserTag = async (description) => {
     for await (const tag of tags) {
       let id = tag.split('@')[1].split('>')[0];
       let { data: dataTag } = await getOneUser(id);
-      users.push({ username: dataTag.username, id: dataTag.id });
+
+      users = [...users, { username: dataTag.username, id: dataTag.id }]
     }
     users.filter((item) => {
-      if (!usersUnique.some((element) => element.id === item.id)) {
-        usersUnique.push(item);
+      if (!usersUnique.some((element) => element.id == item.id)) {
+        usersUnique = [...usersUnique, item];
       }
     });
     tags.forEach((el) => {
@@ -248,7 +249,7 @@ export const parsingUserTag = async (description) => {
       newDesc = newDesc.replace(el, `@${object.username}`);
     });
   }
-  return { description: newDesc, users: usersUnique };
+  return { description: newDesc, users: usersUnique, tags: tags };
 };
 
 export const handleGoToUser = async (id) => {

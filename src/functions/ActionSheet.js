@@ -233,6 +233,12 @@ export class ActionSheets {
           }, async (buttonIndexChild) => {
             if (buttonIndexChild === 1) {
               await deletePost(id);
+              Toast.show({
+                type: 'search',
+                text1: 'Пост удалён',
+                position: 'bottom',
+                bottomOffset: 95
+              })
             }
           });
         }

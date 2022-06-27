@@ -10,7 +10,7 @@ import {
 } from '../../redux/actions/userActions';
 
 function PostListFriendElement({
-  data, handleChooseUser, first = false, full, top = "0px"
+  data, handleChooseUser, full2, first = false, full, top = "0px"
 }) {
   const { width } = Dimensions.get('window');
 
@@ -25,7 +25,7 @@ function PostListFriendElement({
       left={0}
       right={0}
       backgroundColor={COLORS.white2}
-      height={full ? '80%' : '194px'}
+      height={full2 ? '87%' : full ? '80%' : '194px'}
       width={width}
       top={top}
     >

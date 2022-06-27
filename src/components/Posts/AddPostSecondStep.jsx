@@ -128,12 +128,17 @@ function AddPostSecondStep() {
 
   const handleDescription = async (val) => {
     setDescription(val);
-    if (val.includes('@') && val[val.length - 1] === '@') {
-      const { data } = await getFriends();
-      setFriends(data);
+    const array = val.match(/\@[a-z]*/gm);
+    if ((val.endsWith(val.match(/\@[a-z]*/gm)[0]) || val.endsWith(array[array.length - 1]))) {
+      if (array[array?.length - 1].length === 1 || array[0]?.length === 1) {
+        const { data } = await getFriends();
+        setFriends(data);
+      }
       setShowFriends(true);
-      if (val.split('@')[1].length) {
-        setDebouncedTerm(val.split('@')[1]);
+      if (array[array.length - 1]?.length) {
+        setDebouncedTerm(array[array.length - 1].split('@')[1]);
+      } else {
+        setDebouncedTerm(array[0].split('@')[1])
       }
     } else {
       setShowFriends(false);
@@ -195,37 +200,46 @@ function AddPostSecondStep() {
         await getMyWishLists();
         reload();
         await goToPostsUser();
+        Toast.show({
+          type: 'search',
+          text1: 'Пост успешно изменен',
+          position: 'bottom',
+          bottomOffset: 95
+        })
       });
       stop();
-    } else if (description) {
+    } else {
       start();
       try {
         let links = [];
         let friends = [];
         let friendsUnique = [];
-        let desc = description;
-        let users = desc.match(/\@[a-zA-Z]*/gm);
-        if (users?.length) {
-          for await (let user of users) {
-            if (user?.split('@')?.length > 1) {
-              const { data: dataFriendsTag } = await getFriends(user?.split('@')[1], false);
-              dataFriendsTag?.forEach((friend) => {
-                if (friend.username === user.split('@')[1]) {
-                  friends.push({ name: friend.username, id: friend.id });
-                }
-              });
+        let desc = '';
+        if (description.length) {
+          desc = description;
+          let users = desc.match(/\@[a-zA-Z]*/gm);
+          if (users?.length) {
+            for await (let user of users) {
+              if (user?.split('@')?.length > 1) {
+                const { data: dataFriendsTag } = await getFriends(user?.split('@')[1], false);
+                dataFriendsTag?.forEach((friend) => {
+                  if (friend.username === user.split('@')[1]) {
+                    friends.push({ name: friend.username, id: friend.id });
+                  }
+                });
+              }
             }
+            friends?.filter((item) => {
+              if (!friendsUnique.some((element) => element.id === item.id)) {
+                friendsUnique.push(item);
+              }
+            });
+            users?.forEach((el) => {
+              let object = friendsUnique.find((unique) => unique.name === el.split('@')[1]);
+              if (object?.id)
+                desc = desc?.replace(el, `<@${object?.id}>`);
+            });
           }
-          friends?.filter((item) => {
-            if (!friendsUnique.some((element) => element.id === item.id)) {
-              friendsUnique.push(item);
-            }
-          });
-          users?.forEach((el) => {
-            let object = friendsUnique.find((unique) => unique.name === el.split('@')[1]);
-            if (object?.id)
-            desc = desc?.replace(el, `<@${object?.id}>`);
-          });
         }
         if (checkedItems?.length) {
           for await (let element of checkedItems) {
@@ -266,15 +280,7 @@ function AddPostSecondStep() {
       } finally {
         stop();
       }
-    } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Текст поста не может быть пустым',
-        position: 'bottom',
-        bottomOffset: 95
-      });
     }
-
   };
 
   return (

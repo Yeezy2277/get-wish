@@ -5,16 +5,22 @@ import {
 import { COLORS } from '../../functions/constants';
 import { getLikes } from '../../redux/actions/postsActions';
 import LikesBody from '../../components/Posts/LikesBody';
+import useLoader from "../../hooks/useLoader";
 
 function Likes({ navigation, route: { params: { lenta, my, postId } } }) {
   const parent = navigation.getParent();
+  const { start, stop, loading } = useLoader(true);
   const [data, setData] = React.useState([]);
-  console.log(lenta, my);
 
   React.useEffect(() => {
     (async function () {
-      const likesData = await getLikes(postId);
-      setData(likesData);
+      start()
+      try {
+        const likesData = await getLikes(postId);
+        setData(likesData);
+      } finally {
+        stop()
+      }
     }());
   }, [postId]);
 

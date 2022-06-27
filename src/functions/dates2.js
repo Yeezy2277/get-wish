@@ -7,3 +7,8 @@ export const convertComment = (date) => {
   moment.locale('ru');
   return moment(date).startOf('minute').fromNow();
 };
+
+export const convertComment2 = (date) => {
+  moment.locale('ru');
+  return moment(date).startOf('minute');
+};

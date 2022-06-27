@@ -201,3 +201,14 @@ export const getOneUser = async (id) => {
     });
   });
 };
+
+export const openUser = async (tag) => {
+  console.log('tag', tag)
+  return new Promise((resolve, reject) => {
+    $authHost.get(`/api/v1/user/by/username/${tag}`).then(async ({ data }) => {
+      resolve(data);
+    }).catch((error) => {
+      reject(parseError(error));
+    });
+  });
+};

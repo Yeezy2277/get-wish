@@ -3,7 +3,7 @@ import {
   Avatar, HStack, Image, Pressable, Text, View, VStack
 } from 'native-base';
 import Carousel from 'react-native-snap-carousel';
-import { Dimensions, Animated } from 'react-native';
+import {Dimensions, Animated, Platform} from 'react-native';
 import { useSelector } from 'react-redux';
 import FastImage from 'expo-fast-image';
 import FadeInOut from 'react-native-fade-in-out';
@@ -13,11 +13,14 @@ import { COLORS } from '../../functions/constants';
 import { like, unLike } from '../../redux/actions/postsActions';
 import useReload from '../../hooks/useReload';
 import { delay } from '../../functions';
-import { goToComments, goToLikes, isVideo } from '../../functions/helpers';
-import { convertComment } from '../../functions/dates2';
+import {goToComments, goToLikes, goToUserProfile, isVideo} from '../../functions/helpers';
+import {convertComment, convertComment2} from '../../functions/dates2';
 import { TextParser } from '../index';
 import { ActionSheets } from '../../functions/ActionSheet';
 import { useI18n } from '../../i18n/i18n';
+import {changeUserInfo} from "../../redux/actions/authActions";
+import {userCRUD} from "../../http/CRUD";
+import {convertDuration, convertDuration2} from "../../functions/dates";
 
 const assets = {
   like: require('../../assets/images/icons/posts/like.png'),
@@ -28,13 +31,12 @@ function RenderVideo({ item }) {
   let video = React.useRef(null);
   const [status, setStatus] = React.useState({});
 
-
     const onFullscreenUpdate = ({fullscreenUpdate, status}) => {
         video.current.dismissFullscreenPlayer()
     }
 
     return (
-    <Pressable height="375px" width="100%" onPress={() => (status.isPlaying ? video.current.pauseAsync() : video.current.playAsync())}>
+    <Pressable position="relative" height="375px" width="100%" onPress={() => (status.isPlaying ? video.current.pauseAsync() : video.current.playAsync())}>
       <Video
         source={{
           uri: item,
@@ -43,10 +45,32 @@ function RenderVideo({ item }) {
         ref={video}
         style={{ width: '100%', height: 375, zIndex: 5 }}
         useNativeControls
-        resizeMode="contain"
+        resizeMode={Platform.OS === 'ios'  ? "contain" : 'cover'}
         isLooping
         onPlaybackStatusUpdate={(statusLocal) => setStatus(() => statusLocal)}
       />
+        <View
+            position="absolute"
+            right="15px"
+            bottom="15px"
+            width="37px"
+            height="21px"
+            backgroundColor="rgba(26, 26, 26, 0.6)"
+            display="flex"
+            zIndex={99}
+            alignItems="center"
+            justifyContent="center"
+            borderRadius="6px"
+        >
+            <Text
+                fontSize="12px"
+                fontWeight="600"
+                zIndex={111}
+                color="#FFFFFF"
+            >
+                {convertDuration2(status?.positionMillis)}
+            </Text>
+        </View>
     </Pressable>
   );
 }
@@ -81,7 +105,7 @@ function PostBody({
         )
           : <View height="375px" width="100%"><Image alt="image" zIndex={5} height="375px" width="100%" source={{ uri: item }} /></View>}
 
-          {!isVideo(item) ? <FadeInOut style={{ bottom: '30%' }} useNativeDriver visible={visible} duration={350}>
+          {!isVideo(item) ? <FadeInOut  visible={visible} duration={350}>
           <Image
             onPress={handleDoublePress}
             alt="like_big"
@@ -178,36 +202,59 @@ function PostBody({
 
   };
 
-  const firstLikeUser = el?.likes?.friends[0]?.user?.username;
+  const firstLikeUser = React.useMemo(() => {
+      if (el?.likes?.friends?.length) {
+          const names = el?.likes?.friends.map(el => el.user.username);
+          return names.join(', ')
+      }
+      return null
+  }, [el?.likes?.friends])
 
   const count = React.useMemo(() => {
-      if (el?.likes?.friends?.find(friend => friend.user.id === userInfo.id)) {
-          return el?.likes?.count - 1;
+      let count = el?.likes?.count;
+      if (el?.likes?.friends?.length) {
+          el?.likes?.friends.forEach(() => {
+              count = count - 1
+          })
+          if (count === 0) {
+              return  null
+          }
+          return count
       } else {
-          return el?.likes?.friends;
+          return count;
       }
-  }, [])
+  }, [el?.likes, reloadValue, reloadValueGlobal])
+
+    const handlePressFriend = async () => {
+      if (lenta) {
+          const user = await userCRUD.get(el?.user?.id);
+          await changeUserInfo('oneUser', user?.data);
+          await goToUserProfile()
+      }
+    }
 
   return (
     <View key={key} paddingBottom="15px" borderBottomWidth={1} borderBottomColor="#EBEFFF">
-      <HStack alignItems="center" paddingLeft="15px" paddingRight="15px" paddingTop="10px" paddingBottom="10px">
-        <Avatar size="26px" source={el?.user?.avatar ? { uri: el?.user?.avatar } : require('../../assets/images/icons/profile/avatar.png')} />
-        <Text marginLeft="10px" fontSize="16px" color={COLORS.black}>{el?.user.username}</Text>
-        {more && (
-        <Pressable
-          onPress={() => state.showPostAction(el.id, my)}
-          marginLeft="auto"
-          paddingRight="10px"
-          width="20px"
-          height="20px"
-          display="flex"
-          justifyContent="center"
-          alignItems="flex-end"
-        >
-          <Image alt="image" resizeMode="cover" width="3px" height="15px" source={require('../../assets/images/icons/profile/desires/menu.png')} />
-        </Pressable>
-        )}
-      </HStack>
+      <Pressable onPress={handlePressFriend}>
+          <HStack alignItems="center" paddingLeft="15px" paddingRight="15px" paddingTop="10px" paddingBottom="10px">
+              <Avatar size="26px" source={el?.user?.avatar ? { uri: el?.user?.avatar } : require('../../assets/images/icons/profile/avatar.png')} />
+              <Text marginLeft="10px" fontSize="16px" color={COLORS.black}>{el?.user.username}</Text>
+              {more && (
+                  <Pressable
+                      onPress={() => state.showPostAction(el.id, my)}
+                      marginLeft="auto"
+                      paddingRight="10px"
+                      width="20px"
+                      height="20px"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="flex-end"
+                  >
+                      <Image alt="image" resizeMode="cover" width="3px" height="15px" source={require('../../assets/images/icons/profile/desires/menu.png')} />
+                  </Pressable>
+              )}
+          </HStack>
+      </Pressable>
       <View
         display="flex"
         position="relative"
@@ -271,6 +318,7 @@ function PostBody({
                   <Avatar
                     zIndex={idx === 0 ? 3 : idx === 1 ? 2 : 1}
                     borderWidth={2}
+                    marginLeft={idx > 0 ? "-8px" : 0}
                     borderColor={COLORS.white2}
                     size="24px"
                     source={{ uri: el?.user?.avatar }}
@@ -292,7 +340,7 @@ function PostBody({
                     {' '}
                     <Text fontFamily="NunitoBold">{firstLikeUser}</Text>
                     {' '}
-                    {el?.likes?.count > 1
+                    {count > 0
                       ? `и ещё ${count}` : null}
                   </Text>
                 ) : el?.likes?.count ? (
@@ -307,19 +355,20 @@ function PostBody({
           </>
         ) : null}
       </HStack>
-      <Text fontSize="14px" paddingLeft="15px" paddingRight="15px" width="100%" marginTop="10px">
+        {el?.text && <Text fontSize="14px" paddingLeft="15px" paddingRight="15px" width="100%" marginTop="10px">
         <Text fontFamily="NunitoBold">{el?.user?.username}</Text>
         {' '}
         <TextParser
           post={{
             description: el?.text,
             descriptionAuthor: my ? userInfo : oneUser,
-            date: el?.created_at
+            date: el?.created_at,
+              postId: el?.id,
           }}
           maxLenght
           description={el?.text}
         />
-      </Text>
+      </Text>}
       {el?.comments?.friends?.map((com) => {
         return (
           <Text fontSize="14px" paddingLeft="15px" paddingRight="15px" width="100%" marginTop="10px">
@@ -327,9 +376,10 @@ function PostBody({
             {' '}
             <TextParser
               post={{
-                description: com?.text,
-                descriptionAuthor: my ? userInfo : oneUser,
-                date: com?.created_at
+                  description: el?.text,
+                  descriptionAuthor: my ? userInfo : oneUser,
+                  date: el?.created_at,
+                  postId: el?.id,
               }}
               maxLenght
               description={com?.text}

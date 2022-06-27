@@ -9,6 +9,9 @@ import { COLORS } from '../../functions/constants';
 import { convertComment } from '../../functions/dates2';
 import { ActionSheets } from '../../functions/ActionSheet';
 import { useI18n } from '../../i18n/i18n';
+import {userCRUD} from "../../http/CRUD";
+import {changeUserInfo} from "../../redux/actions/authActions";
+import {goToUserProfile} from "../../functions/helpers";
 
 function CommentsBody({ el }) {
   const { userInfo } = useSelector((state) => state.user);
@@ -22,7 +25,14 @@ function CommentsBody({ el }) {
     }
   }, [el?.user.id, userInfo.id]);
 
-  console.log(el?.text)
+  const handleGoToUser = async () => {
+        if (!isYourComment) {
+          const user = await userCRUD.get(el?.user?.id);
+          await changeUserInfo('oneUser', user?.data);
+          await goToUserProfile()
+        }
+  }
+  console.log(el)
 
   return (
     <View
@@ -33,7 +43,7 @@ function CommentsBody({ el }) {
       paddingBottom="8px"
     >
       <HStack space={3}>
-        <Pressable>
+        <Pressable onPress={handleGoToUser}>
           <Avatar
             marginTop="3px"
             size="26px"
@@ -44,6 +54,7 @@ function CommentsBody({ el }) {
         <VStack flex={1}>
           <Text>
             <Text
+                onPress={handleGoToUser}
               fontFamily="NunitoBold"
               fontSize="14px"
               fontWeight="700"

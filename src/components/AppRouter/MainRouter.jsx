@@ -395,7 +395,7 @@ function TabStack() {
               return (
                 <Image
                   resizeMode="cover"
-                  style={{ width: 22, height: 22, position: 'relative' }}
+                  style={{ width: 20, height: 20, position: 'relative' }}
                   source={focused ? require('../../assets/images/icons/bottom/posts_active.png')
                     : require('../../assets/images/icons/bottom/posts.png')}
                 />

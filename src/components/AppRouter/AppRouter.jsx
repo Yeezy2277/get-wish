@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Text } from 'react-native';
 import { refresh } from '../../redux/actions/authActions';
 import { userCRUD } from '../../http/CRUD';
-import { SET_AUTH, SET_NICKNAME, SET_USER_INFO } from '../../redux/constants/userConstants';
+import {SET_AUTH, SET_FRIENDS, SET_NICKNAME, SET_USER_INFO} from '../../redux/constants/userConstants';
 import MainRouter from './MainRouter';
 import AuthRouter from './AuthRouter';
 import NavigationService from '../../functions/NavigationService';
+import {getFriends} from "../../redux/actions/userActions";
 
 function AppRouter() {
   const { isAuth } = useSelector((state) => state.user);
@@ -24,6 +25,8 @@ function AppRouter() {
             dispatch({ type: SET_NICKNAME, payload: true });
           } else {
             dispatch({ type: SET_AUTH, payload: true });
+            const {data} = await getFriends();
+            dispatch({ type: SET_FRIENDS, payload: data });
           }
         }
       }).finally(() => setLoading(false));

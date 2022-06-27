@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dimensions, Platform} from 'react-native';
 import {
-  Avatar, Box, HStack, Image, Input, Pressable, Text, View, VStack, FlatList
+  Avatar, Box, HStack, Image, Input, Pressable, Text, View, VStack, FlatList, KeyboardAvoidingView
 } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,8 @@ import TextParser from '../Shared/TextParser';
 import { getComments, sendComment } from '../../redux/actions/postsActions';
 import CommentsBody from './CommentsBody';
 import {parseTags} from "../../functions/helpers";
+import useLoader from "../../hooks/useLoader";
+import {Loader} from "../index";
 
 function Comments({
   navigation, route: {
@@ -23,6 +25,7 @@ function Comments({
 }) {
   const { comments } = useSelector((state) => state.posts);
   const screenHeight = Dimensions.get('window').height;
+  const { start, stop, loading } = useLoader(true);
   const [data, setData] = React.useState([]);
   const [comment, setComment] = React.useState('');
   const dispatch = useDispatch();
@@ -37,7 +40,12 @@ function Comments({
 
   React.useEffect(() => {
     (async function () {
-      await getComments(postId);
+      start();
+      try {
+        await getComments(postId);
+      } finally {
+        stop()
+      }
     }());
   }, [dispatch, postId]);
 
@@ -138,50 +146,50 @@ function Comments({
   };
 
   return (
-    <KeyboardAwareScrollView
-      extraHeight={300}
-      style={{ backgroundColor: COLORS.white, flex: 1 }}
-      contentContainerStyle={{ flex: 1 }}
-    >
-      <View
-        style={{
-          Height: 'auto', maxHeight: screenHeight, flex: 1, position: 'relative'
-        }}
-        backgroundColor={COLORS.white2}
+      <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? "padding" : 'none'}
+          style={{ backgroundColor: COLORS.white, flex: 1 }}
+          contentContainerStyle={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      >
+      {loading ? <Loader/> : <View
+          style={{
+            Height: 'auto', maxHeight: screenHeight, flex: 1, position: 'relative'
+          }}
+          backgroundColor={COLORS.white2}
       >
         {showFriends && (
-        <PostListFriendElement
-          full
-          top={Platform.OS === 'ios' && onFocus ? '5%' : '0px'}
-          handleChooseUser={handleChooseUser}
-          debouncedTerm={debouncedTerm}
-          data={friends}
-          setData={setFriends}
-        />
+            <PostListFriendElement
+                full2
+                handleChooseUser={handleChooseUser}
+                debouncedTerm={debouncedTerm}
+                data={friends}
+                setData={setFriends}
+            />
         )}
         <View
-          paddingTop="16px"
-          paddingLeft="12px"
-          paddingRight="15px"
-          paddingBottom="15px"
-          borderBottomWidth={1}
-          borderBottomColor="#EBEFFF"
+            paddingTop="16px"
+            paddingLeft="12px"
+            paddingRight="15px"
+            paddingBottom="15px"
+            borderBottomWidth={1}
+            borderBottomColor="#EBEFFF"
         >
           <HStack space={3}>
             <Pressable>
               <Avatar
-                marginTop="3px"
-                size="26px"
-                source={descriptionAuthor?.avatar ? { uri: descriptionAuthor?.avatar }
-                  : require('../../assets/images/icons/profile/avatar.png')}
+                  marginTop="3px"
+                  size="26px"
+                  source={descriptionAuthor?.avatar ? { uri: descriptionAuthor?.avatar }
+                      : require('../../assets/images/icons/profile/avatar.png')}
               />
             </Pressable>
             <VStack flex={1}>
               <Text>
                 <Text
-                  fontFamily="NunitoBold"
-                  fontSize="14px"
-                  fontWeight="700"
+                    fontFamily="NunitoBold"
+                    fontSize="14px"
+                    fontWeight="700"
                 >
                   {descriptionAuthor?.username}
                   {'  '}
@@ -189,10 +197,10 @@ function Comments({
                 <TextParser description={description} />
               </Text>
               <Text
-                marginTop="10px"
-                color={COLORS.gray}
-                fontSize="12px"
-                fontWeight="400"
+                  marginTop="10px"
+                  color={COLORS.gray}
+                  fontSize="12px"
+                  fontWeight="400"
               >
                 {convertComment(date)}
               </Text>
@@ -200,49 +208,49 @@ function Comments({
           </HStack>
         </View>
         <FlatList
-          height="100%"
-          width="100%"
-          flex={1}
-          backgroundColor="#FFFFFF"
-          data={comments}
-          renderItem={({ item: el }) => {
-            return (
-              <CommentsBody el={el} />
-            );
-          }}
+            height="100%"
+            width="100%"
+            flex={1}
+            backgroundColor="#FFFFFF"
+            data={comments}
+            renderItem={({ item: el }) => {
+              return (
+                  <CommentsBody el={el} />
+              );
+            }}
         />
         <Box
-          borderTopWidth={1}
-          borderTopColor="#EBEFFF"
-          paddingLeft="15px"
-          paddingRight="10px"
-          pb="8px"
-          alignItems="center"
-          minHeight="12%"
-          pt="8px"
-          width="100%"
-          backgroundColor={COLORS.white2}
+            borderTopWidth={1}
+            borderTopColor="#EBEFFF"
+            paddingLeft="15px"
+            paddingRight="10px"
+            pb="8px"
+            alignItems="center"
+            minHeight="12%"
+            pt="8px"
+            width="100%"
+            backgroundColor={COLORS.white2}
         >
           <Input
-            value={comment}
-            onChangeText={handleDescription}
-            paddingLeft="12px"
-            paddingRight="41px"
-            multiline
-            color="#1A1A1A"
-            borderRadius="18px"
-            InputRightElement={<RightIcon />}
-            fontSize="15px"
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            borderWidth={0}
-            backgroundColor="#F7F7F7"
-            placeholder="Твой комментарий"
-            position="relative"
+              value={comment}
+              onChangeText={handleDescription}
+              paddingLeft="12px"
+              paddingRight="41px"
+              multiline
+              color="#1A1A1A"
+              borderRadius="18px"
+              InputRightElement={<RightIcon />}
+              fontSize="15px"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              borderWidth={0}
+              backgroundColor="#F7F7F7"
+              placeholder="Твой комментарий"
+              position="relative"
           />
         </Box>
-      </View>
-    </KeyboardAwareScrollView>
+      </View>}
+    </KeyboardAvoidingView>
   );
 }
 

@@ -1,13 +1,7 @@
 import {
-  CANCEL_RESERVE_WISH, GO_BACK_ID,
-  RESERVE_WISH,
-  SET_MY_WISH_LIST, SET_ONE_WISH, SET_WISH, SET_WISH_ADDED, SET_WISH_ID
-} from '../constants/wishConstants';
-import {
   DELETE_COMMENT,
   LIKE, REMOVE_POST, SET_COMMENTS, SET_POSTS_FOR_LENTA, SET_POSTS_USER, SET_POSTS_USER_OTHER, UNLIKE
 } from '../constants/postsConstants';
-import store from '../index';
 
 const initialState = {
   userPosts: [],

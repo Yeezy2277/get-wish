@@ -8,3 +8,9 @@ export const convertDuration = (duration) => {
     trim: false
   });
 };
+
+export const convertDuration2 = (duration) => {
+  return moment?.duration(duration, 'ms')?.format('mm:ss', {
+    trim: false
+  });
+};

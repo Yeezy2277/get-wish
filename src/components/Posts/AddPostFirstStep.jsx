@@ -4,7 +4,7 @@ import {
 } from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
 import * as MediaLibrary from 'expo-media-library';
-import { Dimensions, StyleSheet, FlatList } from 'react-native';
+import {Dimensions, StyleSheet, FlatList, Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
 import ReactNativeZoomableView from '@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView';
 import FastImage from 'expo-fast-image';
@@ -272,7 +272,8 @@ function AddPostFirstStep() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Text color={COLORS.white2} fontSize="13px" fontWeight="700">{checkedItems.find((photo) => photo.id === el.id)?.idx}</Text>
+                  <Text lineHeight={Platform.OS === 'android' ? "13px" : '0'} color={COLORS.white2} fontSize="13px"
+                   fontWeight="700">{checkedItems.find((photo) => photo.id === el.id)?.idx}</Text>
                 </View>
               ) : (
                 <View
