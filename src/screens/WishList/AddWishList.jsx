@@ -167,10 +167,7 @@ function AddWishList({ navigation, ...props }) {
   const canNext = React.useMemo(() => {
     if (name.length) {
       if (privateWishList) {
-        if (selectedFriendsLocal.length) {
-          return true;
-        }
-        return false;
+        return true;
       }
       return true;
 
@@ -217,7 +214,7 @@ function AddWishList({ navigation, ...props }) {
               </FormGroupElementSwitch>
             </FormGroupContainer>
             <ProfilePrivateText>
-              Включи, если хочешь, чтобы этот вишлист был доступен только опредёлнным друзьям
+              Включи, если хочешь, чтобы этот вишлист был доступен только определенным друзьям
             </ProfilePrivateText>
             {loading ? <Spinner /> : privateWishList && (
             <View width="100%" paddingTop={30}>

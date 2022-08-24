@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView } from 'native-base';
 import { SceneMap, TabView } from 'react-native-tab-view';
-import { useWindowDimensions } from 'react-native';
+import {SafeAreaView, useWindowDimensions} from 'react-native';
 import { COLORS } from '../../functions/constants';
 import { FriendTabBars } from '../../styles/shared';
 import { WishListPrivate, WishListPublic, WishListTabBar } from '../../components';
@@ -12,6 +12,7 @@ import TutorialPosts from '../../components/Tutorials/TutorialPosts';
 import Header from '../../components/Header/Header';
 
 function Posts({ navigation }) {
+
   const renderScene = SceneMap({
     public: PostLenta,
     private: PostMy,

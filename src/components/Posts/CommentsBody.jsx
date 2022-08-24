@@ -13,7 +13,7 @@ import {userCRUD} from "../../http/CRUD";
 import {changeUserInfo} from "../../redux/actions/authActions";
 import {goToUserProfile} from "../../functions/helpers";
 
-function CommentsBody({ el }) {
+function CommentsBody({ el, handleGoToUserHandler }) {
   const { userInfo } = useSelector((state) => state.user);
   const [isYourComment, setIsYourComment] = React.useState(false);
   const t = useI18n();
@@ -27,12 +27,9 @@ function CommentsBody({ el }) {
 
   const handleGoToUser = async () => {
         if (!isYourComment) {
-          const user = await userCRUD.get(el?.user?.id);
-          await changeUserInfo('oneUser', user?.data);
-          await goToUserProfile()
+          handleGoToUserHandler(el?.user?.id)
         }
   }
-  console.log(el)
 
   return (
     <View

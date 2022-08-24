@@ -10,8 +10,6 @@ import { AppRouter } from './src/components';
 import store from './src/redux';
 import { toastConfig, toastConfigWithoutNativeBase } from './src/functions/helpers';
 import './src/i18n/i18n';
-import { registerRootComponent } from 'expo';
-
 
 const customFonts = {
   Nunito: require('./src/assets/fonts/NunitoRegular.ttf'),
@@ -22,7 +20,7 @@ SplashScreen.preventAutoHideAsync()
   .then((result) => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
   .catch(console.warn);
 
-export default function App() {
+function App() {
   const [loadingApp, setLoadingApp] = React.useState(false);
   console.disableYellowBox = true;
 
@@ -64,4 +62,4 @@ export default function App() {
   );
 }
 
-registerRootComponent(App);
+export default App;

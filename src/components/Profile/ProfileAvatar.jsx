@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import { Image, Platform } from 'react-native';
+import {Image, Linking, Platform} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSelector } from 'react-redux';
 import { connectActionSheet, useActionSheet } from '@expo/react-native-action-sheet';
 import { ProfileContext } from '../../screens/Profile/ProfileScreen';
 import { Avatar, AvatarTouchableHighlight } from '../../styles/profile';
 import { Icon } from '../index';
-import { updateAvatar } from '../../redux/actions/userActions';
+import {deleteFriend, updateAvatar} from '../../redux/actions/userActions';
 import { androidShadow } from '../../functions';
 import {useI18n} from "../../i18n/i18n";
 
@@ -29,7 +29,7 @@ function ProfileAvatar({ ...props }) {
       async (buttonIndex) => {
         if (buttonIndex === 1) {
           const image = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: false,
             aspect: [4, 3],
             quality: 1,
@@ -55,7 +55,21 @@ function ProfileAvatar({ ...props }) {
               });
             }
           } else {
-            alert(t('accessDenied'));
+            return showActionSheetWithOptions(
+                {
+                  options: [
+                    'Перейти в настройки',
+                  ],
+                  title: 'Фото профиля',
+                  message: 'Разреши доступ к Фото в настройках\n' +
+                      'телефона, чтобы добавлять фото из галереи',
+                  cancelButtonIndex: 0,
+                  userInterfaceStyle: 'dark'
+                }, async (buttonIndex) => {
+                    if (buttonIndex === 0) {
+                        await Linking.openSettings();
+                    }
+                })
           }
         }
       }

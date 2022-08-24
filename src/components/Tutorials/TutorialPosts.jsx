@@ -14,12 +14,12 @@ function TutorialPosts({ setShowTutorial }) {
       <ScrollView height="100%" width="100%">
         <VStack position="relative" height="100%" width="100%">
           <Pressable
-            height="30px"
-            width="30px"
+            height="50px"
+            width="50px"
             display="flex"
             alignItems="center"
             justifyContent="center"
-            top="5%"
+            top={smallSmart ? '1%' : "5%"}
             right="25px"
             position="absolute"
             onPress={async () => {
@@ -36,7 +36,7 @@ function TutorialPosts({ setShowTutorial }) {
               width="18px"
             />
           </Pressable>
-          <Image marginTop={smallSmart ? '20%' : '25%'} alignSelf="center" width="350px" height="541px" source={require('../../assets/images/icons/posts/tutorial_top.png')} />
+          <Image marginTop={smallSmart ? '10%' : '25%'} alignSelf="center" width="350px" height="541px" source={require('../../assets/images/icons/posts/tutorial_top.png')} />
             <Pressable onPress={async () => {
                 await AsyncStorage.setItem(
                     'showTutorialPosts',

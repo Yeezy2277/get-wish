@@ -22,7 +22,6 @@ function AddPost({ navigation, ...props }) {
     };
   }, [navigation]);
 
-  console.log('id', id)
   const onNextStep = () => {
     setStep((prev) => prev + 1);
   };

@@ -8,7 +8,7 @@ function ListFriendsCheck({
   data, add, handleSearchPanel, handlePress, padding
 }) {
   return (
-    <Box paddingLeft={padding ? '20px' : '0px'} maxHeight="70%" flex="1" width="100%">
+    <Box paddingLeft={padding ? '20px' : '0px'} marginBottom="20px" maxHeight="70%" flex="1" width="100%">
       <View style={{ flex: 1 }}>
         <ListFriendCheckElement
           data={data}

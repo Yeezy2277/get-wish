@@ -17,6 +17,7 @@ import {useI18n} from "../../i18n/i18n";
 function ReservedDesiresUser({
   isInWishList, name, id, el, privateMode = false, archive
 }) {
+
   const { showActionSheetWithOptions } = useActionSheet();
   const t = useI18n()
   const state = new ActionSheets(t, showActionSheetWithOptions);
@@ -43,7 +44,7 @@ function ReservedDesiresUser({
         imageStyle={{ borderRadius: 10 }}
         resizeMode="cover"
         style={Platform.OS === 'android' && androidShadow}
-        source={el?.preview ? { uri: el?.preview } : require('../../assets/images/icons/users/theme.png')}
+        source={el?.theme?.card ? { uri: el?.theme?.card } : require('../../assets/images/icons/users/theme.png')}
       >
         <HStack justifyContent="space-between" width="100%">
           <ReservedDesiresUserTitle>

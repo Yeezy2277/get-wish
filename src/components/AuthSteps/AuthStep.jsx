@@ -32,7 +32,7 @@ function AuthStep({
   const t = useI18n()
 
   return (
-    <KeyboardAwareScrollView
+    <KeyboardAwareScrollView enableOnAndroid={false}
       style={{ backgroundColor: COLORS.white, flex: 1 }}
       contentContainerStyle={{ flex: 1 }}
     >

@@ -8,13 +8,13 @@ import useToasts from '../../hooks/useToast';
 import { userCRUD } from '../../http/CRUD';
 import { changeUserInfo } from '../../redux/actions/authActions';
 import {useI18n} from "../../i18n/i18n";
+import Toast from "react-native-toast-message";
 
 function CalendarShared({
   show, setShow, date, setDate
 }) {
 
   const t = useI18n()
-  const { show: showToast } = useToasts();
   const { userInfo } = useSelector((state) => state.user);
 
   const showOff = () => {
@@ -29,7 +29,13 @@ function CalendarShared({
       birthdate: moment(dateFromPicker).format('YYYY-MM-DD'),
     }).then(async ({ data }) => {
       await changeUserInfo('userInfo', data);
-      await showToast(1500);
+      Toast.show({
+        type: 'search',
+        text1: 'Дата рождения изменена',
+        position: 'bottom',
+        bottomOffset: 95
+      });
+
     });
   };
 

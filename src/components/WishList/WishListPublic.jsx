@@ -39,7 +39,7 @@ function WishListPublic({ empty = true }) {
           {loading ? <Loader /> : !publicWishLists?.length ? (
             <>
               <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/wishlist/public.png')} />
-              <Text color={COLORS.black} fontFamily="NunitoBold" marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">У тебя нет вишлистов</Text>
+              <Text color={COLORS.black} fontFamily="NunitoBold" marginTop="14px" fontWeight="bold" fontSize="18px" lineHeight="25px">У тебя еще нет вишлистов</Text>
               <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Скорее исправь это!</Text>
               <AuthButton
                 style={{

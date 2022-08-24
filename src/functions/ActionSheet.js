@@ -193,6 +193,12 @@ export class ActionSheets {
           }, async (buttonIndexChild) => {
             if (buttonIndexChild === 1) {
               await archiveWishList(id, el?.private, el);
+              Toast.show({
+                type: 'search',
+                text1: 'Виш лист отправлен в архив',
+                position: 'bottom',
+                bottomOffset: 95
+              })
             }
           });
         }

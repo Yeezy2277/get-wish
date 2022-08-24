@@ -83,7 +83,6 @@ export const refresh = async () => {
     await $host.post('/api/v1/auth/token/refresh', {
       refresh_token: await AsyncStorage.getItem('refreshToken')
     }).then(async ({ data }) => {
-      console.log('check');
       // eslint-disable-next-line camelcase
       const { access_token, refresh_token } = data;
       await AsyncStorage.setItem('token', access_token);

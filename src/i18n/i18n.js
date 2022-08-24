@@ -49,16 +49,3 @@ export const useI18n = () => {
   const { t } = useTranslation(defaultNS);
   return t;
 };
-
-/**
- * HOC для инъекции ссылки на i18n
- * в свойства компонента
- * @param Component - компонент, в который требуется
- *      предоставить ссылку на i18n (имя свойства: t)
- */
-export const withI18n = (Component) => {
-  return function (props) {
-    const t = useI18n();
-    return (<Component {...props} t={t} />);
-  };
-};

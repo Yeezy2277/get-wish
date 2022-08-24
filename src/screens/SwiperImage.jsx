@@ -26,11 +26,15 @@ function RenderImage({ currentPage, images }) {
         else if (typeof isVideo === 'boolean') {
           response = currentPage.source.uri;
         }
-        setLink(response);
-        await video.current.playAsync();
-      }
+        await setLink(response);}
     }());
-  }, [isVideo]);
+  }, [isVideo, video]);
+
+  React.useEffect(() => {
+    if (video?.current) {
+      video.current.playAsync()
+    }
+  }, [link, video, currentPage])
 
   if (isVideo) {
     return (

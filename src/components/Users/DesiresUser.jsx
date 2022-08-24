@@ -13,17 +13,10 @@ import {useI18n} from "../../i18n/i18n";
 function DesiresUser() {
   const t = useI18n()
   const { oneUser } = useSelector((state) => state.user);
-  const { reloadValue } = useSelector((state) => state.generic);
-  const { start, stop } = useLoader(false);
   const { userWishLists } = useSelector((state) => state.wishList);
-  React.useEffect(() => {
-    const getData = async () => {
-      start();
-      await getWishListUser({ userId: oneUser?.id });
-      stop();
-    };
-    getData();
-  }, [reloadValue]);
+
+
+
   return (
     <ScrollView>
       {(oneUser?.private && !oneUser?.is_friend) ? (

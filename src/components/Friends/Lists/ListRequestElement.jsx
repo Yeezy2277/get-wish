@@ -21,7 +21,7 @@ function ListRequestElement({ data, first = false, handleSearchPanel }) {
     await changeUserInfo('oneUser', user?.data);
     if (search) {
       await goToUserProfile();
-      const close = await handleSearchPanel();
+      const close = await handleSearchPanel(false, true);
       await close(false);
     } else {
       await goToUserProfile({ noSearch: true });
@@ -62,7 +62,7 @@ function ListRequestElement({ data, first = false, handleSearchPanel }) {
                 {item.status !== 'rejected' && item.status !== 'sent' && (
                   <>
                     <SharedButton
-                      textStyle={{ fontSize: 15, lineHeight: 21 }}
+                      textStyle={{ fontSize: 15, lineHeight: 21, fontWeight: 'bold'}}
                       onPress={() => cancelFriend(item?.id, first ? 'SEARCH_IN' : 'REQUEST')}
                     >
                       Отклонить
@@ -77,6 +77,7 @@ function ListRequestElement({ data, first = false, handleSearchPanel }) {
                         width: 120,
                         maxWidth: 120,
                         borderRadius: 10,
+                        fontWeight: 'bold'
                       }}
                       variant="small"
                       text={t('accept')}

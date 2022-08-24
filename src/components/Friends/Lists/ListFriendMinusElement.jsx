@@ -62,7 +62,6 @@ function RightElement({ item, deleteFriendFromLocalHandler }) {
   const handlePressDelete = () => {
     deleteFriendFromLocalHandler(item.id);
   };
-  const t = useI18n()
   return (
     <Pressable
       onPress={handlePressDelete}
@@ -72,7 +71,7 @@ function RightElement({ item, deleteFriendFromLocalHandler }) {
       backgroundColor={COLORS.red}
       height="48px"
     >
-      <Text fontSize="15px" fontFamily="NunitoBold" color={COLORS.white}>{t('delete')}</Text>
+      <Text fontSize="15px" fontFamily="NunitoBold" color={COLORS.white}>Удалить</Text>
     </Pressable>
   );
 }

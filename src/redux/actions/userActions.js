@@ -4,7 +4,7 @@ import { parseError } from '../../http/utils';
 import { changeUserInfo } from './authActions';
 import store from '../index';
 import {
-  ACCEPT_FRIEND,
+  ACCEPT_FRIEND, ACCEPT_FRIEND_PROFILE,
   CANCEL_REQUEST, HANDLE_FRIEND,
   SEND_REQUEST,
   SET_DATA,
@@ -73,6 +73,18 @@ export const acceptFriend = async (userId) => {
     }).catch(((error) => reject(error)));
   });
 };
+
+export const acceptFriendProfile = async (userId) => {
+  return new Promise((resolve, reject) => {
+    $authHost.post('/api/v1/friend/request/accept', {
+      user_id: userId
+    }).then((response) => {
+      store?.dispatch({ type: ACCEPT_FRIEND_PROFILE, payload: userId });
+      resolve(response);
+    }).catch(((error) => reject(error)));
+  });
+};
+
 
 export const cancelFriend = async (userId, type) => {
   return new Promise((resolve, reject) => {
@@ -203,7 +215,6 @@ export const getOneUser = async (id) => {
 };
 
 export const openUser = async (tag) => {
-  console.log('tag', tag)
   return new Promise((resolve, reject) => {
     $authHost.get(`/api/v1/user/by/username/${tag}`).then(async ({ data }) => {
       resolve(data);

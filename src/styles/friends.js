@@ -10,7 +10,7 @@ export const FriendsContainer = styled.View`
 export const FriendsImageEmpty = styled.Image`
   max-width: 100%;
   width: 100%;
-  height: 300px;
+  height: 310px;
 `;
 
 export const FriendsContainerFirst = styled.View`

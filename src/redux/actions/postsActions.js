@@ -56,9 +56,9 @@ export const getMyWishLists = async () => {
   });
 };
 
-export const getPostsForLenta = async () => {
+export const getPostsForLenta = async (limit = 5) => {
   return new Promise((resolve) => {
-    const res = $authHost.get('/api/v1/post/list').then((reponse) => {
+    const res = $authHost.get(`/api/v1/post/list?take=${limit}`).then((reponse) => {
       store?.dispatch({ type: SET_POSTS_FOR_LENTA, payload: reponse?.data?.data });
     });
     resolve(res?.data);
@@ -81,9 +81,9 @@ export const updatePost = async (id, text) => {
   });
 };
 
-export const getUserPosts = async (id) => {
+export const getUserPosts = async (id, limit = 50) => {
   return new Promise((resolve) => {
-    const res = $authHost.get(`/api/v1/user/${id}/posts`).then((reponse) => {
+    const res = $authHost.get(`/api/v1/user/${id}/posts?take=${limit}`).then((reponse) => {
       store?.dispatch({ type: SET_POSTS_USER_OTHER, payload: reponse?.data?.data });
     });
     resolve(res?.data);

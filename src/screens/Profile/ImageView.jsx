@@ -84,7 +84,7 @@ function ImageView({
 
   const handleChangeLibrary = async () => {
     const image = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       aspect: [4, 3],
       quality: 1,
@@ -96,7 +96,7 @@ function ImageView({
     const { status } = ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
       const image = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
         aspect: [4, 3],
         quality: 1,

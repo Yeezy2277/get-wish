@@ -21,7 +21,7 @@ function ListFriendElement({
     await changeUserInfo('oneUser', user?.data);
     if (search) {
       await goToUserProfile();
-      const close = await handleSearchPanel();
+      const close = await handleSearchPanel(false, true);
       await close(false);
     } else {
       await goToUserProfile({ noSearch: true });
@@ -71,7 +71,7 @@ function ListFriendElement({
                 flex={false}
                 onPress={() => cancelRequest(item.id)}
                 style={{
-                  width: 138, marginLeft: 'auto', maxWidth: 138, height: 30
+                  width: 138, marginLeft: 'auto', maxWidth: 138, height: 30, fontWeight: 'bold'
                 }}
               >
                 Отменить запрос

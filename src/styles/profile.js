@@ -53,7 +53,6 @@ export const ReservedDesiresUserContainer = styled.ImageBackground`
 `;
 
 export const ReservedDesiresTitle = styled.Text`
-  font-weight: bold;
   font-family: 'Nunito';
   font-size: 15px;
   line-height: 20px;
@@ -65,8 +64,8 @@ export const ReservedDesiresUserTitle = styled.Text`
   font-weight: bold;
   font-family: 'Nunito';
   align-self: flex-start;
-  font-size: 18px;
-  line-height: 20px;
+  font-size: 16px;
+  line-height: 16px;
   color: #1A1A1A;
   max-width: 80%;
 `;
@@ -465,7 +464,7 @@ export const ActionDesiresRowHeaderName = styled.Text`
   color: #1A1A1A;
 `;
 
-export const ActionDesiresActions = styled.View`
+export const ActionDesiresActions = styled.Pressable`
   margin-left: auto;
   display: flex;
   flex-direction: row;
@@ -547,7 +546,7 @@ export const ActionDesiresChildName = styled.Text`
   font-size: 18px;
   line-height: 25px;
   color: #1A1A1A;
-  max-width: 221px;
+  max-width: 250px;
   text-align: center;
 `;
 

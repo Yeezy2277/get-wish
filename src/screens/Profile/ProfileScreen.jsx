@@ -113,7 +113,10 @@ function ProfileScreen({ navigation }) {
           />
           <FormGroup forms={[
             {
-              type: 'select', name: t('phoneNumber'), value: userInfo?.phone, link: { name: 'ChangePhoneScreen' }
+              type: 'select', name: t('phoneNumber'),
+              value:
+                  `${userInfo?.phone[0]}${userInfo?.phone[1]} ${userInfo?.phone[2]}${userInfo?.phone[3]}${userInfo?.phone[4]} ${userInfo?.phone[5]}${userInfo?.phone[6]}${userInfo?.phone[7]} ${userInfo?.phone[8]}${userInfo?.phone[9]} ${userInfo?.phone[10]}${userInfo?.phone[11]}`,
+              link: { name: 'ChangePhoneScreen' }
             },
             {
               type: 'select', name: t('nickname'), value: `@${userInfo?.username}`, link: { name: 'ChangeNicknameStep' }

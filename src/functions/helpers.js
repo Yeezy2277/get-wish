@@ -23,6 +23,11 @@ export function goToMain() {
   navigateAction('MainProfile');
 }
 
+
+export function goToWishLists() {
+  navigateAction('WishList');
+}
+
 export function goToUserProfile(params) {
   navigateAction('UserProfile', params);
 }
@@ -272,7 +277,7 @@ export const parseTags = async (text) => {
   let friends = [];
   let friendsUnique = [];
   let desc = text;
-  let users = desc.match(/\@[a-zA-Z]*/gm);
+  let users = desc.match(/\@[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*/gm);
   if (users?.length) {
     for await (let user of users) {
       if (user?.split('@')?.length > 1) {

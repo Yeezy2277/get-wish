@@ -6,7 +6,7 @@ import {
 } from 'native-base';
 import { Platform } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import {
   ActionDesires,
@@ -39,10 +39,12 @@ import DesiresScreenElementActionsheetReserv from './DesiresScreenElementActions
 import ButtonReserved from '../../sections/Buttons/ButtonReserved';
 import { reload } from '../../redux/actions/genericActions';
 import {useI18n} from "../../i18n/i18n";
+import {userCRUD} from "../../http/CRUD";
+import {SET_ONE_USER} from "../../redux/constants/userConstants";
 
 function DesiresScreenElementActionsheet({
   open, setOpen, friend,
-  showTutorial, setShowTutorial, isYourWishList, reserved, reserverImage
+  showTutorial, setShowTutorial, isYourWishList, reserved, reserverImage, reservedId
 }) {
   const t = useI18n()
   const { userInfo } = useSelector((state) => state.user);
@@ -51,12 +53,27 @@ function DesiresScreenElementActionsheet({
   const { oneUser } = useSelector((state) => state.user);
   const [openChild, setOpenChild] = React.useState(false);
   const [openChildWhy, setOpenChildWhy] = React.useState(false);
+  const [userNameRes, setUserNameRes] = React.useState('');
   const [openChildReserv, setOpenChildReserv] = React.useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
+  const [reservUser, setReservUser] = React.useState()
+  const dispatch = useDispatch()
   const state = new ActionSheets(t, showActionSheetWithOptions);
 
+  React.useEffect(() => {
+    (async function () {
+      if (reserved && reservedId) {
+        const {data} = await userCRUD.get(reservedId)
+        setUserNameRes(data.username)
+        setReservUser(data)
+      }
+    }())
+  }, [reserved, reservedId])
+
   const goToAnotherList = () => {
-    goToUserWishLists();
+    close()
+    dispatch({type: SET_ONE_USER, payload: reservUser})
+    return goToUserWishLists({id: oneWish?.wishlist_id});
   };
 
   const close = () => {
@@ -108,6 +125,9 @@ function DesiresScreenElementActionsheet({
   };
 
   const RenderResImage = React.useCallback((count, cancel = false) => {
+    if (reserved) {
+      return  null
+    }
     if (count === 0) {
       return (
         <Image
@@ -174,7 +194,7 @@ function DesiresScreenElementActionsheet({
                 <ActionDesiresRowHeaderAvatar source={reserverImage ? { uri: reserverImage }
                   : require('../../assets/images/icons/profile/avatar.png')}
                 />
-                <ActionDesiresRowHeaderName>anastasia_efremova</ActionDesiresRowHeaderName>
+                <ActionDesiresRowHeaderName>{reserved ? userNameRes : oneWish?.user?.username}</ActionDesiresRowHeaderName>
                 <ActionDesiresActions onPress={goToAnotherList}>
                   <ActionDesiresActionsText>{t('desires_toWishList')}</ActionDesiresActionsText>
                   <ActionDesiresActionsIcon source={require('../../assets/images/icons/arrow.png')} />
@@ -291,7 +311,7 @@ function DesiresScreenElementActionsheet({
                     onPress={() => setOpenChild(true)}
                   >
                     <Box alignItems="center" flexDirection="row" width="100%" height="53px">
-                      {RenderResImage(countRes, true)}
+                      { RenderResImage(countRes, true)}
                       <Text fontSize={15} fontFamily="NunitoBold" color={COLORS.purple}>{t('desires_cancelReservedWish')}</Text>
                     </Box>
                   </Button>

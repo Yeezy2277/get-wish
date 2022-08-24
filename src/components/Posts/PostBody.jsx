@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {
   Avatar, HStack, Image, Pressable, Text, View, VStack
 } from 'native-base';
@@ -21,6 +21,7 @@ import { useI18n } from '../../i18n/i18n';
 import {changeUserInfo} from "../../redux/actions/authActions";
 import {userCRUD} from "../../http/CRUD";
 import {convertDuration, convertDuration2} from "../../functions/dates";
+import TextParserPostVariant from "../Shared/TextParserPostVariant";
 
 const assets = {
   like: require('../../assets/images/icons/posts/like.png'),
@@ -49,7 +50,7 @@ function RenderVideo({ item }) {
         isLooping
         onPlaybackStatusUpdate={(statusLocal) => setStatus(() => statusLocal)}
       />
-        <View
+        {status.isPlaying ? <View
             position="absolute"
             right="15px"
             bottom="15px"
@@ -68,9 +69,9 @@ function RenderVideo({ item }) {
                 zIndex={111}
                 color="#FFFFFF"
             >
-                {convertDuration2(status?.positionMillis)}
+                {convertDuration2(status?.playableDurationMillis - status?.positionMillis)}
             </Text>
-        </View>
+        </View> : null}
     </Pressable>
   );
 }
@@ -96,17 +97,52 @@ function PostBody({
     setVisible(!visible);
   };
 
+  const opacity = new Animated.Value(0);
+
+  const onLoad = () => {
+        Animated.timing(opacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+        }).start();
+    }
+
   function RenderItem({ item, index }) {
     return (
-      <Pressable onPress={handleDoublePress} position="relative">
+      <Pressable height="100%" width="100%" onPress={handleDoublePress} position="relative">
 
         {isVideo(item) ? (
           <RenderVideo item={item} />
         )
-          : <View height="375px" width="100%"><Image alt="image" zIndex={5} height="375px" width="100%" source={{ uri: item }} /></View>}
+          : <View height="375px" width="100%">
+                <FastImage
+                    alt="image"
+                    source={{ uri: item }}
+                    style={{
+                        width: '100%',
+                        height: 375,
+                        zIndex: 5
+                    }}
+                />
+                {(visible && Platform.OS === 'android') ? <Animated.Image
+                    onLoad={onLoad}
+                    onPress={handleDoublePress}
+                    alt="like_big"
+                    source={require('../../assets/images/icons/posts/like_big.png')}
+                    style={{
+                        height: 153,
+                        width: 153,
+                        position: 'absolute',
+                        alignSelf: 'center',
+                        bottom: '30%',
+                        zIndex: 9999,
+                        opacity: opacity,
+                    }}
+                /> : null}
+            </View>}
 
-          {!isVideo(item) ? <FadeInOut  visible={visible} duration={350}>
-          <Image
+          {!isVideo(item)  ? <FadeInOut style={{ bottom: '30%' }} visible={visible} duration={350}>
+          <FastImage
             onPress={handleDoublePress}
             alt="like_big"
             source={require('../../assets/images/icons/posts/like_big.png')}
@@ -115,17 +151,19 @@ function PostBody({
               width: 153,
               position: 'absolute',
               alignSelf: 'center',
-              bottom: '30%',
+              bottom: '-30%',
               zIndex: 9999,
             }}
           />
-        </FadeInOut> : null}
+        </FadeInOut>
+              : null}
         {el.attachments?.length > 1 ? (
           <View
             position="absolute"
             right="15px"
             top="15px"
             width="32px"
+            zIndex={999}
             height="21px"
             backgroundColor="rgba(26, 26, 26, 0.6)"
             display="flex"
@@ -167,9 +205,13 @@ function PostBody({
   };
 
   const unlikeHandlerDouble = async () => {
+      toggleVisible();
     await unLike(el.id, my, lenta);
     setSource(assets.like);
     reload();
+      delay(1500).then(
+          setVisible(false)
+      );
   };
 
   const unlikeHandler = async () => {
@@ -204,8 +246,8 @@ function PostBody({
 
   const firstLikeUser = React.useMemo(() => {
       if (el?.likes?.friends?.length) {
-          const names = el?.likes?.friends.map(el => el.user.username);
-          return names.join(', ')
+          const names = el?.likes?.friends[0].user.username;
+          return names
       }
       return null
   }, [el?.likes?.friends])
@@ -213,9 +255,7 @@ function PostBody({
   const count = React.useMemo(() => {
       let count = el?.likes?.count;
       if (el?.likes?.friends?.length) {
-          el?.likes?.friends.forEach(() => {
-              count = count - 1
-          })
+          count = count -1;
           if (count === 0) {
               return  null
           }
@@ -223,7 +263,7 @@ function PostBody({
       } else {
           return count;
       }
-  }, [el?.likes, reloadValue, reloadValueGlobal])
+  }, [el?.likes, el?.likes?.count, reloadValue, reloadValueGlobal])
 
     const handlePressFriend = async () => {
       if (lenta) {
@@ -313,7 +353,7 @@ function PostBody({
         {el?.likes?.friends?.length ? (
           <>
             <HStack>
-              {el?.likes?.friends?.map((el, idx) => {
+              {el?.likes?.friends?.slice(0, 3).map((el, idx) => {
                 return (
                   <Avatar
                     zIndex={idx === 0 ? 3 : idx === 1 ? 2 : 1}
@@ -326,7 +366,6 @@ function PostBody({
                 );
               })}
             </HStack>
-            {my || lenta ? (
               <VStack>
                 {el?.likes?.friends?.length ? (
                   <Text
@@ -351,52 +390,47 @@ function PostBody({
                 ) : null}
 
               </VStack>
-            ) : null}
           </>
         ) : null}
       </HStack>
-        {el?.text && <Text fontSize="14px" paddingLeft="15px" paddingRight="15px" width="100%" marginTop="10px">
-        <Text fontFamily="NunitoBold">{el?.user?.username}</Text>
-        {' '}
-        <TextParser
+        {el?.text ?
+            <>
+        <TextParserPostVariant
           post={{
-            description: el?.text,
-            descriptionAuthor: my ? userInfo : oneUser,
-            date: el?.created_at,
+              description: el.text,
               postId: el?.id,
+              descriptionAuthor: lenta ? el?.user : my
+                  ? userInfo : oneUser,
+              date: el.created_at
           }}
-          maxLenght
-          description={el?.text}
-        />
-      </Text>}
+          maxLenght username={el?.user?.username} description={el?.text}>
+        </TextParserPostVariant>
+        </>
+      : null}
       {el?.comments?.friends?.map((com) => {
         return (
-          <Text fontSize="14px" paddingLeft="15px" paddingRight="15px" width="100%" marginTop="10px">
-            <Text fontFamily="NunitoBold">{com?.user?.username}</Text>
-            {' '}
-            <TextParser
-              post={{
-                  description: el?.text,
-                  descriptionAuthor: my ? userInfo : oneUser,
-                  date: el?.created_at,
-                  postId: el?.id,
-              }}
-              maxLenght
-              description={com?.text}
-            />
-          </Text>
+            <TextParserPostVariant
+                post={{
+                    description: el.text,
+                    postId: el?.id,
+                    descriptionAuthor: lenta ? el?.user : my
+                        ? userInfo : oneUser,
+                    date: el.created_at
+                }}
+                maxLenght username={com?.user?.username} description={com?.text}>
+            </TextParserPostVariant>
         );
       })}
       {el?.comments?.count ? (
         <Text
           onPress={() => goToComments(
-            {
-              description: el.text,
-              postId: el?.id,
-              descriptionAuthor: my ? userInfo : oneUser,
-              date: el.created_at
-            }
-          )}
+              {
+                  description: el.text,
+                  postId: el?.id,
+                  descriptionAuthor: lenta ? el?.user : my
+                      ? userInfo : oneUser,
+                  date: el.created_at
+              }          )}
           paddingLeft="15px"
           marginTop="10px"
           color={COLORS.gray}
@@ -421,4 +455,4 @@ function PostBody({
   );
 }
 
-export default PostBody;
+export default memo(PostBody);

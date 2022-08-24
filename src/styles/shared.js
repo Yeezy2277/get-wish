@@ -225,7 +225,6 @@ export const FormGroupButton = styled.TouchableHighlight`
 
 export const FormGroupButtonText = styled.Text`
   font-family: 'Nunito';
-  font-weight: bold;
   font-size: 15px;
   line-height: 20px;
   color: ${(props) => props.color || '#1A1A1A'};

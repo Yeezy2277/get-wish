@@ -142,6 +142,7 @@ function DesiresScreenElement({
         isYourWishList={isYourWishList}
         setOpen={setOpen}
         reserved={reserved}
+        reservedId={el?.user?.id}
         reserverImage={el?.user?.avatar}
       />
     </>

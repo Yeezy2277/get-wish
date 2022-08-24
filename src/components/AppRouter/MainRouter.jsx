@@ -48,6 +48,7 @@ function MyStack() {
       <Stack.Screen options={{ headerShown: false }} name="ChangeNicknameStep" component={ChangeNicknameStep} />
       <Stack.Screen options={{ headerShown: false }} name="ReservWishList" component={ReservWishList} />
       <Stack.Screen options={{ headerShown: false }} name="Swiper" component={SwiperImage} />
+        <Stack.Screen options={{ headerShown: false }} name="UserWishList" component={UserWishList} />
     </Stack.Navigator>
   );
 }
@@ -167,9 +168,12 @@ function PostsStack() {
   );
 }
 
-function FriendsStack() {
+function FriendsStack({navigation}) {
   const { oneUser, search } = useSelector((state) => state.user);
   const { showActionSheetWithOptions } = useActionSheet();
+    const { comments } = useSelector((state) => state.posts);
+
+
 
   const t = useI18n();
   const dispatch = useDispatch();
@@ -271,7 +275,7 @@ function FriendsStack() {
       <Stack.Screen options={{ headerShown: false }} name="UserWishList" component={UserWishList} />
       <Stack.Screen options={{ headerShown: false }} name="ShareScreen" component={ShareScreen} />
       <Stack.Screen options={{ headerShown: false }} name="Swiper" component={SwiperImage} />
-      <Stack.Screen options={{ header: (navigation) => <Header title="Посты" navigation={navigation} /> }} name="UserPostOther" component={PostUserOthere} />
+      <Stack.Screen options={{ header: (navigation) => <Header title="Посты" navigation={navigation} /> }}  name="UserPostOther" component={PostUserOthere} />
       <Stack.Screen options={{ header: (navigation) => <Header title="Комментарии" navigation={navigation} /> }} name="Comments" component={Comments} />
       <Stack.Screen options={{ header: (navigation) => <Header title="Нравится" navigation={navigation} /> }} name="Likes" component={Likes} />
 
@@ -394,8 +398,8 @@ function TabStack() {
             if (route.name === 'Posts') {
               return (
                 <Image
-                  resizeMode="cover"
-                  style={{ width: 20, height: 20, position: 'relative' }}
+                  resizeMode="contain"
+                  style={{ width: 28, height: 28, position: 'relative' }}
                   source={focused ? require('../../assets/images/icons/bottom/posts_active.png')
                     : require('../../assets/images/icons/bottom/posts.png')}
                 />

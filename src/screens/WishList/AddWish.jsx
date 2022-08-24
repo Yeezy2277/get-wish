@@ -239,7 +239,7 @@ function AddWish({ navigation, ...props }) {
 
       stop();
       if (oneWishList?.id === wishlist) {
-        return goToUserWishLists({ id: oneWishList?.id });
+        return goToUserWishLists({ id: oneWishList?.id, backToWish: true });
       }
       return goToUserWishLists({ id: wishlist });
     }

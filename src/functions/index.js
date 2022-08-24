@@ -34,3 +34,7 @@ export const generateBoxShadowStyle = (
   }
   return {};
 };
+
+export const CheckSpaces = (str, comment) => {
+  return str.trim() === '' && !comment.length
+};

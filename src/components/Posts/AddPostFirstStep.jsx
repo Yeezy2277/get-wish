@@ -4,16 +4,18 @@ import {
 } from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
 import * as MediaLibrary from 'expo-media-library';
-import {Dimensions, StyleSheet, FlatList, Platform} from 'react-native';
+import {Dimensions, StyleSheet, FlatList, Platform, Linking} from 'react-native';
 import Toast from 'react-native-toast-message';
 import ReactNativeZoomableView from '@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView';
 import FastImage from 'expo-fast-image';
 import Header from '../Header/Header';
-import { filterImages } from '../../functions/helpers';
+import {filterImages, findVideoFromStore, findVideoOrImageByStore} from '../../functions/helpers';
 import { COLORS } from '../../functions/constants';
-import { convertDuration } from '../../functions/dates';
+import {convertDuration, convertDuration2} from '../../functions/dates';
 import { AddPostContext } from '../../screens/Posts/AddPost';
 import useLoader from '../../hooks/useLoader';
+import {Video} from "expo-av";
+import {useActionSheet} from "@expo/react-native-action-sheet";
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -40,6 +42,8 @@ function AddPostFirstStep() {
   const {
     navigation, checkedItems, setCheckedItems, onNextStep, onPrevStep
   } = React.useContext(AddPostContext);
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const { start, stop, loading } = useLoader(false);
   const [photos, setPhotos] = React.useState({});
   const [count, setCount] = React.useState(50);
@@ -54,14 +58,23 @@ function AddPostFirstStep() {
           first: count,
           sortBy: sort
         });
-        setPhotos(data?.assets);
+        setPhotos(data?.assets?.filter(file => file?.duration <= 60));
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Нет доступа',
-          position: 'bottom',
-          bottomOffset: 95
-        });
+        return showActionSheetWithOptions(
+            {
+              options: [
+                'Перейти в настройки',
+              ],
+              title: 'Фото профиля',
+              message: 'Разреши доступ к Фото в настройках\n' +
+                  'телефона, чтобы добавлять фото из галереи',
+              cancelButtonIndex: 0,
+              userInterfaceStyle: 'dark'
+            }, async (buttonIndex) => {
+              if (buttonIndex === 0) {
+                await Linking.openSettings();
+              }
+            });
       }
 
     }());
@@ -83,7 +96,8 @@ function AddPostFirstStep() {
       return {
         uri:
         checkedItems[checkedItems.length - 1].uri,
-        duration: checkedItems[checkedItems.length - 1].duration
+        duration: checkedItems[checkedItems.length - 1].duration,
+        id: checkedItems[checkedItems.length - 1].id,
       };
     }
     return null;
@@ -122,6 +136,77 @@ function AddPostFirstStep() {
 
   };
 
+  const VideoPlayer = ({link: linkNew, selectedImage}) => {
+    const [link, setLink] = React.useState('');
+    let video = React.useRef(null);
+    const [status, setStatus] = React.useState({});
+
+    React.useEffect(() => {
+      (async function startPlayer()
+      {
+        let response;
+        response = await findVideoOrImageByStore(selectedImage.id)
+        await setLink(Platform.OS === 'ios' ? response?.localUri : response?.uri);
+      }
+      ());
+    }, [video])
+
+    React.useEffect(() => {
+      if (video?.current) {
+        video.current.playAsync()
+      }
+    }, [linkNew, video?.current])
+    return (
+        <Pressable
+            width="100%"
+            height="375px"
+            justifyContent="center"
+            alignItems="center"
+            position="relative"
+            onPress={() => (status.isPlaying ? video.current.pauseAsync() : video.current.playAsync())}
+        >
+          <Video
+              ref={video}
+              source={{
+                uri: link,
+              }}
+              style={{
+                width: '100%',
+                height: 375
+              }}
+              useNativeControls
+              resizeMode="cover"
+              isLooping={false}
+              onPlaybackStatusUpdate={(statusLocal) => setStatus(() => statusLocal)}
+          />
+          {status.isPlaying ? <View
+              position="absolute"
+              right="15px"
+              bottom="15px"
+              width="37px"
+              height="21px"
+              backgroundColor="rgba(26, 26, 26, 0.6)"
+              display="flex"
+              zIndex={99}
+              alignItems="center"
+              justifyContent="center"
+              borderRadius="6px"
+          >
+            <Text
+                fontSize="12px"
+                fontWeight="600"
+                zIndex={111}
+                color="#FFFFFF"
+            >
+              {convertDuration2(status?.playableDurationMillis - status?.positionMillis)}
+            </Text>
+          </View> : null}
+
+        </Pressable>
+    )
+  }
+
+
 
   const RenderZoomElement = React.useCallback((init) => {
     return selectedImage?.uri
@@ -154,14 +239,7 @@ function AddPostFirstStep() {
               />
             </ReactNativeZoomableView>
           ) : (
-            <FastImage
-              alt="source"
-              source={{ uri: selectedImage?.uri }}
-              style={{
-                width: '100%',
-                height: 375
-              }}
-            />
+            <VideoPlayer selectedImage={selectedImage} link={selectedImage?.uri}/>
           )}
         </View>
       ) : (

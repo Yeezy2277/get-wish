@@ -20,7 +20,7 @@ function ListQueryElement({ data, first = false, handleSearchPanel }) {
     await changeUserInfo('oneUser', user?.data);
     if (search) {
       await goToUserProfile();
-      const close = await handleSearchPanel();
+      const close = await handleSearchPanel(false, true);
       await close(false);
     } else {
       await goToUserProfile({ noSearch: true });

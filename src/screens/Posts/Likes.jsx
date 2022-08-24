@@ -6,8 +6,10 @@ import { COLORS } from '../../functions/constants';
 import { getLikes } from '../../redux/actions/postsActions';
 import LikesBody from '../../components/Posts/LikesBody';
 import useLoader from "../../hooks/useLoader";
+import {handleGoToUser} from "../../functions/helpers";
+import { useIsFocused } from '@react-navigation/native';
 
-function Likes({ navigation, route: { params: { lenta, my, postId } } }) {
+function Likes({ navigation, route: { params: { postId }, ...props } }) {
   const parent = navigation.getParent();
   const { start, stop, loading } = useLoader(true);
   const [data, setData] = React.useState([]);
@@ -24,13 +26,22 @@ function Likes({ navigation, route: { params: { lenta, my, postId } } }) {
     }());
   }, [postId]);
 
+  const handleGoToUserHandler = async (id) => {
+    parent.setOptions({ tabBarStyle: { display: 'flex' } });
+    await handleGoToUser(id)
+  }
+
+
+  const focused = useIsFocused();
+
   React.useEffect(() => {
+    if (focused)
     parent.setOptions({ tabBarStyle: { display: 'none' } });
 
     return () => {
       parent.setOptions({ tabBarStyle: { display: 'flex' } });
     };
-  }, [navigation]);
+  }, [navigation, focused]);
 
   return (
     <>
@@ -46,7 +57,7 @@ function Likes({ navigation, route: { params: { lenta, my, postId } } }) {
           width="100%"
           renderItem={({ item: el }) => {
             return (
-              <LikesBody lenta my el={el} postId={postId} />
+              <LikesBody handleGoToUserHandler={handleGoToUserHandler} lenta my el={el} postId={postId} />
             );
           }}
         />

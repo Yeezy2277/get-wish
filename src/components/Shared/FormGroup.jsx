@@ -114,7 +114,7 @@ function FormGroup({ forms, last = false }) {
               />
               <Pressable onPress={showModal}>
                 <FormGroupButtonText color={!userInfo?.birthdate && COLORS.purple}>
-                  {userInfo?.birthdate ? moment(userInfo?.birthdate).format('YYYY-MM-DD') : t('add')}
+                  {userInfo?.birthdate ? moment(userInfo?.birthdate).format('DD.MM.YYYY') : t('add')}
                 </FormGroupButtonText>
               </Pressable>
             </FormGroupElementDate>

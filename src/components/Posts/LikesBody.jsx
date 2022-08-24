@@ -14,7 +14,7 @@ const assets = {
 };
 
 function LikesBody({
-  postId, el, lenta, my
+  postId, el, lenta, my, handleGoToUserHandler
 }) {
   const [source, setSource] = React.useState(assets.unlike);
   const dispatch = useDispatch();
@@ -54,6 +54,8 @@ function LikesBody({
       } else {
         likeHandler();
       }
+    } else {
+      await handleGoToUserHandler(el?.user.id)
     }
   };
 

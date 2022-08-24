@@ -1,9 +1,9 @@
 import React from 'react';
 import {
   Box,
-  HStack, Image, Pressable, ScrollView, Text, View
+  HStack, Image, KeyboardAvoidingView, Pressable, ScrollView, Text, View
 } from 'native-base';
-import { Dimensions, Platform } from 'react-native';
+import {Dimensions, Keyboard, Platform, TouchableWithoutFeedback} from 'react-native';
 import Toast from 'react-native-toast-message';
 import Header from '../Header/Header';
 import { AddPostContext } from '../../screens/Posts/AddPost';
@@ -129,7 +129,7 @@ function AddPostSecondStep() {
   const handleDescription = async (val) => {
     setDescription(val);
     const array = val.match(/\@[a-z]*/gm);
-    if ((val.endsWith(val.match(/\@[a-z]*/gm)[0]) || val.endsWith(array[array.length - 1]))) {
+    if (val.includes('@') && (val.endsWith(val.match(/\@[a-z]*/gm)[0]) || val.endsWith(array[array.length - 1]))) {
       if (array[array?.length - 1].length === 1 || array[0]?.length === 1) {
         const { data } = await getFriends();
         setFriends(data);
@@ -169,7 +169,7 @@ function AddPostSecondStep() {
         setDebouncedTerm('');
         setTerm('');
         setFriends([]);
-      } else setFriends(data);
+      } else setFriends(data?.slice(0, 5));
 
     } finally {
       stop();
@@ -217,7 +217,7 @@ function AddPostSecondStep() {
         let desc = '';
         if (description.length) {
           desc = description;
-          let users = desc.match(/\@[a-zA-Z]*/gm);
+          let users = desc.match(/\@[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*/gm);
           if (users?.length) {
             for await (let user of users) {
               if (user?.split('@')?.length > 1) {
@@ -284,7 +284,7 @@ function AddPostSecondStep() {
   };
 
   return (
-      <KeyboardAwareScrollView
+      <View
           style={{ backgroundColor: COLORS.white, flex: 1 }}
           contentContainerStyle={{
             Height: 'auto', maxHeight: screenHeight, flex: 1, position: 'relative'
@@ -296,12 +296,16 @@ function AddPostSecondStep() {
         navigation={navigation}
       />
       {loading ? <Loader /> : (
-        <>
-          <ScrollView height="100%" width="100%" flex={1} backgroundColor="#FFFFFF">
+          <>
+          <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? "padding" : 'none'}
+              style={{ backgroundColor: COLORS.white, flex: 1 }}
+              contentContainerStyle={{ flex: 1 }}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
+            <TouchableWithoutFeedback style={{ backgroundColor: COLORS.white, flex: 1 }} onPress={Keyboard.dismiss}>
             <WishListContainer style={{ paddingTop: 20 }}>
               {showFriends && (
               <PostListFriendElement
-                  top={Platform.OS === 'ios' && onFocus ? '5%' : '0px'}
                 handleChooseUser={handleChooseUser}
                 debouncedTerm={debouncedTerm}
                 data={friends}
@@ -348,7 +352,8 @@ function AddPostSecondStep() {
                 и начать вводить никнейм или имя друга, чтобы упомянуть его в посте? Невероятно!
               </Text>
             </WishListContainer>
-          </ScrollView>
+            </TouchableWithoutFeedback>
+          </KeyboardAvoidingView>
           <Box alignItems="center" height="15%" pt="20px" width="100%" backgroundColor={COLORS.white2}>
             <AuthButton onPress={publicHandlerPost} active>
               {id ? 'Сохранить' : 'Опубликовать'}
@@ -356,7 +361,7 @@ function AddPostSecondStep() {
           </Box>
         </>
       )}
-      </KeyboardAwareScrollView>
+      </View>
   );
 }
 

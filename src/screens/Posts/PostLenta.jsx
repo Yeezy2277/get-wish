@@ -1,5 +1,5 @@
-import React from 'react';
-import { FlatList, ScrollView } from 'native-base';
+import React, {useState} from 'react';
+import {FlatList, ScrollView, View} from 'native-base';
 import { useSelector } from 'react-redux';
 import { RefreshControl } from 'react-native';
 import { COLORS } from '../../functions/constants';
@@ -10,47 +10,54 @@ import { getMyWishLists, getPostsForLenta } from '../../redux/actions/postsActio
 function PostLenta({ empty = true }) {
   const { lentaPosts } = useSelector((state) => state.posts);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [take, setTake] = useState(5)
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    getPostsForLenta().then(() => setRefreshing(false));
+      await getPostsForLenta(5).then(() => setRefreshing(false));
   }, []);
+
+  const loadMore = async () => {
+      setTake((prevState => prevState + 5))
+      await getPostsForLenta(take);
+  }
+
   React.useEffect(() => {
     (async function () {
-      await getPostsForLenta();
+        await getPostsForLenta(take);
     }());
   }, []);
   return (
     <>
-      <ScrollView
+      <View
           width="100%"
           height="100%"
           backgroundColor={COLORS.white2}
           display="flex"
           flex={1}
-          refreshControl={(
-              <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={onRefresh}
-              />
-          )}
       >
       {lentaPosts?.length ? (
         <FlatList
           data={lentaPosts}
           keyExtractor={(item) => item.id}
           width="100%"
+          onEndReachedThreshold={0.5}
+          onEndReached={loadMore}
           backgroundColor={COLORS.white2}
           display="flex"
-          style={{
-              marginBottom: 130
-          }}
+          marginBottom='80px'
+          refreshControl={(
+              <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+              />
+          )}
           flex={1}
           renderItem={({ item: el }) => {
             return <PostBody lenta key={el.id} my={false} el={el} more />;
           }}
         />
       ) : <EmptyPost variant={1} />}
-      </ScrollView>
+      </View>
     </>
   );
 }

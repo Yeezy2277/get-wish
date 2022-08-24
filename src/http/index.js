@@ -4,6 +4,7 @@ import { refresh } from '../redux/actions/authActions';
 import NavigationService from '../functions/NavigationService';
 import store from '../redux';
 import { LOGOUT, SET_NICKNAME } from '../redux/constants/userConstants';
+import {getIncoming} from "../redux/actions/userActions";
 
 const { dispatch } = store;
 
@@ -31,6 +32,7 @@ $authHost.interceptors.response.use((response) => {
         dispatch({ type: LOGOUT });
         dispatch({ type: SET_NICKNAME, payload: false });
         NavigationService.navigate('Start');
+        await getIncoming();
       }
     });
   }

@@ -11,7 +11,7 @@ import {
 } from '../index';
 import { COLORS } from '../../functions/constants';
 import AuthButton from '../Shared/AuthButton';
-import { cancelRequest, deleteFriend, sendRequest } from '../../redux/actions/userActions';
+import {acceptFriendProfile, cancelRequest, deleteFriend, sendRequest} from '../../redux/actions/userActions';
 import {useI18n} from "../../i18n/i18n";
 import {declOfNum} from "../../functions/helpers";
 
@@ -69,12 +69,12 @@ function TopPanel() {
             <Text fontSize={13} textAlign="center">{declOfNum(oneUser?.posts, ['пост', 'поста', 'постов'])}</Text>
           </Box>
           <Box paddingRight="22.5px" paddingLeft="22.5px">
-            <Text fontSize={15} fontWeight="bold" textAlign="center">0</Text>
-            <Text fontSize={13} textAlign="center">желаний</Text>
+            <Text fontSize={15} fontWeight="bold" textAlign="center">{oneUser?.wishes}</Text>
+            <Text fontSize={13} textAlign="center">{declOfNum(oneUser?.wishes, ['желание', 'желания', 'желаний'])}</Text>
           </Box>
         </HStack>
       </HStack>
-      {!oneUser?.is_friend && !oneUser?.has_outgoing_friend_request && (
+      {!oneUser?.is_friend && !oneUser?.has_outgoing_friend_request && !oneUser?.has_incoming_friend_request && (
       <SharedButton
         onPress={() => sendRequest(oneUser?.id, 'PROFILE').then(() => {
           Toast.show({
@@ -91,6 +91,25 @@ function TopPanel() {
         }}
       >
         Добавить в друзья
+      </SharedButton>
+      )}
+      {!oneUser?.is_friend && oneUser?.has_incoming_friend_request && (
+      <SharedButton
+        onPress={() => acceptFriendProfile(oneUser?.id).then(() => {
+          Toast.show({
+            type: 'search',
+            text1: 'Пользователь добавлен в друзья',
+            position: 'bottom',
+            bottomOffset: 95,
+          });
+        })}
+        textStyle={{ fontSize: 15, lineHeight: 21 }}
+        flex={false}
+        style={{
+          width: '100%', maxWidth: 335, height: 36
+        }}
+      >
+        Принять заявку в друзья
       </SharedButton>
       )}
       {oneUser?.has_outgoing_friend_request && !oneUser?.is_friend && (

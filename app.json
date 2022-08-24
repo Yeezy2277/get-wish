@@ -3,6 +3,7 @@
     "name": "getwish",
     "slug": "getwish",
     "version": "1.0.0",
+    "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "splash": {
@@ -27,7 +28,8 @@
       "favicon": "./src/assets/favicon.png"
     },
     "ios": {
-      "bundleIdentifier": "com.mediapark.getwish"
+      "bundleIdentifier": "com.mediapark.getwish",
+      "jsEngine": "jsc"
     }
   }
 }

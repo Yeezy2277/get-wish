@@ -24,7 +24,7 @@ function EmptyPost({ variant = 1 }) {
       <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Оживи эту ленту свом постом!</Text>
       <AuthButton
         style={{
-          zIndex: 999, display: 'flex', width: 172, marginTop: 40
+          zIndex: 999, display: 'flex', width: 172, marginTop: 40, flex: 0
         }}
         variant="small"
         bxShadow={Platform.OS === 'ios'}

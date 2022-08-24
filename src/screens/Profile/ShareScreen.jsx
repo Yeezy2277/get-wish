@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import {Platform, ScrollView, StyleSheet} from 'react-native';
 import { Box, Button, Text } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -45,7 +45,6 @@ function ShareScreen({ navigation, ...params }) {
       payload: 'share'
     });
     if (selectedFriendsRedux?.length) {
-      console.log('selectedFriendsRedux', selectedFriendsRedux);
       setSelectedFriends([...selectedFriendsRedux]);
     }
     getData();
@@ -85,7 +84,6 @@ function ShareScreen({ navigation, ...params }) {
     };
   }, []);
 
-  console.log('setSelectedFriends', setSelectedFriends);
 
   const SearchHeaderMemo = React.useMemo(() => {
     return (
@@ -143,7 +141,7 @@ function ShareScreen({ navigation, ...params }) {
             active={!isDisabled}
           >
             <Box display="flex" height="53px" alignItems="center" flexDirection="row">
-              <Text marginRight="10px" fontSize={16} fontFamily="NunitoBold" color={COLORS.white}>{t('share_saveChoice')}</Text>
+              <Text marginRight="10px" fontSize={16} lineHeight={Platform.OS === 'android' ? 20 : 0} fontFamily="NunitoBold" color={COLORS.white}>Сохранить выбор</Text>
               <Box
                 display="flex"
                 justifyContent="center"

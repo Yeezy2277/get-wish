@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'native-base';
-import { Animated } from 'react-native';
+import {Animated, Platform} from 'react-native';
 import {
   HeaderArchive,
   HeaderArrow,
@@ -50,6 +50,7 @@ function Header({
 
   return (
     <HeaderRow
+        platform={Platform.OS === 'ios'}
       style={{
         opacity: fadeAnim,
       }}

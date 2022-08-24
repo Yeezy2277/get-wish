@@ -111,10 +111,10 @@ export const createWishList = async ({
 };
 
 export const getWishListUser = async ({
-  userId
+  userId, limit = 50
 }) => {
   return new Promise((resolve, reject) => {
-    $authHost.get(`/api/v1/user/${userId}/wishlists`).then(async ({ data }) => {
+    $authHost.get(`/api/v1/user/${userId}/wishlists?take=${limit}`).then(async ({ data }) => {
       const newWishList = data?.data;
       store?.dispatch({
         type: SET_USER_WISH_LIST,

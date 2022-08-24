@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Dimensions, Platform} from 'react-native';
 import {
   Avatar, Box, HStack, Image, Input, Pressable, Text, View, VStack, FlatList, KeyboardAvoidingView
@@ -12,9 +12,13 @@ import PostListFriendElement from './PostListFriendElement';
 import TextParser from '../Shared/TextParser';
 import { getComments, sendComment } from '../../redux/actions/postsActions';
 import CommentsBody from './CommentsBody';
-import {parseTags} from "../../functions/helpers";
+import {goToUserProfile, parseTags} from "../../functions/helpers";
 import useLoader from "../../hooks/useLoader";
 import {Loader} from "../index";
+import {CheckSpaces} from "../../functions";
+import {userCRUD} from "../../http/CRUD";
+import {changeUserInfo} from "../../redux/actions/authActions";
+import {useIsFocused} from "@react-navigation/native";
 
 function Comments({
   navigation, route: {
@@ -30,13 +34,17 @@ function Comments({
   const [comment, setComment] = React.useState('');
   const dispatch = useDispatch();
   const parent = navigation.getParent();
+
+  const focused = useIsFocused();
+
   React.useEffect(() => {
+    if (focused)
     parent.setOptions({ tabBarStyle: { display: 'none' } });
 
     return () => {
       parent.setOptions({ tabBarStyle: { display: 'flex' } });
     };
-  }, [navigation]);
+  }, [navigation, focused]);
 
   React.useEffect(() => {
     (async function () {
@@ -55,16 +63,21 @@ function Comments({
     setComment('');
   };
 
-  const RightIcon = React.useCallback(() => {
-    if (!comment.length) {
-      return (
-        <Pressable zIndex={9999} position="absolute" right="5px" bottom="5px">
+  const RightIconEmpty = React.useCallback(() => {
+    return (
+        <Pressable zIndex={9999} position="absolute" top="0" bottom="0"
+                   right="5px" justifyContent="center" alignSelf="center">
           <Image size="26px" source={require('../../assets/images/icons/posts/arrow_disabled.png')} />
         </Pressable>
-      );
-    }
+    );
+  }, [comment]);
+
+
+  const RightIcon = React.useCallback(() => {
     return (
-      <Pressable onPress={handleSendComment} zIndex={9999} position="absolute" right="5px" bottom="5px">
+      <Pressable onPress={handleSendComment} zIndex={9999} position="absolute"
+                 top="0" bottom="0"
+                 right="5px" justifyContent="center" alignSelf="center">
         <Image size="26px" source={require('../../assets/images/icons/posts/arrow_next.png')} />
       </Pressable>
     );
@@ -76,18 +89,38 @@ function Comments({
   const [friends, setFriends] = React.useState([]);
 
   const handleDescription = async (val) => {
-    setComment(val);
-    if (val?.includes('@') && val[val.length - 1] === '@') {
-      const { data: dataFriends } = await getFriends();
-      setFriends(dataFriends);
-      setShowFriends(true);
-      if (val.split('@')[1].length) {
-        setDebouncedTerm(val.split('@')[1]);
+      if (!CheckSpaces(val, comment)) {
+        setComment(val);
+        const array = val.match(/\@[a-z]*/gm);
+        if (val.includes('@') && (val.endsWith(val.match(/\@[a-z]*/gm)[0]) || val.endsWith(array[array.length - 1]))) {
+          if (array[array?.length - 1].length === 1 || array[0]?.length === 1) {
+            const { data } = await getFriends();
+            setFriends(data);
+          }
+          setShowFriends(true);
+          if (array[array.length - 1]?.length) {
+            setDebouncedTerm(array[array.length - 1].split('@')[1]);
+          } else {
+            setDebouncedTerm(array[0].split('@')[1])
+          }
+        } else {
+          setShowFriends(false);
+        }
       }
-    } else {
-      setShowFriends(false);
+  };
+
+  const [disabled, setDisabled] = useState(false)
+
+  const handleKeyPress = ({ nativeEvent: { key: keyValue } }) => {
+    if (comment) {
+      if (comment.length >= 255 && keyValue !== 'Backspace') {
+        setDisabled(true);
+      } else {
+        setDisabled(false);
+      }
     }
   };
+
 
   React.useEffect(() => {
     const timer = setTimeout(() => setTerm(debouncedTerm), 1000);
@@ -112,7 +145,7 @@ function Comments({
         setDebouncedTerm('');
         setTerm('');
         setFriends([]);
-      } else setFriends(data);
+      } else setFriends(dataGetFriends?.slice(0, 5));
 
     } finally {
       stop();
@@ -145,6 +178,15 @@ function Comments({
     setFriends([]);
   };
 
+  const handleGoToUserHandler = async (id) => {
+    const user = await userCRUD.get(id);
+    await changeUserInfo('oneUser', user?.data);
+    parent.setOptions({ tabBarStyle: { display: 'flex' } });
+    navigation.navigate('Friends', {
+      screen: 'UserProfile',
+    });
+  }
+
   return (
       <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? "padding" : 'none'}
@@ -167,7 +209,7 @@ function Comments({
                 setData={setFriends}
             />
         )}
-        <View
+        {description ? <View
             paddingTop="16px"
             paddingLeft="12px"
             paddingRight="15px"
@@ -206,7 +248,7 @@ function Comments({
               </Text>
             </VStack>
           </HStack>
-        </View>
+        </View> : null}
         <FlatList
             height="100%"
             width="100%"
@@ -215,7 +257,7 @@ function Comments({
             data={comments}
             renderItem={({ item: el }) => {
               return (
-                  <CommentsBody el={el} />
+                  <CommentsBody handleGoToUserHandler={handleGoToUserHandler} el={el} />
               );
             }}
         />
@@ -232,14 +274,17 @@ function Comments({
             backgroundColor={COLORS.white2}
         >
           <Input
+              _disabled={disabled}
               value={comment}
-              onChangeText={handleDescription}
+              display="flex"
+              onKeyPress={handleKeyPress}
+              onChangeText={disabled ? null : handleDescription}
               paddingLeft="12px"
               paddingRight="41px"
               multiline
               color="#1A1A1A"
               borderRadius="18px"
-              InputRightElement={<RightIcon />}
+              InputRightElement={comment?.length ? <RightIcon /> : <RightIconEmpty/>}
               fontSize="15px"
               onFocus={handleFocus}
               onBlur={handleBlur}

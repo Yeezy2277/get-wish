@@ -72,7 +72,7 @@ function FriendsRequest({ empty = false }) {
           </>
         ) : (
           <ListRequest
-            title={`${all()} ${declOfNum(all(), t('friends_requestPlurals', {returnObjects: true}))}`}
+            title={`${all()} ${declOfNum(all(), t('friends_outcomingRequestPlurals', {returnObjects: true}))}`}
             data={incomingRequest}
           />
         )}

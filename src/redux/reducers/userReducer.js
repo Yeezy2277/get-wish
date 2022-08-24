@@ -1,11 +1,11 @@
 import {
-  ACCEPT_FRIEND, CANCEL_FRIEND,
+  ACCEPT_FRIEND, ACCEPT_FRIEND_PROFILE, CANCEL_FRIEND,
   CANCEL_REQUEST,
   DELETE_ID_FROM_DATA, HANDLE_FRIEND,
   LOGOUT, SEND_REQUEST,
   SET_AUTH,
   SET_DATA, SET_FRIENDS, SET_INCOMING,
-  SET_NICKNAME, SET_OUTGOING, SET_RESERVED_WISH_LIST,
+  SET_NICKNAME, SET_ONE_USER, SET_OUTGOING, SET_RESERVED_WISH_LIST,
   SET_SEARCH,
   SET_SEARCH_DATA, SET_SEARCH_FRIENDS, SET_SEARCH_INCOMING, SET_SEARCH_OUTGOING,
   SET_SEARCH_START,
@@ -44,6 +44,11 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         typeSearch: action.payload
+      };
+    case SET_ONE_USER:
+      return {
+        ...state,
+        oneUser: action.payload
       };
     case SET_RESERVED_WISH_LIST:
       return {
@@ -145,6 +150,14 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         incomingRequest: newIncoming,
+      };
+    case ACCEPT_FRIEND_PROFILE:
+      let newIncomingProfile = [...state.incomingRequest];
+      const arrayProfile = newIncomingProfile.filter((el) => el.id !== action.payload);
+      return {
+        ...state,
+        incomingRequest: arrayProfile,
+        oneUser: { ...state.oneUser, has_incoming_friend_request: false, has_outgoing_friend_request: false, is_friend: true }
       };
     case HANDLE_FRIEND:
       let newOneUser = { ...state.oneUser };

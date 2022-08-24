@@ -12,7 +12,7 @@ import {
   HeaderArrow, HeaderAvatar, HeaderPressable, HeaderPressableAvatar
 } from '../../styles/shared';
 import {
-  declOfNum, goBack, goToAddWish, goToWishList
+  declOfNum, goBack, goToAddWish, goToUserWishLists, goToWishList, goToWishLists
 } from '../../functions/helpers';
 import { COLORS } from '../../functions/constants';
 import { DesiresScreenRow } from '../../styles/profile';
@@ -25,6 +25,7 @@ import AuthButton from '../../components/Shared/AuthButton';
 import useLoader from '../../hooks/useLoader';
 import { ActionSheets } from '../../functions/ActionSheet';
 import { useI18n } from '../../i18n/i18n';
+import {useSwipe} from "../../hooks/useSwipe";
 
 function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
   const { start, stop, loading } = useLoader(false);
@@ -32,10 +33,13 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
   const [showHeader, setShowHeader] = React.useState(false);
   const dispatch = useDispatch();
   const t = useI18n();
+
+
   const { oneWishList } = useSelector((state) => state.wishList);
   const { reloadValue } = useSelector((state) => state.generic);
   const { userInfo: { id: userId } } = useSelector((state) => state.user);
   const { oneUser } = useSelector((state) => state.user);
+  console.log(oneUser)
   const { showActionSheetWithOptions } = useActionSheet();
   const state = new ActionSheets(t, showActionSheetWithOptions);
   const parent = navigation.getParent();
@@ -44,6 +48,17 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
     () => oneWishList?.user_id === userId,
     [oneWishList?.user_id, userId]
   );
+
+  const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
+
+  function onSwipeLeft(){
+
+  }
+
+  function onSwipeRight(){
+    goToWishLists()
+  }
+
 
   const handleScroll = (event) => {
     if (event.nativeEvent.contentOffset.y > 150) {
@@ -76,30 +91,50 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
     }
   };
 
+
   return (
     <>
       {!oneWishList?.wishes?.length ? (
         <ScrollView
           height="100%"
+          onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
           width="100%"
           backgroundColor={COLORS.white2}
         >
-          <Header
-            backHandler={() => {
+          {isYourWishList ? <Header
+              backHandler={() => {
+                if (backToWish) {
+                  goToWishList();
+                } else {
+                  goBack();
+                }
+              }}
+              morePress={handleClickOption}
+              more
+              cancel
+              title={oneWishList?.name}
+              navigation={navigation}
+          /> : <View height="88px">
+            <HeaderPressable onPress={() => {
               if (backToWish) {
                 goToWishList();
               } else {
                 goBack();
               }
             }}
-            morePress={handleClickOption}
-            more
-            cancel
-            title={oneWishList?.name}
-            navigation={navigation}
-          />
+            >
+              <HeaderArrow source={require('../../assets/images/icons/arrow.png')} />
+            </HeaderPressable>
+            <HeaderPressableAvatar onPress={handleClickOption}>
+              <HeaderAvatar
+                  style={isYourWishList && { height: 4, width: 20 }}
+                  source={isYourWishList ? require('../../assets/images/icons/header/more.png')
+                      : (oneUser?.avatar ? { uri: oneUser.avatar } : require('../../assets/images/icons/profile/avatar.png'))}
+              />
+            </HeaderPressableAvatar>
+          </View>}
           <FriendsContainerFirst style={{ marginTop: 76 }}>
-            <FriendsImageEmpty resizeMode="cover" source={require('../../assets/images/icons/wishlist/wish_placeholder.png')} />
+            <FriendsImageEmpty resizeMode="contain" source={require('../../assets/images/icons/wishlist/wish_placeholder.png')} />
             <Text
               color={COLORS.black}
               fontFamily="NunitoBold"
@@ -110,8 +145,9 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
             >
               Здесь ни одного желания
             </Text>
-            <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Твоим друзьям придётся поломать голову!</Text>
-            <AuthButton
+            {isYourWishList ? <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Твоим друзьям придётся поломать голову!</Text> :
+                <Text color={COLORS.gray} marginTop="11px" fontSize="14px" lineHeight="20px">Тебе придется поломать голову!</Text>}
+            {isYourWishList ? <AuthButton
               style={{
                 zIndex: 999, display: 'flex', width: 172, marginTop: 40
               }}
@@ -119,11 +155,12 @@ function UserWishList({ navigation, route: { params: { id, backToWish } } }) {
               variant="small"
               bxShadow
               text="Задагать желание"
-            />
+            /> : null}
           </FriendsContainerFirst>
         </ScrollView>
       ) : loading ? <Loader /> : (
         <ImageBackground
+            onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
           resizeMode="cover"
           source={{ uri: oneWishList?.theme?.image }}
           style={{
